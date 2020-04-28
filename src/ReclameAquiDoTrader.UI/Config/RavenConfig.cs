@@ -2,14 +2,13 @@
 using Microsoft.Extensions.DependencyInjection;
 using Raven.Client.Documents;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
 using ReclameAquiDoTrader.Data.Extensions;
 using Microsoft.Extensions.Configuration;
 using Raven.DependencyInjection;
 using System.Security.Cryptography.X509Certificates;
+using ReclameAquiDoTrader.UI.Identity.Models;
+using Raven.Identity;
 
 namespace ReclameAquiDoTrader.UI.Config
 {
@@ -30,7 +29,10 @@ namespace ReclameAquiDoTrader.UI.Config
                     options.Certificate = new X509Certificate2(configuration["RavenSettings:CertFilePath"],
                                                                configuration["RavenSettings:CertPassword"],
                                                            X509KeyStorageFlags.MachineKeySet))
-                .AddRavenDbSession();
+                .AddRavenDbSession()
+                .AddRavenDbAsyncSession()
+                .AddIdentity<AppUser, Raven.Identity.IdentityRole>() // Adds an identity system to ASP.NET Core
+                .AddRavenDbIdentityStores<AppUser>(); // Use RavenDB as the store for identity users and roles.
 
             return services;
         }

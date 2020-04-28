@@ -29,6 +29,8 @@ namespace ReclameAquiDoTrader.UI
 
             services.AddMediatR(typeof(Startup));
 
+            services.AddMvcConfiguration();
+
             services.ResolveDependencies();
 
             services.AddRavenDbConfig(Configuration);
@@ -52,13 +54,14 @@ namespace ReclameAquiDoTrader.UI
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Acesso}/{action=Entrar}/{id?}");
             });
         }
     }

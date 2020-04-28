@@ -6,9 +6,61 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\lib\css\landing\**" />
+    <Compile Remove="wwwroot\lib\css\patterns\**" />
+    <Compile Remove="wwwroot\lib\font-awesome\less\**" />
+    <Compile Remove="wwwroot\lib\font-awesome\scss\**" />
+    <Compile Remove="wwwroot\lib\fonts\**" />
+    <Compile Remove="wwwroot\lib\jquery\external\**" />
+    <Compile Remove="wwwroot\lib\jquery\src\**" />
+    <Compile Remove="wwwroot\lib\slimScroll\examples\**" />
+    <Content Remove="wwwroot\lib\css\landing\**" />
+    <Content Remove="wwwroot\lib\css\patterns\**" />
+    <Content Remove="wwwroot\lib\font-awesome\less\**" />
+    <Content Remove="wwwroot\lib\font-awesome\scss\**" />
+    <Content Remove="wwwroot\lib\fonts\**" />
+    <Content Remove="wwwroot\lib\jquery\external\**" />
+    <Content Remove="wwwroot\lib\jquery\src\**" />
+    <Content Remove="wwwroot\lib\slimScroll\examples\**" />
+    <EmbeddedResource Remove="wwwroot\lib\css\landing\**" />
+    <EmbeddedResource Remove="wwwroot\lib\css\patterns\**" />
+    <EmbeddedResource Remove="wwwroot\lib\font-awesome\less\**" />
+    <EmbeddedResource Remove="wwwroot\lib\font-awesome\scss\**" />
+    <EmbeddedResource Remove="wwwroot\lib\fonts\**" />
+    <EmbeddedResource Remove="wwwroot\lib\jquery\external\**" />
+    <EmbeddedResource Remove="wwwroot\lib\jquery\src\**" />
+    <EmbeddedResource Remove="wwwroot\lib\slimScroll\examples\**" />
+    <None Remove="wwwroot\lib\css\landing\**" />
+    <None Remove="wwwroot\lib\css\patterns\**" />
+    <None Remove="wwwroot\lib\font-awesome\less\**" />
+    <None Remove="wwwroot\lib\font-awesome\scss\**" />
+    <None Remove="wwwroot\lib\fonts\**" />
+    <None Remove="wwwroot\lib\jquery\external\**" />
+    <None Remove="wwwroot\lib\jquery\src\**" />
+    <None Remove="wwwroot\lib\slimScroll\examples\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="bundleconfig.json" />
+    <Content Remove="wwwroot\lib\css\email.css" />
+    <Content Remove="wwwroot\lib\font-awesome\.bower.json" />
+    <Content Remove="wwwroot\lib\font-awesome\.gitignore" />
+    <Content Remove="wwwroot\lib\font-awesome\.npmignore" />
+    <Content Remove="wwwroot\lib\font-awesome\bower.json" />
+    <Content Remove="wwwroot\lib\font-awesome\HELP-US-OUT.txt" />
+    <Content Remove="wwwroot\lib\jquery\.bower.json" />
+    <Content Remove="wwwroot\lib\jquery\AUTHORS.txt" />
+    <Content Remove="wwwroot\lib\jquery\bower.json" />
+    <Content Remove="wwwroot\lib\jquery\LICENSE.txt" />
+    <Content Remove="wwwroot\lib\jquery\README.md" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="9.0.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="8.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.2" />
     <PackageReference Include="RavenDB.DependencyInjection" Version="3.1.0" />
+    <PackageReference Include="RavenDB.Identity" Version="7.0.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -17,12 +69,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Config\AutoMapper\" />
     <Folder Include="ViewModels\HomeViewModels\" />
     <Folder Include="ViewModels\PublicacaoViewModels\" />
     <Folder Include="wwwroot\css\" />
-    <Folder Include="wwwroot\js\" />
-    <Folder Include="wwwroot\lib\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="bundleconfig.json" />
   </ItemGroup>
 
 </Project>

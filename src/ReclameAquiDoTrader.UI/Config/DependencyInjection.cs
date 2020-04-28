@@ -1,10 +1,11 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 using ReclameAquiDoTrader.Business.Core.Communication.Mediator;
 using ReclameAquiDoTrader.Business.Core.Communication.Notificacoes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using ReclameAquiDoTrader.Business.Interfaces.Repository;
+using ReclameAquiDoTrader.Data.Repositories;
+using ReclameAquiDoTrader.UI.Identity.Models;
 
 namespace ReclameAquiDoTrader.UI.Config
 {
@@ -14,6 +15,9 @@ namespace ReclameAquiDoTrader.UI.Config
         {
             services.AddScoped<INotificador, Notificador>();
             services.AddScoped<IMediatorHandler, MediatorHandler>();
+
+            services.AddScoped<IAvaliacaoRepository, AvaliacaoRepository>();
+            services.AddScoped<IMentorRepository, MentorRepository>();
 
             return services;
         }

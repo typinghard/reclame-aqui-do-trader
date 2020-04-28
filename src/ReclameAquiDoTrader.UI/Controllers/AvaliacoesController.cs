@@ -15,14 +15,10 @@ namespace ReclameAquiDoTrader.UI.Controllers
     public class AvaliacoesController : MainController
     {
         private readonly IAvaliacaoRepository _avaliacaoRepository;
-        private readonly IMapper _mapper;
-
-        protected AvaliacoesController(IAvaliacaoRepository avaliacaoRepository,
-                                       IMapper mapper,
-                                       INotificador notificador) : base(notificador)
+        public AvaliacoesController(IAvaliacaoRepository avaliacaoRepository,
+                                    INotificador notificador) : base(notificador)
         {
             _avaliacaoRepository = avaliacaoRepository;
-            _mapper = mapper;
         }
 
         public IActionResult Index()
