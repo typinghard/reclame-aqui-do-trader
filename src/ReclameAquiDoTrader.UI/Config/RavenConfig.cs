@@ -9,6 +9,8 @@ using Raven.DependencyInjection;
 using System.Security.Cryptography.X509Certificates;
 using ReclameAquiDoTrader.UI.Identity.Models;
 using Raven.Identity;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Http;
 
 namespace ReclameAquiDoTrader.UI.Config
 {
@@ -31,8 +33,8 @@ namespace ReclameAquiDoTrader.UI.Config
                                                            X509KeyStorageFlags.MachineKeySet))
                 .AddRavenDbSession()
                 .AddRavenDbAsyncSession()
-                .AddIdentity<AppUser, Raven.Identity.IdentityRole>() // Adds an identity system to ASP.NET Core
-                .AddRavenDbIdentityStores<AppUser>(); // Use RavenDB as the store for identity users and roles.
+                .AddIdentity<Usuario, Raven.Identity.IdentityRole>()    
+                .AddRavenDbIdentityStores<Usuario>();
 
             return services;
         }

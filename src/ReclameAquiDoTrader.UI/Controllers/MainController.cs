@@ -1,12 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ReclameAquiDoTrader.Business.Core.Communication.Notificacoes;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace ReclameAquiDoTrader.UI.Controllers
 {
+    [Authorize]
     public class MainController : Controller
     {
         private readonly INotificador _notificador;
