@@ -66,7 +66,7 @@ namespace ReclameAquiDoTrader.UI.Controllers
         public async Task<IActionResult> Sair()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Entrar");
+            return RedirectToAction("Login");
         }
     }
 }
