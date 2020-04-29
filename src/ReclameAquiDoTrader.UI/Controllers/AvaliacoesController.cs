@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using ReclameAquiDoTrader.Business.Core.Communication.Notificacoes;
+using ReclameAquiDoTrader.Business.Interfaces.Identity;
 using ReclameAquiDoTrader.Business.Interfaces.Repository;
 
 namespace ReclameAquiDoTrader.UI.Controllers
@@ -9,7 +9,8 @@ namespace ReclameAquiDoTrader.UI.Controllers
     {
         private readonly IAvaliacaoRepository _avaliacaoRepository;
         public AvaliacoesController(IAvaliacaoRepository avaliacaoRepository,
-                                    INotificador notificador) : base(notificador)
+                                    INotificador notificador,
+                                    IUsuarioIdentity usuarioIdentity) : base(usuarioIdentity, notificador)
         {
             _avaliacaoRepository = avaliacaoRepository;
         }

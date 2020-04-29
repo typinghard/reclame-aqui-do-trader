@@ -55,6 +55,7 @@
     <Content Remove="wwwroot\lib\jquery\.bower.json" />
     <Content Remove="wwwroot\lib\jquery\AUTHORS.txt" />
     <Content Remove="wwwroot\lib\jquery\bower.json" />
+    <Content Remove="wwwroot\lib\jquery\dist\bundleconfig.json" />
     <Content Remove="wwwroot\lib\jquery\LICENSE.txt" />
     <Content Remove="wwwroot\lib\jquery\README.md" />
   </ItemGroup>
@@ -75,11 +76,11 @@
   <ItemGroup>
     <Folder Include="ViewModels\HomeViewModels\" />
     <Folder Include="ViewModels\PublicacaoViewModels\" />
-    <Folder Include="wwwroot\css\" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="bundleconfig.json" />
+    <None Include="wwwroot\lib\jquery\dist\bundleconfig.json" />
   </ItemGroup>
 
 </Project>

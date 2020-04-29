@@ -59,7 +59,7 @@ namespace ReclameAquiDoTrader.UI
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Acesso}/{action=Entrar}/{id?}");
+                    pattern: "{controller=Account}/{action=Login}/{id?}");
             });
         }
     }

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using ReclameAquiDoTrader.Business.Core.Communication.Notificacoes;
+using ReclameAquiDoTrader.Business.Interfaces.Identity;
 using ReclameAquiDoTrader.UI.Identity.Models;
 using ReclameAquiDoTrader.UI.ViewModels.AcessoViewModel;
 using System;
@@ -13,15 +14,16 @@ using System.Threading.Tasks;
 namespace ReclameAquiDoTrader.UI.Controllers
 {
     [AllowAnonymous]
-    public class AcessoController : MainController
+    public class AccountController : MainController
     {
         private readonly SignInManager<Usuario> _signInManager;
         private readonly UserManager<Usuario> _userManager;
 
-        public AcessoController(
+        public AccountController(
                                 SignInManager<Usuario> signInManager,
                                 UserManager<Usuario> userManager,
-                                INotificador notificador) : base(notificador)
+                                INotificador notificador,
+                                IUsuarioIdentity usuarioIdentity) : base(usuarioIdentity,notificador)
         {
             _signInManager = signInManager;
             _userManager = userManager;
@@ -29,14 +31,14 @@ namespace ReclameAquiDoTrader.UI.Controllers
 
         
         [HttpGet]
-        public IActionResult Entrar()
+        public IActionResult Login()
         {
             return View();
         }
 
         
         [HttpPost]
-        public async Task<IActionResult> Entrar(SignInViewModel viewmModel)
+        public async Task<IActionResult> Login(SignInViewModel viewmModel)
         {
             if (!ModelState.IsValid)
                 return View(viewmModel);
