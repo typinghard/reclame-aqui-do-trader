@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ReclameAquiDoTrader.Business.Core.Communication.Notificacoes;
+using ReclameAquiDoTrader.Business.Interfaces.Identity;
 using System.Linq;
 
 namespace ReclameAquiDoTrader.UI.Controllers
@@ -9,9 +10,11 @@ namespace ReclameAquiDoTrader.UI.Controllers
     public class MainController : Controller
     {
         private readonly INotificador _notificador;
-
-        protected MainController(INotificador notificador)
+        public readonly IUsuarioIdentity UsuarioLogado;
+        protected MainController(IUsuarioIdentity usuarioIdentity,
+                                 INotificador notificador)
         {
+            UsuarioLogado = usuarioIdentity;
             _notificador = notificador;
         }
 
