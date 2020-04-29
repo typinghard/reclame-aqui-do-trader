@@ -14,6 +14,9 @@
 
     <title>@ViewData["Title"] | Entrar</title>
 
+    <!-- Ladda style -->
+    <link href="~/lib/ladda/css/ladda-themeless.min.css" rel="stylesheet">
+
     <link href="~/css/site.min.css" rel="stylesheet">
 
 </head>
@@ -23,22 +26,23 @@
     <div class="middle-box text-center loginscreen animated fadeInDown">
         <div>
             <h3>Bem-vindo ao Reclame Aqui do Trader</h3>
-            <form class="m-t" role="form" asp-action="Entrar" method="post">
+            <form class="m-t" id="form-login" role="form" asp-action="Entrar" method="post">
                 <div class="form-group">
-                    <input type="email" asp-for="Email" class="form-control">
+                    <input type="email" asp-for="Email" placeholder="E-mail" class="form-control" required>
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
+
                 <div class="form-group">
-                    <input type="password" asp-for="Password" class="form-control">
+                    <input type="password" asp-for="Password" placeholder="Senha" class="form-control" required>
                     <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
 
                 @if (ViewData["Erro"] != null)
                 {
-                    <div asp-validation-summary="All" class="alert alert-danger text-danger"></div>
+                    <div asp-validation-summary="All" class="alert alert-danger text-danger" id="errors"></div>
                 }
 
-                <button type="submit" class="btn btn-primary block full-width m-b">Entrar</button>
+                <button type="submit" class="ladda-button ladda-button-demo btn btn-primary block full-width m-b" data-style="zoom-in">Entrar</button>
 
             </form>
             <p class="m-t"> <small>Inspinia we app framework base on Bootstrap 3 &copy; 2019</small> </p>
@@ -46,7 +50,13 @@
     </div>
 
     <!-- Mainly scripts -->
-    <script src="~/js/site.min.js"></script>
+    <script src="~/js/login.min.js"></script>
+    <script src="~/lib/Popper/popper.min.js"></script>
+
+    <!-- Ladda -->
+    <script src="~/lib/ladda/js/spin.min.js"></script>
+    <script src="~/lib/ladda/js/ladda.min.js"></script>
+    <script src="~/lib/ladda/js/ladda.jquery.min.js"></script>
 
 </body>
 
@@ -55,3 +65,48 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
+
+<script>
+    $(document).ready(function () {
+
+        // Bind normal buttons
+        Ladda.bind('.ladda-button', { timeout: 750 });
+
+        // Bind progress buttons and simulate loading progress
+        Ladda.bind('.progress-demo .ladda-button', {
+            callback: function (instance) {
+                var progress = 0;
+                var interval = setInterval(function () {
+                    progress = Math.min(progress + Math.random() * 0.1, 1);
+                    instance.setProgress(progress);
+
+                    if (progress === 1) {
+                        instance.stop();
+                        clearInterval(interval);
+                    }
+                }, 200);
+            }
+        });
+
+
+        var l = $('.ladda-button-demo').ladda();
+
+        l.click(function () {
+            // Start loading
+            l.ladda('start');
+
+            $("#form-login")
+                .submit(); //end .submit()   
+
+
+            // Timeout example
+            // Do something in backend and then stop ladda
+            setTimeout(function () {
+                l.ladda('stop');
+            }, 12000)
+
+
+        });
+
+    });
+</script>

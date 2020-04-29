@@ -27,15 +27,16 @@ namespace ReclameAquiDoTrader.UI.Controllers
             _userManager = userManager;
         }
 
-        
+
         [HttpGet]
         public IActionResult Entrar()
         {
             return View();
         }
 
-        
+
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Entrar(SignInViewModel viewmModel)
         {
             if (!ModelState.IsValid)
@@ -51,12 +52,14 @@ namespace ReclameAquiDoTrader.UI.Controllers
                          signInResult.RequiresTwoFactor ? "Autenticação por 2 fatores requerido" :
                          "Usuário ou Senha incorretos";
 
+            NotificarErro(motivo);
+            ModelState.AddModelError("Entrar", motivo);
             ViewData["Erro"] = motivo;
 
             return View(viewmModel);
         }
 
-        
+
         [HttpGet]
         public async Task<IActionResult> Sair()
         {

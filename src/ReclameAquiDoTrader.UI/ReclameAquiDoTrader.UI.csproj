@@ -82,4 +82,6 @@
     <None Include="bundleconfig.json" />
   </ItemGroup>
 
+  <ProjectExtensions><VisualStudio><UserProperties bundleconfig_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
+
 </Project>
