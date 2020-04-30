@@ -22,33 +22,74 @@
 </head>
 
 <body class="gray-bg">
+    <div class="row">
+        <div class="loginColumns animated fadeInDown">
+            <div class="col-lg-12 shadow p-3 mb-5 bg-white rounded">
+                <div class="ibox border-bottom">
+                    <div class="ibox-content" style="display: flex;">
+                        <div class="white-bg col-md-6 m-t / m-t-(xs,sm,md,lg,xl) border-right">
+                            <h2 class="font-bold text-center">Reclame Aqui do Trader!</h2>
+                            <hr class="hr-line-dashed">
+                            <p class="text-justify">
+                                Este login destina-se aos adiministradores do site, faça o login para ter acesso aos paineis administrativos.
+                            </p>
 
-    <div class="middle-box text-center loginscreen animated fadeInDown">
-        <div>
-            <h3>Bem-vindo ao Reclame Aqui do Trader</h3>
-            <form class="m-t" id="form-login" role="form" asp-action="Login" method="post">
-                <div class="form-group">
-                    <input type="email" asp-for="Email" placeholder="E-mail" class="form-control" required>
-                    <span asp-validation-for="Email" class="text-danger"></span>
+                            <p class="text-justify font-weight-normal">
+                                Caso tenha perdido a senha, para mais informações entre em contato no <email email-domain="administracao.com">contato</email>.
+                            </p>
+
+                        </div>
+                        <div class="col-md-6 m-t / m-t-(xs,sm,md,lg,xl)">
+                            <div>
+                                <h2 class="font-bold text-center">Login</h2>
+                                <form class="m-t" id="form-login" role="form" asp-action="Login" method="post">
+
+                                    <vc:Summary></vc:Summary>
+
+                                    <div class="form-group">
+                                        <div class="input-group m-b">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-addon">
+                                                    <i class="fa fa-user"></i>
+                                                </span>
+                                            </div>
+                                            <input type="email" asp-for="Email" placeholder="E-mail" class="form-control" required>
+                                        </div>
+                                        <span asp-validation-for="Email" class="text-danger"></span>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="input-group m-b">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-addon">
+                                                    <i class="fa fa-lock"></i>
+                                                </span>
+                                            </div>
+                                            <input type="password" asp-for="Password" placeholder="Senha" class="form-control" required>
+                                        </div>
+                                        <span asp-validation-for="Password" class="text-danger"></span>
+                                    </div>
+
+                                    <button type="submit" class="ladda-button ladda-button-demo btn btn-primary block full-width m-b" data-style="zoom-out">Entrar</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
-                <div class="form-group">
-                    <input type="password" asp-for="Password" placeholder="Senha" class="form-control" required>
-                    <span asp-validation-for="Password" class="text-danger"></span>
+                <hr />
+                <div class="row">
+                    <div class="col-md-6">
+                        Reclame Aqui do Trader - Todos os Direitos Reservados
+                    </div>
+                    <div class="col-md-6 text-right">
+                        <small>© 2018-@DateTime.UtcNow.Year</small>
+                    </div>
                 </div>
+            </div>
 
-                <vc:Summary></vc:Summary>
-                @*@if (ViewData["Erro"] != null)
-                {
-                    <div asp-validation-summary="All" class="alert alert-danger text-danger" id="errors"></div>
-                }*@
-
-                <button type="submit" class="ladda-button ladda-button-demo btn btn-primary block full-width m-b" data-style="zoom-out">Entrar</button>
-
-            </form>
-            <p class="m-t"> <small>Inspinia we app framework base on Bootstrap 3 &copy; 2019</small> </p>
         </div>
     </div>
+
 
     <!-- Mainly scripts -->
     <script src="~/js/login.min.js"></script>
@@ -68,6 +109,7 @@
 
 <script>
     $(document).ready(function () {
+        $.ajaxSetup({ cache: false });
 
         // Bind normal buttons
         Ladda.bind('.ladda-button', { timeout: 750 });
@@ -95,18 +137,35 @@
             // Start loading
             l.ladda('start');
 
-            $("#form-login")
-                .submit(); //end .submit()
-
+            EnviaFormulario();
 
             // Timeout example
             // Do something in backend and then stop ladda
             setTimeout(function () {
                 l.ladda('stop');
             }, 1300)
-
-
         });
 
     });
+
+
+    function EnviaFormulario() {
+
+        $('form').submit(function () {
+            $.ajax({
+                url: "/entrar",
+                type: 'POST',
+                success: function (result) {
+                    console.log("AQUI");
+                    if (result.success) {
+                        console.log("SUCESSO");
+                    } else {
+                        console.log("ERRO");
+                    }
+                }
+            });
+            return false;
+        });
+    }
+
 </script>

@@ -5,10 +5,6 @@ using ReclameAquiDoTrader.Business.Core.Communication.Notificacoes;
 using ReclameAquiDoTrader.Business.Interfaces.Identity;
 using ReclameAquiDoTrader.UI.Identity.Models;
 using ReclameAquiDoTrader.UI.ViewModels.AcessoViewModel;
-using System;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ReclameAquiDoTrader.UI.Controllers
@@ -21,16 +17,15 @@ namespace ReclameAquiDoTrader.UI.Controllers
 
         public AccountController(
                                 SignInManager<Usuario> signInManager,
-                                UserManager<Usuario> userManager,
                                 INotificador notificador,
-                                IUsuarioIdentity usuarioIdentity) : base(usuarioIdentity,notificador)
+                                IUsuarioIdentity usuarioIdentity) : base(usuarioIdentity, notificador)
         {
             _signInManager = signInManager;
-            _userManager = userManager;
         }
 
 
         [HttpGet]
+        [Route("entrar")]
         public IActionResult Login()
         {
             return View();
@@ -38,6 +33,7 @@ namespace ReclameAquiDoTrader.UI.Controllers
 
 
         [HttpPost]
+        [Route("entrar")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(SignInViewModel viewModel)
         {
@@ -56,7 +52,7 @@ namespace ReclameAquiDoTrader.UI.Controllers
 
             NotificarErro(motivo);
 
-            return View(viewModel);
+            return CustomResponse();
         }
 
 
