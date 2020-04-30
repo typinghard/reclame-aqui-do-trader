@@ -1,15 +1,27 @@
-﻿using System;
+﻿using ReclameAquiDoTrader.Business.Core.DomainObjects;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace ReclameAquiDoTrader.Business.ValueObjects
 {
     public class TelefoneList
     {
-        public List<Telefone> _telefones { get; set; }
+        private List<Telefone> _telefones { get; set; }
         public IReadOnlyCollection<Telefone> Telefones { get { return _telefones; } }
+        public void Adicionar(Telefone telefone)
+        {
+            if (_telefones == null)
+                _telefones = new List<Telefone>();
+
+            if (_telefones.Any(t => t == telefone))
+                return;
+
+            _telefones.Add(telefone);
+        }
     }
-    public class Telefone
+    public class Telefone : ValueObject<Telefone>
     {
         public string Numero { get; }
         public string DDD { get { return Numero?.Substring(0, 2); } }
@@ -20,24 +32,7 @@ namespace ReclameAquiDoTrader.Business.ValueObjects
 
             Numero = numero;
         }
-
-        public override bool Equals(object obj)
-        {
-            var other = obj as Telefone;
-
-            return other != null ? Equals(other) : Equals(obj as string);
-        }
-        public bool Equals(Telefone other) => other != null && Numero == other.Numero;
-        public bool Equals(string other) => Numero == other;
-        public static bool operator ==(Telefone a, Telefone b)
-        {
-            if (ReferenceEquals(a, b)) return true;
-            if (((object)a == null) || ((object)b == null)) return false;
-
-            return a.Numero == b.Numero;
-        }
-        public static bool operator !=(Telefone a, Telefone b) => !(a == b);
-        public override int GetHashCode() => Numero.GetHashCode();
+        
         public override string ToString() => Numero;
     }
 }

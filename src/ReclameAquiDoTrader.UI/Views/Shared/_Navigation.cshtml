@@ -12,14 +12,14 @@
                     </ul>
                 </div>
                 <div class="logo-element">
-                    IN+
+                    RADT
                 </div>
             </li>
-            <li class="@Html.IsSelected(controller: "Home", action: "Main")">
-                <a href="@Url.Action("Main", "Home")"><i class="fa fa-diamond"></i> <span class="nav-label">Main</span> <span class="label label-primary float-right">Main</span></a>
+            <li class="@Html.IsSelected(controller: "Avaliacoes", action: "Index")">
+                <a href="@Url.Action("Index", "Avaliacoes")"><i class="fa fa-comments"></i> <span class="nav-label">Avaliações</span> <span class="label label-primary float-right">114</span></a>
             </li>
-            <li class="@Html.IsSelected(controller: "Home", action: "Minor")">
-                <a href="@Url.Action("Minor", "Home")"><i class="fa fa-server"></i> <span class="nav-label">Minor</span></a>
+            <li class="@Html.IsSelected(controller: "Mentores", action: "index")">
+                <a href="@Url.Action("index", "Mentores")"><i class="fa fa-graduation-cap"></i> <span class="nav-label">Mentores</span></a>
             </li>
         </ul>
     </div>
