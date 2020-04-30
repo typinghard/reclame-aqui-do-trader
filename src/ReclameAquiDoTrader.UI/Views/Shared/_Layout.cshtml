@@ -7,7 +7,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
     <link rel="shortcut icon" href="~/favicon.ico" type="image/x-icon">
-    <link rel="icon" href="~/favicon.ico" type="image/x-icon">
 
     <!-- Add local styles, mostly for plugins css file -->
     @if (IsSectionDefined("Styles"))
@@ -43,9 +42,9 @@
     </div>
     <!-- End wrapper-->
 
-
-    <script src="~/js/site.min.js"></script>
     <script src="~/lib/Popper/popper.min.js"></script>
+    <script src="~/js/site.min.js"></script>
+
 
     @RenderSection("scripts", required: false)
 </body>
