@@ -65,7 +65,7 @@ namespace ReclameAquiDoTrader.Data.Repositories
             }
             catch
             {
-                _notificador.Handle(new Notificacao("Houve um problema com a persistência dos dados"));
+                _notificador.Handle(new Notificacao("", "Houve um problema com a persistência dos dados"));
             }
         }
     }

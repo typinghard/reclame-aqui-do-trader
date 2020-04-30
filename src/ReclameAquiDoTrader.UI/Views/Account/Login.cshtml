@@ -55,7 +55,7 @@
                                             </div>
                                             <input type="email" asp-for="Email" placeholder="E-mail" class="form-control" required>
                                         </div>
-                                        <span asp-validation-for="Email" class="text-danger"></span>
+                                        <span class="text-danger msg-validacao" name="Email"></span>
                                     </div>
 
                                     <div class="form-group">
@@ -67,7 +67,7 @@
                                             </div>
                                             <input type="password" asp-for="Password" placeholder="Senha" class="form-control" required>
                                         </div>
-                                        <span asp-validation-for="Password" class="text-danger"></span>
+                                        <span class="text-danger msg-validacao" name="Password"></span>
                                     </div>
 
                                     <button type="submit" class="ladda-button ladda-button-demo btn btn-primary block full-width m-b" data-style="zoom-out">Entrar</button>
@@ -131,7 +131,7 @@
         });
 
 
-        var l = $('.ladda-button-demo').ladda();
+
 
         l.click(function () {
             // Start loading
@@ -149,22 +149,39 @@
     });
 
 
-    function EnviaFormulario() {
+    $('#form-login').submit(function () {
 
-        $('form').submit(function () {
-            $.ajax({
-                url: "/entrar",
-                type: 'POST',
-                success: function (result) {
-                    console.log("AQUI");
-                    if (result.success) {
-                        console.log("SUCESSO");
-                    } else {
-                        console.log("ERRO");
-                    }
-                }
-            });
-            return false;
+        var l = $('.ladda-button-demo').ladda();
+        l.ladda('start');
+
+        $.ajax({
+            url: this.action,
+            type: 'POST',
+            processData: false,
+            contentType: false,
+            data: new FormData(this),
+            success: function (result) {
+                ExibeErros(result.erros);
+            },
+            error: function (result) {
+
+                console.log("ERRO DO AJAX");
+
+            },
+            complete: function (result) {
+                var l = $('.ladda-button-demo').ladda();
+                l.ladda('stop');
+            }
+        });
+        return false;
+    });
+
+
+    function ExibeErros(erros) {
+        $(erros).each(function (index, erro) {
+
+            $('[name="' + erro.chave + '"].msg-validacao').html(erro.mensagem + '</br>');
+
         });
     }
 

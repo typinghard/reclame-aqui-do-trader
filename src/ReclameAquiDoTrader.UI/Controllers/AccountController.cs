@@ -25,7 +25,6 @@ namespace ReclameAquiDoTrader.UI.Controllers
 
 
         [HttpGet]
-        [Route("entrar")]
         public IActionResult Login()
         {
             return View();
@@ -33,12 +32,11 @@ namespace ReclameAquiDoTrader.UI.Controllers
 
 
         [HttpPost]
-        [Route("entrar")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(SignInViewModel viewModel)
         {
             if (!ModelState.IsValid)
-                return View(viewModel);
+                return CustomResponse(ModelState);
 
             var signInResult = await _signInManager.PasswordSignInAsync(viewModel.Email, viewModel.Password, true, false);
 
@@ -50,7 +48,7 @@ namespace ReclameAquiDoTrader.UI.Controllers
                          signInResult.RequiresTwoFactor ? "Autenticação por 2 fatores requerido" :
                          "Usuário ou Senha incorretos";
 
-            NotificarErro(motivo);
+            NotificarErro("Email", motivo);
 
             return CustomResponse();
         }

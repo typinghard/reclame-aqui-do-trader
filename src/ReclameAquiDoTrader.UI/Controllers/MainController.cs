@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using ReclameAquiDoTrader.Business.Core.Communication.Notificacoes;
 using ReclameAquiDoTrader.Business.Interfaces.Identity;
 using System.Linq;
@@ -30,15 +31,31 @@ namespace ReclameAquiDoTrader.UI.Controllers
                 return Ok(result);
             }
 
-            return BadRequest(new
+            return Json(new
             {
-                erro = string.Join(", ", _notificador.ObterNotificacoes().Select(n => n.Mensagem))
+                erros = _notificador.ObterNotificacoes()
             });
         }
 
-        protected void NotificarErro(string mensagem)
+        protected void NotificarErro(string chave, string mensagem)
         {
-            _notificador.Handle(new Notificacao(mensagem));
+            _notificador.Handle(new Notificacao(chave, mensagem));
+        }
+
+        protected IActionResult CustomResponse(ModelStateDictionary modelState)
+        {
+            if (!modelState.IsValid) NotificarErroModelInvalida(modelState);
+            return CustomResponse();
+        }
+
+        protected void NotificarErroModelInvalida(ModelStateDictionary modelState)
+        {
+            foreach (var erro in modelState)
+            {
+                erro.Value.Errors
+                        .ToList()
+                        .ForEach(x => NotificarErro(erro.Key, x.ErrorMessage != null ? x.ErrorMessage : x.Exception.Message));
+            }
         }
     }
 }
