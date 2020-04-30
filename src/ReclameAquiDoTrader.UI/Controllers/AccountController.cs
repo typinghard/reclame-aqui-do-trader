@@ -39,12 +39,12 @@ namespace ReclameAquiDoTrader.UI.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(SignInViewModel viewmModel)
+        public async Task<IActionResult> Login(SignInViewModel viewModel)
         {
             if (!ModelState.IsValid)
-                return View(viewmModel);
+                return View(viewModel);
 
-            var signInResult = await _signInManager.PasswordSignInAsync(viewmModel.Email, viewmModel.Password, true, false);
+            var signInResult = await _signInManager.PasswordSignInAsync(viewModel.Email, viewModel.Password, true, false);
 
             if (signInResult.Succeeded)
                 return RedirectToAction("Index", "Home");
@@ -55,10 +55,8 @@ namespace ReclameAquiDoTrader.UI.Controllers
                          "Usuário ou Senha incorretos";
 
             NotificarErro(motivo);
-            ModelState.AddModelError("Entrar", motivo);
-            ViewData["Erro"] = motivo;
 
-            return View(viewmModel);
+            return View(viewModel);
         }
 
 

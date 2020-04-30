@@ -37,10 +37,11 @@
                     <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
 
-                @if (ViewData["Erro"] != null)
+                <vc:Summary></vc:Summary>
+                @*@if (ViewData["Erro"] != null)
                 {
                     <div asp-validation-summary="All" class="alert alert-danger text-danger" id="errors"></div>
-                }
+                }*@
 
                 <button type="submit" class="ladda-button ladda-button-demo btn btn-primary block full-width m-b" data-style="zoom-out">Entrar</button>
 
@@ -102,7 +103,7 @@
             // Do something in backend and then stop ladda
             setTimeout(function () {
                 l.ladda('stop');
-            }, 12000)
+            }, 1300)
 
 
         });
