@@ -15,7 +15,7 @@ namespace ReclameAquiDoTrader.UI.Extensions
             {
                 using (var dbSession = store.OpenSession())
                 {
-                    dbSession.Query<AppUser>().Take(0).ToList();
+                    dbSession.Query<Usuario>().Take(0).ToList();
                 }
             }
             catch (Raven.Client.Exceptions.Database.DatabaseDoesNotExistException)

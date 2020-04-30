@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ReclameAquiDoTrader.Business.Aggregates;
 using ReclameAquiDoTrader.Business.Core.Communication.Notificacoes;
+using ReclameAquiDoTrader.Business.Interfaces.Identity;
 using ReclameAquiDoTrader.Business.Interfaces.Repository;
 using ReclameAquiDoTrader.UI.ViewModels.MentoresViewModels;
 
@@ -14,7 +15,8 @@ namespace ReclameAquiDoTrader.UI.Controllers
 
         public MentoresController(INotificador notificador,
                                   IMapper mapper,
-                                  IMentorRepository mentorRepository) : base(notificador)
+                                  IMentorRepository mentorRepository,
+                                  IUsuarioIdentity usuarioIdentity) : base(usuarioIdentity, notificador)
         {
             _mapper = mapper;
             _mentorRepository = mentorRepository;
