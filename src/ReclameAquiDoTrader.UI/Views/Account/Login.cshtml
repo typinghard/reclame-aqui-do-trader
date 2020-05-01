@@ -137,7 +137,6 @@
             // Start loading
             l.ladda('start');
 
-            EnviaFormulario();
 
             // Timeout example
             // Do something in backend and then stop ladda
@@ -161,7 +160,11 @@
             contentType: false,
             data: new FormData(this),
             success: function (result) {
-                ExibeErros(result.erros);
+
+                if (result.erros === undefined)
+                    window.location.href = '/Home/Index';
+                else
+                    ExibeErros(result.erros);
             },
             error: function (result) {
 
