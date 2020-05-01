@@ -5,6 +5,7 @@ using ReclameAquiDoTrader.Business.Core.Communication.Notificacoes;
 using ReclameAquiDoTrader.Business.Interfaces.Identity;
 using ReclameAquiDoTrader.UI.Identity.Models;
 using ReclameAquiDoTrader.UI.ViewModels.AcessoViewModel;
+using System;
 using System.Threading.Tasks;
 
 namespace ReclameAquiDoTrader.UI.Controllers
@@ -13,8 +14,6 @@ namespace ReclameAquiDoTrader.UI.Controllers
     public class AccountController : MainController
     {
         private readonly SignInManager<Usuario> _signInManager;
-        private readonly UserManager<Usuario> _userManager;
-
         public AccountController(
                                 SignInManager<Usuario> signInManager,
                                 INotificador notificador,
@@ -30,7 +29,6 @@ namespace ReclameAquiDoTrader.UI.Controllers
             return View();
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(SignInViewModel viewModel)
@@ -41,7 +39,10 @@ namespace ReclameAquiDoTrader.UI.Controllers
             var signInResult = await _signInManager.PasswordSignInAsync(viewModel.Email, viewModel.Password, true, false);
 
             if (signInResult.Succeeded)
-                return RedirectToAction("Index", "Home");
+                return CustomResponse(new
+                {
+                    url = Url.Action("Index", "Home")
+                });
 
             var motivo = signInResult.IsLockedOut ? "Usuário temporariamente bloqueado por tentativas inválidas" :
                          signInResult.IsNotAllowed ? "Usuário não está autorizado para logar" :

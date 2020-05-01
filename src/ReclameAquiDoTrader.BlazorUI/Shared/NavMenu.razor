@@ -1,0 +1,31 @@
+﻿<nav class="navbar-default navbar-static-side" role="navigation">
+    <div class="sidebar-collapse">
+        <ul class="nav metismenu" id="side-menu">
+            <li class="nav-header">
+                <div class="dropdown profile-element">
+                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                        <span class="block m-t-xs font-bold">@Usuario</span>
+                        <span class="text-muted text-xs block">Title <b class="caret"></b></span>
+                    </a>
+                    <ul class="dropdown-menu animated fadeInRight m-t-xs" style="position: absolute; top: 91px; left: 0px; will-change: top, left;">
+                        <li><a class="dropdown-item" asp-controller="Account" asp-action="Sair">Sair</a></li>
+                    </ul>
+                </div>
+                <div class="logo-element">
+                    RADT
+                </div>
+            </li>
+
+            <li class="@HtmlHelpers.IsSelected(controller: "Avaliacoes", action: "Index")">
+                <a href="avaliacoes"><i class="fa fa-comments"></i> <span class="nav-label">Avaliações</span> <span class="label label-primary float-right">114</span></a>
+            </li>
+            <li class="@HtmlHelpers.IsSelected(controller: "Mentores", action: "index")">
+                <a href="mentores"><i class="fa fa-graduation-cap"></i> <span class="nav-label">Mentores</span></a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+@code{
+    private string Usuario => "Teste";
+}

@@ -12,6 +12,7 @@ namespace ReclameAquiDoTrader.Data.Extensions
         public static void Inicializar(this IDocumentStore store)
         {
             EnsureExists(store);
+
             IndexesSetup.Execute(store);
         }
         private static IDocumentStore EnsureExists(IDocumentStore store)
@@ -32,5 +33,23 @@ namespace ReclameAquiDoTrader.Data.Extensions
             }
             return store;
         }
+
+        //public static void Seed(IDocumentStore store)
+        //{
+        //    using (var session = store.OpenSession())
+        //    {
+        //        var parceiros = session.Query<Usu>().ToList();
+        //        if (!parceiros.Any(p => p.Id == CodigosParceiros.Bndes))
+        //        {
+        //            var parceiroBndes = new Parceiro(CodigosParceiros.Bndes)
+        //            {
+        //                LandingPageCadatral = LandingPages.Bndes,
+        //                Nome = "BNDES"
+        //            };
+        //            session.Store(parceiroBndes);
+        //            session.SaveChanges();
+        //        }
+        //    }
+        //}
     }
 }

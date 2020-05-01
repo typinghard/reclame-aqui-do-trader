@@ -20,6 +20,7 @@ namespace ReclameAquiDoTrader.UI.Config
             services.AddScoped<IMentorRepository, MentorRepository>();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
             services.AddScoped<IUsuarioIdentity, UsuarioLogado>();
 
             return services;

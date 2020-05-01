@@ -22,6 +22,7 @@
 </head>
 
 <body class="gray-bg">
+
     <div class="row">
         <div class="loginColumns animated fadeInDown">
             <div class="col-lg-12 shadow p-3 mb-5 bg-white rounded">
@@ -35,7 +36,7 @@
                             </p>
 
                             <p class="text-justify font-weight-normal">
-                                Caso tenha perdido a senha, para mais informações entre em contato no <email email-domain="administracao.com">contato</email>.
+                                Caso tenha perdido a senha, para mais informações entre em contato no <email email-domain="reclameaquidotraderz.com">contato</email>.
                             </p>
 
                         </div>
@@ -90,7 +91,6 @@
         </div>
     </div>
 
-
     <!-- Mainly scripts -->
     <script src="~/js/login.min.js"></script>
 
@@ -103,52 +103,7 @@
 
 </html>
 
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
-
 <script>
-    $(document).ready(function () {
-        $.ajaxSetup({ cache: false });
-
-        // Bind normal buttons
-        Ladda.bind('.ladda-button', { timeout: 750 });
-
-        // Bind progress buttons and simulate loading progress
-        Ladda.bind('.progress-demo .ladda-button', {
-            callback: function (instance) {
-                var progress = 0;
-                var interval = setInterval(function () {
-                    progress = Math.min(progress + Math.random() * 0.1, 1);
-                    instance.setProgress(progress);
-
-                    if (progress === 1) {
-                        instance.stop();
-                        clearInterval(interval);
-                    }
-                }, 200);
-            }
-        });
-
-
-
-
-        l.click(function () {
-            // Start loading
-            l.ladda('start');
-
-            EnviaFormulario();
-
-            // Timeout example
-            // Do something in backend and then stop ladda
-            setTimeout(function () {
-                l.ladda('stop');
-            }, 1300)
-        });
-
-    });
-
-
     $('#form-login').submit(function () {
 
         var l = $('.ladda-button-demo').ladda();
@@ -161,27 +116,31 @@
             contentType: false,
             data: new FormData(this),
             success: function (result) {
-                ExibeErros(result.erros);
+                window.location.href = result.url;
             },
             error: function (result) {
-
-                console.log("ERRO DO AJAX");
-
+                TratarErro(result);
             },
-            complete: function (result) {
-                var l = $('.ladda-button-demo').ladda();
-                l.ladda('stop');
+            complete: function () {
+                $('.ladda-button-demo').ladda('stop');
             }
         });
         return false;
     });
 
 
-    function ExibeErros(erros) {
-        $(erros).each(function (index, erro) {
+    function TratarErro(resultError) {
+        $('.msg-validacao').html('');
+        $("input.error").removeClass('error');
 
-            $('[name="' + erro.chave + '"].msg-validacao').html(erro.mensagem + '</br>');
+        if (resultError.responseJSON == undefined) {
+            //TO DO
+        }
 
+        let erros = resultError.responseJSON.erros;
+        $(erros).each(function (i, erro) {
+            $('[name="' + erro.chave + '"].msg-validacao').append(erro.mensagem + '</br>');
+            $('input[name="' + erro.chave + '"]').addClass('error');
         });
     }
 

@@ -5,7 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Bogus" Version="29.0.2" />
     <PackageReference Include="FluentAssertions" Version="5.10.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="3.1.3" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
       <PrivateAssets>all</PrivateAssets>
@@ -15,6 +17,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\ReclameAquiDoTrader.Business\ReclameAquiDoTrader.Business\ReclameAquiDoTrader.Business.csproj" />
+    <ProjectReference Include="..\..\src\ReclameAquiDoTrader.UI\ReclameAquiDoTrader.UI.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="UnitTests\ValueObjects\" />
   </ItemGroup>
 
 </Project>

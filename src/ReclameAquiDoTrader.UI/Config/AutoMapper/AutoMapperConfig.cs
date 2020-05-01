@@ -13,7 +13,6 @@ namespace ReclameAquiDoTrader.UI.AutoMapper
             CreateMap<Mentor, AlterarMentorViewModel>().ReverseMap();
             CreateMap<Mentor, RemoverMentorViewModel>().ReverseMap();
 
-
             CreateMap<Avaliacao, CriarAvaliacaoViewModel>().ReverseMap();
             CreateMap<Avaliacao, AlterarAvaliacaoViewModel>().ReverseMap();
             CreateMap<Avaliacao, RemoverAvaliacaoViewModel>().ReverseMap();

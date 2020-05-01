@@ -1,4 +1,5 @@
 ﻿using ReclameAquiDoTrader.Business.Core.DomainObjects;
+using ReclameAquiDoTrader.Business.Statics;
 using ReclameAquiDoTrader.Business.ValueObjects;
 using System;
 using System.Collections.Generic;

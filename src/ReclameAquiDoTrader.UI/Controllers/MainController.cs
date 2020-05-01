@@ -31,7 +31,7 @@ namespace ReclameAquiDoTrader.UI.Controllers
                 return Ok(result);
             }
 
-            return Json(new
+            return BadRequest(new
             {
                 erros = _notificador.ObterNotificacoes()
             });
@@ -54,7 +54,7 @@ namespace ReclameAquiDoTrader.UI.Controllers
             {
                 erro.Value.Errors
                         .ToList()
-                        .ForEach(x => NotificarErro(erro.Key, x.ErrorMessage != null ? x.ErrorMessage : x.Exception.Message));
+                        .ForEach(x => NotificarErro(erro.Key, x.ErrorMessage ?? x.Exception.Message));
             }
         }
     }

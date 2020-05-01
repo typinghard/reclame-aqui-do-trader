@@ -12,10 +12,15 @@
     @if (IsSectionDefined("Styles"))
     {@RenderSection("Styles", required: false)}
 
+
+    
     <link rel="stylesheet" href="~/css/site.min.css" />
 </head>
 <body>
     <div id="wrapper" class="@Html.PageClass()">
+
+        
+
         <partial name="_Navigation" />
         <div id="page-wrapper" class="gray-bg @ViewBag.SpecialClass">
             <partial name="_TopNavbar" />
@@ -24,9 +29,16 @@
         </div>
     </div>
 
+
+
     <script src="~/js/site.min.js"></script>
     <script src="~/lib/Popper/popper.min.js"></script>
 
     @RenderSection("scripts", required: false)
+
+
 </body>
+
+
+
 </html>

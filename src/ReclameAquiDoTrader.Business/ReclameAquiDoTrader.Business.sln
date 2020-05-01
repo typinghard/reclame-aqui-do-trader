@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReclameAquiDoTrader.UI", ".
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{3790C538-0FA8-408A-B947-9891E88B46BC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReclameAquiDoTrader.Business.Tests", "..\..\tests\ReclameAquiDoTrader.Business.Tests\ReclameAquiDoTrader.Business.Tests.csproj", "{788F32DF-9772-4743-AE63-042F1F42B307}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReclameAquiDoTrader.Business.Tests", "..\..\tests\ReclameAquiDoTrader.Business.Tests\ReclameAquiDoTrader.Business.Tests.csproj", "{788F32DF-9772-4743-AE63-042F1F42B307}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

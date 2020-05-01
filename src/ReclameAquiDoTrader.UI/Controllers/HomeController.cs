@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ReclameAquiDoTrader.Business.Core.Communication.Notificacoes;
 using ReclameAquiDoTrader.Business.Interfaces.Identity;
+using ReclameAquiDoTrader.UI.Identity;
 
 namespace ReclameAquiDoTrader.UI.Controllers
 {
