@@ -3,19 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReclameAquiDoTrader.Business", "..\src\ReclameAquiDoTrader.Business\ReclameAquiDoTrader.Business.csproj", "{A4659613-AA68-4AF0-9209-1B22C6AE6B14}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReclameAquiDoTrader.Business", "src\ReclameAquiDoTrader.Business\ReclameAquiDoTrader.Business.csproj", "{A4659613-AA68-4AF0-9209-1B22C6AE6B14}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReclameAquiDoTrader.Data", "..\src\ReclameAquiDoTrader.Data\ReclameAquiDoTrader.Data.csproj", "{5C98EDA4-DDFE-4E52-B442-E4CCBD09BD9B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReclameAquiDoTrader.Data", "src\ReclameAquiDoTrader.Data\ReclameAquiDoTrader.Data.csproj", "{5C98EDA4-DDFE-4E52-B442-E4CCBD09BD9B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReclameAquiDoTrader.UI", "..\src\ReclameAquiDoTrader.UI\ReclameAquiDoTrader.UI.csproj", "{BDD101A9-6DA4-45F2-89F3-9290A0722ABB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReclameAquiDoTrader.UI", "src\ReclameAquiDoTrader.UI\ReclameAquiDoTrader.UI.csproj", "{BDD101A9-6DA4-45F2-89F3-9290A0722ABB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{3790C538-0FA8-408A-B947-9891E88B46BC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReclameAquiDoTrader.Business.Tests", "..\tests\ReclameAquiDoTrader.Business.Tests\ReclameAquiDoTrader.Business.Tests.csproj", "{788F32DF-9772-4743-AE63-042F1F42B307}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReclameAquiDoTrader.Business.Tests", "tests\ReclameAquiDoTrader.Business.Tests\ReclameAquiDoTrader.Business.Tests.csproj", "{788F32DF-9772-4743-AE63-042F1F42B307}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReclameAquiDoTrader.UI.Tests", "..\tests\ReclameAquiDoTrader.UI.Tests\ReclameAquiDoTrader.UI.Tests.csproj", "{59D307C6-0E35-4C0F-AA5C-6276B377AEFD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReclameAquiDoTrader.UI.Tests", "tests\ReclameAquiDoTrader.UI.Tests\ReclameAquiDoTrader.UI.Tests.csproj", "{59D307C6-0E35-4C0F-AA5C-6276B377AEFD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReclameAquiDoTrader.Data.Tests", "..\tests\ReclameAquiDoTrader.Data.Tests\ReclameAquiDoTrader.Data.Tests.csproj", "{BC8F8E73-D70C-472E-A6B0-7F60F7BD9990}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReclameAquiDoTrader.Data.Tests", "tests\ReclameAquiDoTrader.Data.Tests\ReclameAquiDoTrader.Data.Tests.csproj", "{BC8F8E73-D70C-472E-A6B0-7F60F7BD9990}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
