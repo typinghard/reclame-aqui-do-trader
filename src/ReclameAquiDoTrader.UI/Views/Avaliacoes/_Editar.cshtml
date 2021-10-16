@@ -1,0 +1,370 @@
+﻿@model ReclameAquiDoTrader.UI.ViewModels.AvaliacaoViewModels.AlterarAvaliacaoViewModel
+@using  Microsoft.AspNetCore.Antiforgery;
+@using ReclameAquiDoTrader.Business.Enums;
+@inject IAntiforgery antiforgery
+
+<link href="~/lib/datapicker/css/datepicker3.css" rel="stylesheet">
+
+<link href="~/lib/awesome-bootstrap-checkbox/css/awesome-bootstrap-checkbox.css" rel="stylesheet" />
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+    <h4 class="modal-title">Alterar avaliação</h4>
+</div>
+
+<div class="modal-body bg-white">
+
+    <div class="row">
+        <div class="col-lg-12 ">
+            @Html.AntiForgeryToken()
+            <div class="text-danger div-error"></div>
+            <div class="form-group form-group-inline">
+                <div class="col-sm">
+                    <input asp-for="Id" type="hidden" id="id">
+                    <strong><label class="control-label"> Mentor</label></strong>
+                    <br />
+                    <div class="input-group m-b pr-1">
+                        <div class="input-group-prepend">
+                            <span class="input-group-addon">
+                                <i class="fa fa-graduation-cap"></i>
+                            </span>
+                        </div>
+                        <select class="select2_mentor form-control" id="campoMentor" data-url="@Url.Action("ListarRedesSociais", "Mentores")">
+                            <option></option>
+                            @if (Model.Mentores != null)
+                            {
+                                @foreach (var mentor in Model.Mentores)
+                                {
+                                    if (Model.MentorId == mentor.Id)
+                                    {
+                                        <option selected value="@mentor.Id">@mentor.Nome</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@mentor.Id">@mentor.Nome</option>
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                    <span class="alert alert-danger text-danger msg-validacao-mentor invisible" name="Nome">
+                        Campo mentor não pode ser vazio!
+                    </span>
+
+                </div>
+
+                <div class="col-sm m-b col-md-2">
+                    <strong><label class="control-label"> Positivo</label></strong>
+                    <br />
+                    <div class="form-check abc-checkbox abc-checkbox-success form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="chkPositivo" checked="@Model.Positivo">
+                        <label class="form-check-label" for="chkPositivo"> Sim </label>
+                    </div>
+                </div>
+
+                <div class="col-sm m-b col-md-4">
+                    <strong>
+                        <label class="control-label"> Data Expiração</label>
+                    </strong>
+                    <br />
+                    <div class="input-group" id="expiracao">
+                        <div class="input-group date">
+                            <span class="input-group-addon">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                            <input type="text" disabled data-toggle="tooltip" title="Prazo de 48h para resposta contando da data de cadastro" class="form-control mask-expiracao" data-mask="99/99/9999" value="@DateTime.UtcNow.AddHours(48).ToShortDateString()">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="form-group form-group-inline">
+
+                <div class="input-group m-b pr-1 preencher">
+                    <div class="input-group-prepend">
+                        <span class="input-group-addon">
+                            <i class="fa fa-desktop"></i>
+                        </span>
+                    </div>
+                    <select class="select2_redesocial form-control" id="campoRedeSocial">
+                        @foreach (var item in @Html.GetEnumSelectList<ERedeSocialTipo>())
+                        {
+                            if (item.Text.ToUpper() == ERedeSocialTipo.INSTAGRAM.ToString())
+                            {
+                                <option value="@item.Value" selected="selected"> @item.Text </option>
+                            }
+                            else
+                            {
+                                <option value="@item.Value"> @item.Text </option>
+                            }
+                        }
+                    </select>
+                </div>
+
+                <div class="input-group m-b pr-1 preencher">
+                    <div class="input-group-prepend">
+                        <span class="input-group-addon">
+                            <i class="fa fa-globe"></i>
+                        </span>
+                    </div>
+                    <input class="form-control" placeholder="Link do Post" type="text" id="campoUrl" name="RedesSociais" value="">
+                    <div class="input-group-prepend btn-salvar-redeSocial" style="cursor: pointer;" title="Adicionar Rede Social">
+                        <span class="input-group-addon">
+                            <i class="fa fa-plus" style="color: #28a745;"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive border-left border-right text-center mb-3" id="divRedesSociais">
+
+                <div class="col-sm row border-bottom border-top m-0" style="text-align: center;">
+                    <div class="col-sm numero-telefone">
+                        <h4>Post</h4>
+                    </div>
+                    <div class="col-sm acao-telefone">
+                        <h4>Remover</h4>
+                    </div>
+                </div>
+
+                @if (Model.RedesSociais != null)
+                {
+                    @foreach (var redeSocial in Model.RedesSociais)
+                    {
+                        <div class="col-sm row pb-1 border-bottom border-top m-0">
+                            <div class="col-sm pt-2 numero-telefone" data-url="@redeSocial.Url" data-tipo="@redeSocial.Tipo" data-usuario="@redeSocial.Usuario">
+                                @*<i class="@RedeSocialHtmlHelper.ClasseRedeSocial(redeSocial.Tipo)"></i>*@
+                                <span data-toggle="tooltip" title="@redeSocial.Url">
+                                    <a href="@redeSocial.Url" title="@redeSocial.Url">
+                                        @redeSocial.Url
+                                    </a>
+                                </span>
+                            </div>
+                            <a data-toggle="tooltip" class="col-sm btn btn-remover-redeSocial acao-telefone" data-url="@string.Concat(redeSocial.Url, "/" ,redeSocial.Usuario)" title="Remover">
+                                <i class="fa fa-times text-danger" data-toggle="tooltip" title="Remover" style="width:22px;"></i>
+                            </a>
+                        </div>
+                    }
+                }
+
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm">
+                    <hr class="hr-line-dashed" />
+
+                    @await Html.PartialAsync("_Comprovante", new List<ArquivoViewModel>())
+
+                </div>
+            </div>
+
+            @if (Model.ComprovantesCadastrados.Count > 0)
+            {
+                <div class="form-group">
+                    <div class="col-sm">
+                        <hr class="hr-line-dashed" />
+
+
+                        <div class="panel-group" id="accordion">
+                            <div class="panel panel-default">
+                                <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#comprovanteCadastradoCollapse" style="cursor: pointer;height: 40px;" title="Clique para Expandir">
+                                    <h4 class="panel-title">
+                                        <i class="fa fa-file-photo-o"></i>
+                                        <strong><label class="control-label"> Comprovantes Salvos - @Model.ComprovantesCadastrados.Count</label></strong>
+                                    </h4>
+                                </div>
+
+                                <div id="comprovanteCadastradoCollapse" class="panel-collapse collapse in">
+                                    <div class="col-lg-12 mt-3" id="div_comprovantes">
+                                        <div class="row">
+                                            <div class="col-lg-12" id="preview_arquivos">
+                                                @foreach (var arquivo in Model.ComprovantesCadastrados)
+                                                {
+
+                                                    <div class="file-box animated fadeIn">
+                                                        <div class="file">
+
+                                                            <span class="corner"></span>
+
+                                                            @if (arquivo.ContentType == "image/jpeg" || arquivo.ContentType == "image/png")
+                                                            {
+                                                                <div class="image">
+                                                                    <img alt="@arquivo.Nome" class="img-fluid" src="@arquivo.Url">
+                                                                </div>
+                                                            }
+                                                            else
+                                                            {
+                                                                <div class="icon">
+                                                                    <i class="@ArquivoHtmlHelper.ClasseFaIconContentType(arquivo.ContentType)"></i>
+                                                                </div>
+                                                            }
+
+                                                            <div class="file-name">
+                                                                <a title="Download" href="@Url.Action("DownloadComprovante", "Avaliacoes", new { avaliacaoId = arquivo.AvaliacaoId, comprovanteId = arquivo.ComprovanteId })">
+                                                                    <i class="fa fa-download"></i>
+                                                                    <span class="truncate fh-15">
+                                                                        @arquivo.Nome
+                                                                    </span>
+                                                                </a>
+                                                                <br>
+                                                                <small>Adicionado ás: @arquivo.Cadastro</small>
+                                                                <div class="text-left">
+                                                                    <br />
+                                                                    <a class="text-right remover" title="Remover" href="@Url.Action("RemoverComprovante", "Avaliacoes", new { avaliacaoId = arquivo.AvaliacaoId, comprovanteId = arquivo.ComprovanteId })">
+                                                                        <small><i class="fa fa-times-circle-o text-danger"></i> Remover</small>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            }
+
+            <div class="form-group">
+                <div class="col-sm">
+                    <hr class="hr-line-dashed" />
+
+                    <div class="panel-group" id="accordion">
+                        <div class="panel panel-default">
+                            <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#textoCollapse" style="cursor: pointer;height: 40px;" title="Clique para Expandir">
+                                <h4 class="panel-title">
+                                    <i class="fa fa-file-text"></i>
+                                    <strong><label class="control-label"> Texto</label></strong>
+                                </h4>
+                            </div>
+                            <div id="textoCollapse" class="panel-collapse collapse in show">
+                                <div class="panel-body p-0">
+                                    <textarea class="form-control" asp-for="Texto" rows="7" id="texto"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <hr class="hr-line-dashed" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm">
+
+                    <div class="panel-group" id="accordion">
+                        <div class="panel panel-default">
+                            <div class="panel-heading" data-parent="#accordion" href="#respostaMentorCollapse" data-toggle="collapse" style="cursor: pointer;height: 40px;" title="Clique para Expandir">
+                                <h4 class="panel-title">
+                                    <i class="fa fa-file-text"></i>
+                                    <strong><label class="control-label"> Resposta do Mentor</label></strong>
+                                </h4>
+                            </div>
+                            <div id="respostaMentorCollapse" class="panel-collapse collapse in">
+                                <div class="panel-body p-0">
+                                    <textarea class="form-control" asp-for="Resposta" rows="7" id="resposta"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<div class="modal-footer" style="justify-content:left;">
+    <button type="button" class="ladda-button ladda-button-demo btn btn-primary btn-alterar" data-url="@Url.Action("Editar","Avaliacoes")" data-style="zoom-out">Salvar Alterações</button>
+    <button type="button" class="btn btn-white" data-dismiss="modal">Fechar</button>
+</div>
+
+<script>
+    var listaRedesSociaisAux = [];
+    var listaComprovantes = [];
+</script>
+
+@if (Model.RedesSociais != null && Model.RedesSociais.Count > 0)
+{
+
+    @foreach (var redeSocial in Model.RedesSociais)
+    {
+        int tipo;
+        switch (redeSocial.Tipo)
+        {
+            case ERedeSocialTipo.FACEBOOK:
+                tipo = 0;
+                break;
+            case ERedeSocialTipo.INSTAGRAM:
+                tipo = 1;
+                break;
+            default:
+                tipo = -1;
+                break;
+        }
+
+        if (tipo >= 0)
+        {
+            <script>
+                listaRedesSociaisAux.push({
+                    Url: '@redeSocial.Url',
+                    Usuario: '@redeSocial.Usuario',
+                    Tipo: parseInt('@tipo')
+                });
+            </script>
+        }
+    }
+
+}
+
+
+<script src="~/lib/datapicker/js/bootstrap-datepicker.js"></script>
+<script src="~/js/avaliacao.js" charset="utf-8"></script>
+
+<script>
+    $(document).ready(function () {
+        RemoverRedeSocial();
+
+        $('#modalGenerico').on('shown.bs.modal', function (e) {
+            // do cool stuff here all day… no need to change bootstrap
+
+            $(".truncate").dotdotdot({
+                watch: 'window',
+                ellipsis: '...'
+            });
+
+            console.log(listaRedesSociaisAux);
+            console.log(listaRedesSociais);
+
+            if (listaRedesSociaisAux.length > 0)
+                listaRedesSociaisAux.forEach(element => listaRedesSociais.push(element));
+
+            listaRedesSociaisAux = []
+        });
+    });
+
+
+
+    function RemoverRedeSocial() {
+        $('.btn-remover-redeSocial').unbind('click');
+        $('.btn-remover-redeSocial').on("click", function (e) {
+
+            var index = listaRedesSociais.findIndex(n => n.Url === $(this).data('redeSocial'));
+
+            listaRedesSociais.splice(index, 1);
+            $(this).parent().remove();
+        });
+    }
+</script>
+
+@section Scripts {
+
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

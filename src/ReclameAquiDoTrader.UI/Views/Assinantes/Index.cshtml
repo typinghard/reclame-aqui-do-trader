@@ -1,0 +1,103 @@
+﻿@model List<ReclameAquiDoTrader.UI.ViewModels.AssinantesViewModels.DetalhesAssinantesViewModel>
+@using ReclameAquiDoTrader.UI.Extensions;
+
+@{
+    ViewData["Title"] = "Listar Assinantes";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/lib/select2/css/select2_site.min.css" rel="stylesheet">
+<link href="~/lib/select2/css/select2-bootstrap4.min.css" rel="stylesheet">
+<link href="~/lib/bootstrap/dist/css/bootstrap-tagsinput.css" rel="stylesheet">
+<link rel="stylesheet" href="~/lib/footable/css/footable.bootstrap.min.css" />
+
+<style>
+    .footable-filtering-search .input-group-btn {
+        display: none;
+    }
+
+    .footable-filtering-search {
+        width: 100% !important;
+    }
+
+        .footable-filtering-search .input-group {
+            width: 100% !important;
+        }
+
+    .texto-sucesso {
+        color: #28a745;
+    }
+</style>
+
+<div class="ibox" id="lista_asinantes">
+    <div class="ibox-title">
+        <h1>@ViewData["Title"]</h1>
+    </div>
+
+    <div class="ibox-content">
+        <div class="ibox-content">
+
+            <table id="tabela-assinantes"
+                   class="footable table"
+                   data-paging-count-format="{CP} de {TP} páginas"
+                   data-paging="true"
+                   data-sorting="true"
+                   data-filtering="true"
+                   data-paging-limit="3"
+                   data-filter-placeholder="Pesquise aqui...">
+                <thead>
+                    <tr>
+                        <th>WhatsApp</th>
+                        <th data-breakpoints="xs">Data Cadastro</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var assinante in Model)
+                    {
+                        <tr>
+                            <td>
+                                <div>
+                                    @if (assinante.Telefone != null)
+                                    {
+                                        <span>@assinante.Telefone.FormataTelefone()</span>
+                                        <br />
+                                    }
+                                </div>
+                            </td>
+                            <td>
+                                <div>
+                                    @assinante.CriadoAs.FormataData()
+                                </div>
+                            </td>
+                            <td>
+                                <div class="d-inline-flex">
+                                    <a asp-controller="Assinantes" asp-action="Detalhes" asp-route-id="@assinante.Id"
+                                       type="button" class="btn btn-outline btn-link text-warning abre-modal-generico" style="min-width: 28px; cursor: pointer;"
+                                       data-toggle="tooltip" title="Detalhes">
+                                        <i class="fa fa-search" data-toggle="tooltip"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="~/lib/footable/js/footable.3.6.1.min.js"></script>
+
+@section Scripts
+ {
+
+    <script>
+        $('[data-toggle="tooltip"]').tooltip();
+
+        $(document).ready(function () {
+            $('.footable').footable();
+        });
+    </script>
+}

@@ -8,8 +8,10 @@ namespace ReclameAquiDoTrader.Data.Repositories
     public class AvaliacaoRepository : Repository<Avaliacao>, IAvaliacaoRepository
     {
         public AvaliacaoRepository(IDocumentSession session,
-                                   INotificador notificador) : base(session, notificador)
+                                   IAsyncDocumentSession asyncSession,
+                                   INotificador notificador) : base(session, asyncSession, notificador)
         {
         }
+
     }
 }

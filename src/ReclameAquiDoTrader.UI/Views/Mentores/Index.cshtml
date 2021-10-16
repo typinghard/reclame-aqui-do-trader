@@ -1,12 +1,197 @@
-﻿@{
-    ViewData["Title"] = "Mentores";
+﻿@model ReclameAquiDoTrader.UI.ViewModels.MentoresViewModels.DetalhesMentoresItemViewModels
+@using ReclameAquiDoTrader.UI.Extensions;
+@using ReclameAquiDoTrader.Business.Enums;
+@using  Microsoft.AspNetCore.Antiforgery;
+@inject IAntiforgery antiforgery
+
+@{
+    ViewData["Title"] = "Listar Mentores";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Bem-vindo</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<link href="~/lib/select2/css/select2_site.min.css" rel="stylesheet">
+<link href="~/lib/select2/css/select2-bootstrap4.min.css" rel="stylesheet">
+<link href="~/lib/bootstrap/dist/css/bootstrap-tagsinput.css" rel="stylesheet">
+<link rel="stylesheet" href="~/lib/footable/css/footable.bootstrap.min.css" />
+
+<style>
+    .footable-filtering-search .input-group-btn {
+        display: none;
+    }
+
+    .footable-filtering-search {
+        width: 100% !important;
+    }
+
+        .footable-filtering-search .input-group {
+            width: 100% !important;
+        }
+
+    .texto-sucesso {
+        color: #28a745;
+    }
+</style>
+
+<div class="ibox" id="lista_mentores">
+    <div class="ibox-title">
+        <h1>@ViewData["Title"]</h1>
+        <div class="ibox-tools">
+            <a asp-controller="Mentores" asp-action="Cadastrar"
+               type="button" class="btn btn-primary abre-modal-generico"
+               data-toggle="tooltip"
+               data-original-title="Cadastrar Mentor">
+                <i class="fa fa-plus"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="ibox-content">
+        <div class="ibox-content">
+
+            <table id="tabela-mentores"
+                   class="footable table"
+                   data-paging-count-format="{CP} de {TP} páginas"
+                   data-paging="true"
+                   data-sorting="true"
+                   data-filtering="true"
+                   data-paging-limit="3"
+                   data-filter-placeholder="Pesquise aqui...">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th data-breakpoints="xs">Site</th>
+                        <th data-breakpoints="xs">Data Criação</th>
+                        <th data-breakpoints="xs">Última Atualização</th>
+                        <th data-breakpoints="xs">Redes Sociais</th>
+                        <th data-breakpoints="xs">Telefones</th>
+                        <th data-breakpoints="xs">Emails</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var mentor in Model.Mentores)
+                    {
+                        <tr>
+                            <td>
+                                <div>
+                                    @mentor.Nome
+                                </div>
+                            </td>
+                            <td>
+                                <div>
+                                    <a href="@string.Concat("https://", mentor.Site)" target="_blank" title="@mentor.Site">@string.Concat("https://", mentor.Site)</a>
+                                </div>
+                            </td>
+                            <td>
+                                <div>
+                                    @mentor.CriadoAs.FormataData()
+                                </div>
+                            </td>
+                            <td>
+                                <div>
+                                    <span title="@mentor.AtualizadoAs.FormataData()"> @mentor.AtualizadoAs.TempoTras()</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div>
+                                    @if (mentor.RedesSociais != null)
+                                    {
+                                        foreach (var redeSocial in mentor.RedesSociais)
+                                        {
+                                            var url = string.Concat("https://", @redeSocial.Url, "/", @redeSocial.Usuario);
+                                            <a href="@url" target="_blank" title="@url">
+                                                <i class="@RedeSocialHtmlHelper.ClasseRedeSocial(redeSocial.Tipo)"></i>
+                                            </a>
+                                        }
+                                    }
+                                </div>
+                            </td>
+                            <td>
+                                <div>
+                                    @if (mentor.Telefones != null)
+                                    {
+                                        foreach (var telefone in mentor.Telefones)
+                                        {
+                                            <span>@telefone.Numero.FormataTelefone()</span>
+                                            <br />
+                                        }
+                                    }
+                                </div>
+                            </td>
+                            <td>
+                                <div>
+                                    @if (mentor.Emails != null)
+                                    {
+                                        @foreach (var email in mentor.Emails)
+                                        {
+                                            <span>@email.Endereco</span>
+                                            <br />
+                                        }
+                                    }
+                                </div>
+                            </td>
+                            <td>
+                                <div class="d-inline-flex">
+                                    <a asp-controller="Mentores" asp-action="Editar" asp-route-id="@mentor.Id"
+                                       type="button" class="btn btn-outline btn-link text-success abre-modal-generico" style="min-width: 28px; cursor: pointer;"
+                                       data-toggle="tooltip" title="Editar">
+                                        <i class="fa fa-pencil-square-o" data-toggle="tooltip"></i>
+                                    </a>
+                                    <a asp-controller="Mentores" asp-action="Detalhes" asp-route-id="@mentor.Id"
+                                       type="button" class="btn btn-outline btn-link text-warning abre-modal-generico" style="min-width: 28px; cursor: pointer;"
+                                       data-toggle="tooltip" title="Detalhes">
+                                        <i class="fa fa-search" data-toggle="tooltip"></i>
+                                    </a>
+                                    <div id="lista_mentores_1">
+                                        @if (mentor.Inativo)
+                                        {
+                                        <a asp-controller="Mentores" asp-action="Ativar" asp-route-id="@mentor.Id"
+                                           class="btn btn-outline btn-link text-danger link-mentor btn-ativar" style="min-width: 28px; cursor: pointer;"
+                                           data-toggle="tooltip" title="Ativar Mentor">
+                                            <i class="fa fa-eye-slash"></i>
+                                        </a>
+                                        }
+                                        else
+                                        {
+                                            <a asp-controller="Mentores" asp-action="Inativar" asp-route-id="@mentor.Id"
+                                               type="button" class="btn btn-outline btn-link texto-sucesso abre-modal-generico" style="min-width: 28px; cursor: pointer;"
+                                               data-toggle="tooltip" title="Inativar Mentor">
+                                                <i class="fa fa-eye"></i>
+                                            </a>
+                                        }
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+        </div>
+    </div>
 </div>
 
-<script>
-    
-</script>
+<script src="~/lib/footable/js/footable.3.6.1.min.js"></script>
+
+@*Select2*@
+<script src="~/lib/select2/js/select2.full.min.js"></script>
+
+@*Input Mask*@
+<script src="~/lib/jasny/jasny-bootstrap.min.js"></script>
+
+@*Tags Input*@
+<script src="~/lib/bootstrap/dist/js/bootstrap-tagsinput.js"></script>
+
+<script src="~/js/mentor.js"></script>
+
+@section Scripts
+ {
+
+    <script>
+        $('[data-toggle="tooltip"]').tooltip();
+
+        $(document).ready(function () {
+            $('.footable').footable();
+        });
+    </script>
+}

@@ -1,0 +1,368 @@
+﻿@model ReclameAquiDoTrader.UI.ViewModels.MentoresViewModels.DetalhesMentorViewModels
+@using ReclameAquiDoTrader.Business.Enums;
+@using ReclameAquiDoTrader.UI.Extensions;
+@using  Microsoft.AspNetCore.Antiforgery;
+@inject IAntiforgery antiforgery
+
+<div class="row">
+    <div class="col-lg-12 ">
+        @Html.AntiForgeryToken()
+        <div class="text-danger div-error"></div>
+        <div class="form-group form-group-inline">
+            <input asp-for="Id" type="hidden" id="id">
+            <div class="col-sm">
+
+                <div class="form-group form-group-nome">
+                    <div class="input-group m-b">
+                        <div class="input-group-prepend">
+                            <span class="input-group-addon">
+                                <i class="fa fa-graduation-cap"></i>
+                            </span>
+                        </div>
+                        <input asp-for="Nome" id="nome" placeholder="Nome" class="form-control" required>
+                    </div>
+                </div>
+                <span class="alert alert-danger text-danger msg-validacao invisible" name="Nome">
+                    Campo nome não pode ser vazio!
+                </span>
+
+            </div>
+            <div class="col-sm">
+
+                <div class="form-group">
+                    <div class="input-group m-b">
+                        <div class="input-group-prepend">
+                            <span class="input-group-addon">
+                                <i class="fa fa-globe"></i>
+                            </span>
+                        </div>
+                        <input asp-for="Site" id="site" placeholder="Site" class="form-control" required>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm">
+                <i class="fa fa-tags"></i>
+                <strong><label class="control-label"> Áreas de Atuação</label></strong>
+                <br />
+                <select class="select2_areaAtuacao form-control" multiple="multiple" style="width: 100%;">
+                    @if (Model.AreasAtuacaoExistentes != null)
+                    {
+                        <optgroup label="Areas de Atuação">
+                            @foreach (var areaAtuacao in Model.AreasAtuacaoExistentes)
+                            {
+                                @if (Model.AreasDeAtuacao.Contains(areaAtuacao))
+                                {
+                                    <option selected="selected">@areaAtuacao</option>
+                                }
+                                else
+                                {
+                                    <option>@areaAtuacao</option>
+                                }
+                            }
+                        </optgroup>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="form-group form-group-inline">
+            <div class="col-sm">
+                <strong><label class="control-label"> Telefones</label></strong>
+                <div class="form-group">
+                    <div class="input-group m-b">
+                        <div class="input-group-prepend">
+                            <span class="input-group-addon">
+                                <i class="fa fa-phone"></i>
+                            </span>
+                        </div>
+                        <input class="form-control" id="campoTelefone" placeholder="(__) _____-____" title="Adicionar Telefone" />
+                        <div class="input-group-prepend btn-salvar-telefone" style="cursor: pointer;">
+                            <span class="input-group-addon">
+                                <i class="fa fa-plus" style="color: #28a745;"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive border-left border-right text-center mb-3" id="divTelefones">
+                    <div class="col-sm row border-bottom border-top m-0" style="text-align: center;">
+                        <div class="col-sm numero-telefone">
+                            <h4>Telefone</h4>
+                        </div>
+                        <div class="col-sm acao-telefone">
+                            <h4>Remover</h4>
+                        </div>
+                    </div>
+                    @if (Model.Telefones != null)
+                    {
+                        @foreach (var telefone in Model.Telefones)
+                        {
+                            <div class="col-sm row pb-1 border-bottom border-top m-0">
+                                <div class="col-sm pt-2 numero-telefone">
+                                    <span>@telefone.Numero.FormataTelefone()</span>
+                                </div>
+                                <a data-toggle="tooltip" class="col-sm btn btn-remover-telefone acao-telefone" data-numero="@telefone.Numero.FormataTelefone()" title="Remover">
+                                    <i class="fa fa-times text-danger" data-toggle="tooltip" title="Remover" style="width:22px;"></i>
+                                </a>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+            <div class="col-sm">
+                <strong><label class="control-label"> E-mails</label></strong>
+                <div class="form-group">
+                    <div class="input-group m-b">
+                        <div class="input-group-prepend">
+                            <span class="input-group-addon">
+                                <i class="fa fa-envelope"></i>
+                            </span>
+                        </div>
+                        <input type="email" class="form-control" id="campoEmail" />
+                        <div class="input-group-prepend btn-salvar-email" style="cursor: pointer;" title="Adicionar E-mail">
+                            <span class="input-group-addon">
+                                <i class="fa fa-plus" style="color: #28a745;"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive border-left border-right text-center mb-3" id="divEmails">
+                    <div class="col-sm row border-bottom border-top m-0" style="text-align: center;">
+                        <div class="col-sm numero-telefone">
+                            <h4>E-mail</h4>
+                        </div>
+                        <div class="col-sm acao-telefone">
+                            <h4>Remover</h4>
+                        </div>
+                    </div>
+                    @if (Model.Emails != null)
+                    {
+                        @foreach (var email in Model.Emails)
+                        {
+                            <div class="col-sm row pb-1 border-bottom border-top m-0">
+                                <div class="col-sm pt-2 numero-telefone">
+                                    <span>@email.Endereco</span>
+                                </div>
+                                <a data-toggle="tooltip" class="col-sm btn btn-remover-email acao-telefone" data-email="@email.Endereco" title="Remover">
+                                    <i class="fa fa-times text-danger" data-toggle="tooltip" title="Remover" style="width:22px;"></i>
+                                </a>
+                            </div>
+                        }
+                    }
+                </div>
+
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm">
+                <div>
+                    <strong><label class="control-label"> Redes Sociais</label></strong>
+                </div>
+                <div class="form-group form-group-inline">
+
+                    <div class="input-group m-b pr-1">
+                        <div class="input-group-prepend">
+                            <span class="input-group-addon">
+                                <i class="fa fa-desktop"></i>
+                            </span>
+                        </div>
+                        <select class="select2_redesocial form-control" id="campoRedeSocial" asp-items="@Html.GetEnumSelectList<ERedeSocialTipo>()">
+                            <option></option>
+                        </select>
+                    </div>
+
+                    <div class="input-group m-b pr-1 preencher" style="">
+                        <div class="input-group-prepend">
+                            <span class="input-group-addon">
+                                @@
+                            </span>
+                        </div>
+                        <input class="form-control" placeholder="nome_usuario" type="text" id="campoUsuario" name="RedesSociais" value="">
+                    </div>
+
+                    <div class="input-group m-b pr-1 preencher">
+                        <div class="input-group-prepend">
+                            <span class="input-group-addon">
+                                <i class="fa fa-globe"></i>
+                            </span>
+                        </div>
+                        <input class="form-control" placeholder="Url" type="text" id="campoUrl" name="RedesSociais" value="">
+                        <div class="input-group-prepend btn-salvar-redeSocial" style="cursor: pointer;" title="Adicionar Rede Social">
+                            <span class="input-group-addon">
+                                <i class="fa fa-plus" style="color: #28a745;"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive border-left border-right text-center mb-3" id="divRedesSociais">
+                    <div class="col-sm row border-bottom border-top m-0" style="text-align: center;">
+                        <div class="col-sm numero-telefone">
+                            <h4>Usuario</h4>
+                        </div>
+                        <div class="col-sm acao-telefone">
+                            <h4>Remover</h4>
+                        </div>
+                    </div>
+                    @if (Model.RedesSociais != null)
+                    {
+                        @foreach (var redeSocial in Model.RedesSociais)
+                        {
+                            <div class="col-sm row pb-1 border-bottom border-top m-0">
+                                <div class="col-sm pt-2 numero-telefone" data-url="@redeSocial.Url" data-tipo="@redeSocial.Tipo" data-usuario="@redeSocial.Usuario">
+                                    <span data-toggle="tooltip" title="@redeSocial.Url">
+                                        @switch (redeSocial.Tipo)
+                                        {
+                                            case ERedeSocialTipo.FACEBOOK:
+                                                <i class="fa fa-facebook-square"></i> @redeSocial.Usuario
+                                                break;
+                                            case ERedeSocialTipo.INSTAGRAM:
+                                                <i class="fa fa-instagram"></i> @redeSocial.Usuario
+                                                break;
+                                            default:
+                                                <i class="fa fa-question-circle"></i> @redeSocial.Usuario
+                                                break;
+                                        }
+                                    </span>
+                                </div>
+                                <a data-toggle="tooltip" class="col-sm btn btn-remover-redeSocial acao-telefone" data-url="@string.Concat(redeSocial.Url, "/" ,redeSocial.Usuario)" title="Remover">
+                                    <i class="fa fa-times text-danger" data-toggle="tooltip" title="Remover" style="width:22px;"></i>
+                                </a>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<script>
+    var listaEmailsAux = [];
+    var listaTelefonesAux = [];
+    var listaRedesSociaisAux = [];
+</script>
+
+@if (Model.Emails != null && Model.Emails.Count > 0)
+{
+
+    @foreach (var email in Model.Emails)
+    {
+        <script>
+            listaEmailsAux.push({ Endereco: '@email.Endereco' });
+        </script>
+    }
+
+}
+
+@if (Model.Telefones != null && Model.Telefones.Count > 0)
+{
+
+    @foreach (var telefone in Model.Telefones)
+    {
+        <script>
+            listaTelefonesAux.push({ Numero: '@telefone.Numero.FormataTelefone()' });
+        </script>
+    }
+
+}
+
+@if (Model.RedesSociais != null && Model.RedesSociais.Count > 0)
+{
+
+    @foreach (var redeSocial in Model.RedesSociais)
+    {
+        int tipo;
+        switch (redeSocial.Tipo)
+        {
+            case ERedeSocialTipo.FACEBOOK:
+                tipo = 0;
+                break;
+            case ERedeSocialTipo.INSTAGRAM:
+                tipo = 1;
+                break;
+            default:
+                tipo = -1;
+                break;
+        }
+
+        if (tipo >= 0)
+        {
+            <script>
+                listaRedesSociaisAux.push({
+                    Url: '@redeSocial.Url',
+                    Usuario: '@redeSocial.Usuario',
+                    Tipo: parseInt('@tipo')
+                });
+            </script>
+        }
+    }
+
+}
+
+
+<script>
+    $(document).ready(function () {
+        RemoverTelefone();
+        RemoverEmail();
+        RemoverRedeSocial();
+
+        $('#modalGenerico').on('shown.bs.modal', function (e) {
+            // do cool stuff here all day… no need to change bootstrap
+
+            console.log(listaTelefonesAux);
+            console.log(listaRedesSociaisAux);
+            console.log(listaEmailsAux);
+
+            if (listaTelefonesAux.length > 0)
+                listaTelefonesAux.forEach(element => listaTelefones.push(element));
+
+            if (listaEmailsAux.length > 0)
+                listaEmailsAux.forEach(element => listaEmails.push(element));
+
+            if (listaRedesSociaisAux.length > 0)
+                listaRedesSociaisAux.forEach(element => listaRedesSociais.push(element));
+
+            listaTelefonesAux = []
+            listaEmailsAux = []
+            listaRedesSociaisAux = []
+        });
+    });
+
+
+    function RemoverTelefone() {
+        $('.btn-remover-telefone').unbind('click');
+        $('.btn-remover-telefone').on("click", function (e) {
+
+            var index = listaTelefones.findIndex(n => n.Numero === $(this).data('numero'));
+
+            listaTelefones.splice(index, 1);
+            $(this).parent().remove();
+
+        });
+    }
+
+    function RemoverEmail() {
+        $('.btn-remover-email').unbind('click');
+        $('.btn-remover-email').on("click", function (e) {
+
+            var index = listaEmails.findIndex(n => n.Endereco === $(this).data('endereco'));
+
+            listaEmails.splice(index, 1);
+            $(this).parent().remove();
+        });
+    }
+
+    function RemoverRedeSocial() {
+        $('.btn-remover-redeSocial').unbind('click');
+        $('.btn-remover-redeSocial').on("click", function (e) {
+
+            var index = listaRedesSociais.findIndex(n => (n.Url + '/' + n.Usuario) === $(this).data('redeSocial'));
+
+            listaRedesSociais.splice(index, 1);
+            $(this).parent().remove();
+        });
+    }
+</script>

@@ -1,0 +1,88 @@
+﻿@using ReclameAquiDoTrader.UI.Extensions;
+@model List<ReclameAquiDoTrader.UI.ViewModels.PesquisaViewModels.AvaliacaoParaPesquisaItemViewModel>
+@{
+    var areasAtuacao = Model.SelectMany(x => x.Mentor.AreasDeAtuacao);
+    Dictionary<string, int> QuantidadePorArea = new Dictionary<string, int>();
+    foreach (var areaAtuacao in areasAtuacao)
+    {
+        if (!QuantidadePorArea.ContainsKey(areaAtuacao))
+            QuantidadePorArea.Add(areaAtuacao, 0);
+        QuantidadePorArea[areaAtuacao]++;
+    }
+    var topAreas = QuantidadePorArea.OrderByDescending(x => x.Value).Take(5);
+}
+
+    <div class="col-lg-3" id="areas-avaliacao" style="display: none;">
+        <div class="statistic-box">
+            <h4>
+                Essas são as áreas de atuação mais avaliadas
+            </h4>
+            <div class="row">
+                <div id="morris-bar-chart"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var areasDeAtuacao = [];
+        var cores = [];
+        var pos = 0;
+    </script>
+
+    @foreach (var area in topAreas)
+    {
+        <script>
+        areasDeAtuacao.push({
+                label: '@area.Key.RemoveDiacritics()',
+                value: @(area.Value)
+            });
+        switch (pos) {
+            case 0:
+                cores.push("#87d6c6");
+                break;
+            case 1:
+                cores.push("#54cdb4");
+                break;
+            case 2:
+                cores.push("#1ab394");
+                break;
+            case 3:
+                cores.push("#87d6c6");
+                break;
+            case 4:
+                cores.push("#54cdb4");
+                break;
+        }
+        pos++;
+        </script>
+    }
+
+    <script>
+
+        $(document).ready(function () {
+            //Morris.Donut({
+            //    element: 'morris-donut-chart',
+            //    data: areasDeAtuacao,
+            //    resize: true,
+            //    colors: cores,
+            //});
+            Morris.Bar({
+                element: 'morris-bar-chart',
+                data:
+                    [{ y: areasDeAtuacao[0].label, a: areasDeAtuacao[0].value },
+                     { y: areasDeAtuacao[1].label, a: areasDeAtuacao[1].value },
+                     { y: areasDeAtuacao[2].label, a: areasDeAtuacao[2].value },
+                     { y: areasDeAtuacao[3].label, a: areasDeAtuacao[3].value },
+                     { y: areasDeAtuacao[4].label, a: areasDeAtuacao[4].value }],
+                xkey: 'y',
+                ykeys: ['a'],
+                labels: ['Quantidade de avaliações'],
+                hideHover: 'auto',
+                xLabelAngle: 35,
+                resize: true,
+                barColors: ['#1ab394'],
+            });
+
+        });
+
+    </script>

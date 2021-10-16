@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using ReclameAquiDoTrader.Business.Core.Communication.Notificacoes;
-using ReclameAquiDoTrader.Business.Interfaces.Identity;
 using System.Linq;
 
 namespace ReclameAquiDoTrader.UI.Controllers
@@ -11,11 +10,8 @@ namespace ReclameAquiDoTrader.UI.Controllers
     public class MainController : Controller
     {
         private readonly INotificador _notificador;
-        public readonly IUsuarioIdentity UsuarioLogado;
-        protected MainController(IUsuarioIdentity usuarioIdentity,
-                                 INotificador notificador)
+        protected MainController(INotificador notificador)
         {
-            UsuarioLogado = usuarioIdentity;
             _notificador = notificador;
         }
 
@@ -33,7 +29,8 @@ namespace ReclameAquiDoTrader.UI.Controllers
 
             return BadRequest(new
             {
-                erros = _notificador.ObterNotificacoes()
+                erros = _notificador.ObterNotificacoes(),
+                result
             });
         }
 
@@ -42,10 +39,10 @@ namespace ReclameAquiDoTrader.UI.Controllers
             _notificador.Handle(new Notificacao(chave, mensagem));
         }
 
-        protected IActionResult CustomResponse(ModelStateDictionary modelState)
+        protected IActionResult CustomResponse(ModelStateDictionary modelState, object result = null)
         {
             if (!modelState.IsValid) NotificarErroModelInvalida(modelState);
-            return CustomResponse();
+            return CustomResponse(result);
         }
 
         protected void NotificarErroModelInvalida(ModelStateDictionary modelState)

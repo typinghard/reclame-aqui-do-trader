@@ -1,0 +1,224 @@
+﻿@model List<ReclameAquiDoTrader.UI.ViewModels.AvaliacaoViewModels.ArquivoViewModel>
+
+
+<div class="panel-group" id="accordion">
+    <div class="panel panel-default">
+        <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#comprovanteCollapse" style="cursor: pointer;height: 40px;" title="Clique para Expandir">
+            <h4 class="panel-title">
+                <i class="fa fa-upload"></i>
+                @if (Model.Count > 0)
+                {
+                    <strong><label class="control-label"> Comprovantes - @Model.Count</label></strong>
+                }
+                else
+                {
+                    <strong><label class="control-label"> Comprovantes</label></strong>
+                }
+            </h4>
+            <div class="ibox-tools">
+                <a class="btn" data-toggle="tooltip" title="Limpar Comprovantes Selecionados" style="margin: 11px 10px 0 0;" id="limpar_comprovantes">
+                    <i class="fa fa-times-rectangle text-danger"></i>
+                </a>
+            </div>
+        </div>
+        <div id="comprovanteCollapse" class="panel-collapse collapse in">
+            <div class="panel-body p-0">
+                <div class="custom-file" style="cursor:pointer;">
+                    <input id="comprovantes" type="file" class="custom-file-input" multiple style="cursor:pointer;" title="Escolher arquivo(s)...">
+                    <label for="comprovantes" class="custom-file-label" style="cursor:pointer;">Escolher arquivo(s)...</label>
+                </div>
+            </div>
+
+            <div class="col-lg-12 mt-3" id="div_comprovantes">
+                <div class="row">
+                    <div class="col-lg-12" id="preview_arquivos">
+                        @foreach (var arquivo in Model)
+                        {
+                            <div class="file-box animated fadeIn">
+                                <div class="file">
+
+                                    <span class="corner"></span>
+
+                                    @if (arquivo.ContentType == "image/jpeg" || arquivo.ContentType == "image/png")
+                                    {
+                                        <div class="image">
+                                            <img alt="@arquivo.Nome" class="img-fluid" src="@arquivo.Url">
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="icon">
+                                            <i class="@ArquivoHtmlHelper.ClasseFaIconContentType(arquivo.ContentType)"></i>
+                                        </div>
+                                    }
+
+                                    <div class="file-name">
+                                        <a title="Download" href="@Url.Action("DownloadComprovante", "Avaliacoes", new { avaliacaoId = arquivo.AvaliacaoId, comprovanteId = arquivo.ComprovanteId })">
+                                            <i class="fa fa-download"></i>
+                                            <span class="truncate fh-15">
+                                                @arquivo.Nome
+                                            </span>
+                                        </a>
+                                        <br>
+                                        <small>Adicionado ás: @arquivo.Cadastro</small>
+                                    </div>
+
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@if (Model.Count > 0)
+{
+    <script>
+        $("#div_comprovantes").show();
+    </script>
+}
+else
+{
+    <script>
+        $("#div_comprovantes").hide();
+    </script>
+}
+
+<script>
+    $(document).ready(function () {
+
+        $("#comprovantes").change(function () { //aqui seto a função no evento de change do campo
+
+            var arquivos = $("#comprovantes")[0].files;
+
+            console.log(arquivos);
+
+            LimparImagemPreview();
+
+            for (var i = 0; i < arquivos.length; i++) {
+                $("#comprovantes").removeAttr("style").show();
+                MontarPreviewDoComprovante(arquivos[i]);
+            }
+
+            if (arquivos.length > 0)
+                $("#div_comprovantes").show();
+        });
+
+        $('#limpar_comprovantes').click(function () {
+
+            LimparImagemPreview();
+            LimparInputFileComprovantes();
+        });
+
+        function LimparImagemPreview() {
+            $("#div_comprovantes").hide();
+            $("#preview_arquivos").empty('');
+        }
+
+        function LimparInputFileComprovantes() {
+            $("#comprovantes").val('');
+        }
+
+        function RecuperarFaIconDoAquivo(arquivo) {
+
+            var retorno;
+            console.log(arquivo.type);
+            switch (arquivo.type) {
+
+                case 'application/pdf':
+                    retorno = '<i class="fa fa-file-pdf-o text-danger"></i>';
+                    break;
+                case 'application/word':
+                case 'application/doc':
+                case 'application/docx':
+                    retorno = '<i class="fa fa-file-word-o text-success"></i>';
+                    break;
+                case 'application/xls':
+                case 'application/xlsx':
+                    retorno = '<i class="fa fa-file-excel-o text-info"></i>';
+                    break;
+                default:
+                    retorno = '<i class="fa fa-file-o"></i>';
+                    break;
+            }
+
+            return retorno;
+        }
+
+        function ObterDataComprovante(arquivo) {
+            var retorno = '#';
+
+            diaNome = new Array("domingo", "segunda", "terça", "quarta", "quinta", "sexta", "sábado")
+            mesNome = new Array("janeiro", "fevereiro", "março", "abril", "Maio", "junho", "agosto", "outubro", "novembro", "dezembro")
+            mesNomeAbreviado = new Array("Jan", "Fev", "Mar", "Abr", "Maio", "Jun", "Ago", "Out", "Nov", "Dez")
+
+            numeros1a9 = ["00", "01", "02", "03", "04", "05", "06", "07", "08", "09"]
+
+            hoje = new Date();
+            retorno = mesNomeAbreviado[hoje.getMonth()] + ' ' + hoje.getDay() + ', ' + hoje.getFullYear() + ' - ' + hoje.getHours() < 10 ? numeros1a9[hoje.getHours()] : hoje.getHours() + ':' + hoje.getMinutes();
+
+            return retorno;
+        }
+
+        function MontarHtmlPreviewDoComprovante(arquivo, urlImagem) {
+
+            var divImg = '<div class="image">'
+                + '               <img alt="' + arquivo.name + '" class="img-fluid" src="' + urlImagem + '">'
+                + '       </div>'
+
+            var html =
+                '     <div class="file-box animated fadeIn">'
+                + '       <div class="file">'
+                + '         <a href="#">'
+                + '          <span class="corner"></span>'
+
+            if (arquivo.type === "image/jpeg" || arquivo.type === "image/png") {
+                html += divImg;
+            }
+            else {
+                html += '           <div class="icon">'
+                    + RecuperarFaIconDoAquivo(arquivo)
+                    + '             </div>'
+            }
+
+            html += '             <div class="file-name">'
+                + '               <span class="truncate fh-15" title="' + arquivo.name + '">'
+                + arquivo.name
+                + '              </span>'
+                + '              <br>'
+                + '              <small>Adicionado ás: ' + ObterDataComprovante(arquivo) + '</small>'
+                + '             </div>'
+                + '         </a>'
+                + '      </div>'
+                + '    </div>'
+
+            return html;
+        }
+
+        function MontarPreviewDoComprovante(arquivo) {
+            if (arquivo) { //verifica se o arquivo não está nulo
+                var reader = new FileReader(); //instancia um objeto FileReader que permite aplicações web ler o conteúdo dos arquivos (ou buffers de dados puros)
+
+                var htmlComprovante;
+
+                reader.onload = function (e) { //Este evento é chamado cada vez que a operação de leitura é completada com sucesso.
+                    //$('#preview_arquivos').append('src', e.target.result); //aqui seto a imagem no src da div a cima
+                    htmlComprovante = MontarHtmlPreviewDoComprovante(arquivo, e.target.result);
+                    $('#preview_arquivos').append(htmlComprovante);
+                    $(".truncate").dotdotdot({
+                        watch: 'window',
+                        ellipsis: '...'
+                    });
+                    console.log(e.target);
+                }
+
+                reader.readAsDataURL(arquivo); //Inicia a leitura do conteúdo que caira após o peração completar na função a cima
+            }
+        }
+
+
+    });
+</script>

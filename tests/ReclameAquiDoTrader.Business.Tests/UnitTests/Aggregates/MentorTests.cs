@@ -1,9 +1,6 @@
 ﻿using FluentAssertions;
 using ReclameAquiDoTrader.Business.Aggregates;
 using ReclameAquiDoTrader.Business.Core.DomainObjects;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
 namespace ReclameAquiDoTrader.Business.Tests.UnitTests.Aggregates
@@ -15,6 +12,15 @@ namespace ReclameAquiDoTrader.Business.Tests.UnitTests.Aggregates
         {
             mentor = new Mentor("Mentor 1");
         }
+
+        [Fact(DisplayName = "Atualizar Nome")]
+        public void AtualizarNome_DeveAtualizarCorretamente()
+        {
+            mentor.AtualizarNome("Novo Nome");
+
+            mentor.Nome.Should().Be("Novo Nome");
+        }
+
         [Fact(DisplayName = "Atribuir site")]
         public void AtribuirSite_DeveAtribuirCorretamente()
         {

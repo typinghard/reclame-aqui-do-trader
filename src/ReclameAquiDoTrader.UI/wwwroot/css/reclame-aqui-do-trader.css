@@ -1,0 +1,153 @@
+@font-face {
+    font-family: Roboto;
+    src: url(../lib/font-roboto/Roboto-Bold.ttf);
+}
+
+.asyncPartialContent {
+    overflow-x: hidden;
+    margin-left: 10px;
+    height: 100%;
+}
+
+.atalho-ver-todos {
+    font-size: 10px;
+    cursor: pointer;
+    float: right;
+    color: #a2a2a2;
+    margin-bottom: -12px;
+    margin-top: -10px;
+}
+
+    .atalho-ver-todos:hover {
+        color: #000000;
+    }
+
+.icon {
+    /*font-size: 14px;*/
+}
+
+.icon,
+.texto-sucesso {
+    color: #28a745 !important
+}
+
+.icones-acoes {
+    display: flex;
+}
+
+.shadow:hover {
+    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, 0.15), 0 6px 20px 0 rgba(0, 0, 0, 0.15) !important;
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+.form-group-inline {
+    display: flex;
+}
+
+.preencher {
+    height: max-content;
+}
+
+.input-tag {
+    width: 100%;
+    min-height: 60px;
+}
+
+.select2-container--bootstrap4 .select2-selection--multiple .select2-selection__choice {
+    margin-right: 2px;
+    font-family: 'Open Sans','Helvetica Neue',Helvetica,Arial,sans-serif;
+    font-weight: 600;
+    padding: 3px 8px;
+    text-shadow: none;
+    border-radius: .25em;
+    white-space: nowrap;
+    background-color: #1c84c6;
+    color: white !important;
+    line-height: 20px;
+}
+
+.select2-container--bootstrap4 .select2-selection--multiple .select2-selection__choice__remove {
+    color: white;
+    font-weight: 700;
+    margin-left: 3px;
+    margin-right: 2px;
+    padding-right: 3px;
+    padding-left: 3px;
+    float: left;
+}
+
+.numero-telefone {
+}
+
+.acao-telefone {
+}
+
+.titulo-painel-dashboard {
+
+}
+
+
+.file-box {
+    width: 165px !important;
+}
+
+file-box,
+.img-fluid {
+    max-height: 100% !important;
+    height: 100%;
+    width: 100%;
+}
+
+.remover:hover {
+    text-decoration: underline;
+    color: #a2a2a2
+}
+
+
+/* Telefones em paisagem e abaixo */
+@media (max-width: 480px) {
+    .wrapper-content {
+        padding: 10px 10px 40px 0px;
+    }
+    /* estilos aqui */
+    .asyncPartialContent {
+        overflow-x: scroll;
+        width: 100%;
+    }
+
+    .numero-telefone {
+        width: 65%;
+    }
+
+    .acao-telefone {
+        width: 20%;
+    }
+
+    .titulo-painel-dashboard {
+        font-size: inherit !important;
+    }
+    
+}
+
+/* Telefones em paisagem a tablet em retrato */
+@media (max-width: 767px) {
+    /* estilos aqui */
+    .form-group-inline {
+        display: grid;
+    }
+}
+
+/* Tablet em retrato a paisagem e desktop */
+@media (min-width: 768px) and (max-width: 979px) {
+    /* estilos aqui */
+    .form-group-inline {
+        display: grid;
+    }
+
+    
+}
+
+/* Desktop grande */
+@media (min-width: 1200px) {
+    /* estilos aqui */
+}

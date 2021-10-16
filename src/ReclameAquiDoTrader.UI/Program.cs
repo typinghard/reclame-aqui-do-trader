@@ -1,11 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace ReclameAquiDoTrader.UI
 {
@@ -21,6 +15,9 @@ namespace ReclameAquiDoTrader.UI
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+#if !DEBUG
+                        webBuilder.UseSentry("https://956c5f0c21ea465b905b8f47b3226273@o409000.ingest.sentry.io/5280712");
+#endif
                 });
     }
 }

@@ -1,0 +1,130 @@
+﻿<style>
+    .pesquise-aqui {
+        background: #d8d8d8;
+        text-align: center !important;
+        display: flow-root;
+        padding-top: 7px;
+    }
+
+    .fonte-pesquisa {
+        color: #797979;
+        letter-spacing: 3px;
+        font-weight: 200;
+        font-size: 18px;
+    }
+
+    .seta-pesquisa {
+        font-size: 18px;
+        -webkit-transform: scale(2,1);
+        -moz-transform: scale(2,1);
+        -ms-transform: scale(2,1);
+        -o-transform: scale(2,1);
+        transform: scale(2,1);
+        color: #9a9a9a;
+    }
+
+    .carousel-control-prev {
+        width: auto;
+        margin-left: 11px;
+    }
+
+    .carousel-control-next {
+        width: auto;
+        margin-right: 11px;
+    }
+</style>
+
+<div class="navbar-wrapper">
+    <nav class="navbar navbar-default navbar-fixed-top navbar-expand-md" role="navigation">
+        <div class="container">
+            <div class="navbar-header page-scroll">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar">
+                    <i class="fa fa-bars"></i>
+                </button>
+            </div>
+            <div class="collapse navbar-collapse justify-content-end" id="navbar">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class=""><a class="nav-link page-scroll" href="#page-top">Home</a></li>
+                    <li class=""><a class="nav-link page-scroll" href="#pesquisa">Pesquise</a></li>
+                    <li class=""><a class="nav-link page-scroll" href="#workflow">Como funciona</a></li>
+                    <li><a class="nav-link page-scroll" href="#contact">Contato</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</div>
+
+<div id="inSlider" class="carousel slide">
+    <ol class="carousel-indicators">
+        <li data-target="#inSlider" data-slide-to="0" class="active"></li>
+        <li data-target="#inSlider" data-slide-to="1"></li>
+        <li data-target="#inSlider" data-slide-to="2"></li>
+    </ol>
+    <div class="carousel-inner" role="listbox">
+        <div class="carousel-item active">
+            <div class="container">
+                <div class="carousel-caption">
+                    <h1>
+                        Reclame Aqui do Trader<br />
+                    </h1>
+                    <p>
+                        Aqui você poderá saber mais sobre os cursos na área <br />
+                        do mercado de invetimentos através dos feedbacks de outros alunos<br />
+                        Nós te ajudamos a aprender mais sobre investimentos
+                    </p>
+                </div>
+                <div class="carousel-image wow zoomIn">
+                    <img src="~/img/logo-transparente.png" alt="laptop" 
+                         style="width: 35%; float: right;"/>
+                </div>
+            </div>
+            <div class="header-back one"></div>
+        </div>
+
+        <div class="carousel-item">
+            <div class="container">
+                <div class="carousel-caption blank">
+                    <h1>Siga-nos no Instagram e <br /> acompanhe de perto cada novidade</h1>
+                    <p>Se quiser, aproveite para nos mandar uma mensagem =)</p>
+
+                    <a class="btn btn-large btn-outline btn-danger" href="https://www.instagram.com/reclameaqui.do.trader/" target="_blank" role="button" style="color: white;">SIGA-NOS</a>
+                </div>
+                <div class="carousel-image wow zoomIn">
+                    <img src="~/img/logo-intagram-fundo-transparente.png" alt="Instagram" style="opacity: 13.5%; transform: rotate(9deg);" />
+                </div>
+            </div>
+            <div class="header-back fundo-instagram"></div>
+        </div>
+
+        <div class="carousel-item">
+            <div class="container">
+                <div class="carousel-caption blank">
+                    <h1>Faça parte do nosso <br /> grupo no Telegram</h1>
+                    <p>Lá, você estará pode dentro das últimas novidades e participará de diversos sorteios</p>
+
+                    <a class="btn btn-large btn-outline btn-info" href="https://t.me/joinchat/NeKEbUcskjYfkgYyit5W2Q" target="_blank" role="button" style="color: white;">ENTRE AGORA</a>
+                </div>
+                <div class="carousel-image wow zoomIn">
+                    <img src="~/img/logo-telegram.png" alt="Instagram" style="opacity: 13.5%; width: 140%" />
+                </div>
+            </div>
+            <div class="header-back fundo-telegram"></div>
+        </div>
+    </div>
+
+    <a class="carousel-control-prev" href="#inSlider" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Próximo</span>
+    </a>
+    <a class="carousel-control-next" href="#inSlider" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Anterior</span>
+    </a>
+    
+</div>
+
+<a href="#pesquisa" class="page-scroll fonte-pesquisa row pesquise-aqui">
+    VEJA TODAS AS AVALIAÇÕES CLICANDO AQUI
+    <br />
+    <i class="fa fa-angle-double-down seta-pesquisa"></i>
+</a>

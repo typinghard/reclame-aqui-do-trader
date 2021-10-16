@@ -1,0 +1,22 @@
+﻿@model ReclameAquiDoTrader.UI.ViewModels.MentoresViewModels.MentorItemViewModel
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+    <h4 class="modal-title">Cadastrar mentor</h4>
+    <small class="font-bold">Cadastre um novo mentor.</small>
+</div>
+
+<div class="modal-body bg-white">
+    @await Html.PartialAsync("_CadastroMentor", Model)
+</div>
+
+<div class="modal-footer" style="justify-content:left;">
+    <button type="button" class="ladda-button ladda-button-demo btn btn-primary btn-salvar" data-url="@Url.Action("Criar","Mentores")" data-style="zoom-out">Salvar Alterações</button>
+    <button type="button" class="btn btn-white" data-dismiss="modal">Fechar</button>
+</div>
+
+<script src="~/js/mentor.js" charset="utf-8"></script>
+
+@section Scripts {
+
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

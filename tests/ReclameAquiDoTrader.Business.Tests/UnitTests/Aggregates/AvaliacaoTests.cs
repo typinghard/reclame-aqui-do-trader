@@ -1,10 +1,7 @@
 ﻿using FluentAssertions;
 using ReclameAquiDoTrader.Business.Aggregates;
-using ReclameAquiDoTrader.Business.Core.DomainObjects;
 using ReclameAquiDoTrader.Business.Statics;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
 namespace ReclameAquiDoTrader.Business.Tests.UnitTests.Aggregates
@@ -14,7 +11,7 @@ namespace ReclameAquiDoTrader.Business.Tests.UnitTests.Aggregates
         private Avaliacao avaliacao;
         private string MentorId = Guid.NewGuid().ToString();
         private string Texto = "Texto para teste";
-        public AvaliacaoTests() 
+        public AvaliacaoTests()
         {
             avaliacao = new Avaliacao(MentorId, Texto);
         }
@@ -28,6 +25,7 @@ namespace ReclameAquiDoTrader.Business.Tests.UnitTests.Aggregates
             avaliacao.Expirado.Should().BeFalse();
             avaliacao.Respondido.Should().BeFalse();
             avaliacao.Positivo.Should().BeFalse();
+            avaliacao.Publicado.Should().BeFalse();
             avaliacao.DataExpiracao.Should().Be(avaliacao.CriadoAs.AddHours(AvaliacaoStatics.TEMPO_EM_HORAS_PARA_EXPIRACAO));
         }
 
@@ -47,40 +45,58 @@ namespace ReclameAquiDoTrader.Business.Tests.UnitTests.Aggregates
             avaliacao.Positivo.Should().BeFalse();
         }
 
-        [Fact(DisplayName = "Marcar como respondido")]
+        [Fact(DisplayName = "Responder")]
         public void MarcarComoRespondido_DeveMarcarCorretamente()
         {
-            avaliacao.MarcarComoRespondido();
+            avaliacao.Responder(string.Empty);
 
             avaliacao.Respondido.Should().BeTrue();
         }
 
-        [Fact(DisplayName = "AdicionarTag - Nova tag deve ser adicionada")]
-        public void AdicionarTag_NovaTagDeveSerAdicionada()
-        {
-            avaliacao.AdicionarTag("tag 1");
 
-            avaliacao.Tags.Should().Contain("tag 1");
+        [Fact(DisplayName = "Publicar")]
+        public void Publicar_DevePublicarCorretamente()
+        {
+            avaliacao.Publicar();
+
+            avaliacao.DataPublicacao.Should().HaveValue();
         }
 
-        [Theory(DisplayName = "AdicionarTag - Tag repetida não deve ser adicionada")]
-        [InlineData("tag 1", "tag 1")]
-        [InlineData(" Tag 1 ", " taG 1")]
-        public void AdicionarTag_TagRepetidaNaoDeveSerAdicionada(string tag, string tagRepetida)
+        [Fact(DisplayName = "Remover Publicação")]
+        public void RemoverPublicacao_DeveRemoverPublicacaoCorretamente()
         {
-            avaliacao.AdicionarTag(tag);
-            avaliacao.AdicionarTag(tagRepetida);
+            avaliacao.RemoverPublicacao();
 
-            avaliacao.Tags.Should().ContainSingle(tag);
+            avaliacao.DataPublicacao.Should().NotHaveValue();
         }
 
-        [Theory(DisplayName = "AdicionarTag - Tag vazia deve lançar exceção")]
-        [InlineData("")]
-        [InlineData("      ")]
-        [InlineData(null)]
-        public void AdicionarTag_TagVaziaLancaExcecao(string tag)
+        [Fact(DisplayName = "Texto Avaliação")]
+        public void Texto_DeveAtribuirNovoTextoCorretamente()
         {
-            Assert.Throws<DomainException>(() => avaliacao.AdicionarTag(tag));
+            avaliacao.NovoTexto(string.Empty);
+
+            avaliacao.Texto.Should().NotBeNull();
         }
+
+
+        [Fact(DisplayName = "Texto Resposta")]
+        public void TextoResposta_DeveAtribuirTextoRespostaCorretamente()
+        {
+            avaliacao.Responder(Texto);
+
+            avaliacao.TextoResposta.Should().NotBeNull();
+            avaliacao.DataResposta.Should().HaveValue();
+        }
+
+
+        [Fact(DisplayName = "Remover Texto Resposta")]
+        public void RemoverTextoResposta_DeveRemoverTextoRespostaCorretamente()
+        {
+            avaliacao.RemoverResposta();
+
+            avaliacao.TextoResposta.Should().BeEmpty();
+            avaliacao.DataResposta.Should().NotHaveValue();
+        }
+
     }
 }

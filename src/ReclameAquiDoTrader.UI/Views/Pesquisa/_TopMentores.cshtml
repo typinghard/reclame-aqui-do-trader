@@ -1,0 +1,56 @@
+﻿@using ReclameAquiDoTrader.UI.Extensions;
+@using ReclameAquiDoTrader.Business.Enums;
+@using ReclameAquiDoTrader.UI.Helpers;
+@model ReclameAquiDoTrader.UI.ViewModels.PesquisaViewModels.AvaliacaoParaPesquisaViewModel
+@{
+    var topMentores = Model.AvaliacoesPorMentor
+                    .OrderByDescending(x => x.Quantidade)
+                    .Take(7)
+                    .ToList();
+
+}
+
+<div class="col-md-3">
+    <h2>Veja algumas estatísticas</h2>
+    <small>Mentores mais avaliados</small>
+    <ul class="list-group clear-list m-t">
+        @for (int i = 0; i < topMentores.Count; i++)
+        {
+        <li class="list-group-item @(i == 0 ? "fist-item" : "") ">
+            <div style="width: 30px; float: right">
+                &nbsp;
+                @if (topMentores[i].QtdePositivasUltimos30Dias > 0)
+                {
+                    <span class="text-navy small" style="" data-toggle="tooltip" title="Aumento nos últimos 30 dias">
+                        +@topMentores[i].QtdePositivasUltimos30Dias
+                        <i class="fa fa-level-up"></i>
+                    </span>
+                }
+            </div>
+            <span class="float-right" style="font-size: 16px;font-weight: 600;" data-toggle="tooltip" title="Nº de avaliações">
+                @topMentores[i].Quantidade
+
+            </span>
+
+            @if (topMentores[i].Mentor.RedesSociais != null)
+            {
+                var url = string.Concat("https://", topMentores[i].Mentor.RedesSociais[0].Url, "/", topMentores[i].Mentor.RedesSociais[0].Usuario);
+                <a href="@url" target="_blank" data-toggle="tooltip" title="Ir para @topMentores[i].Mentor.RedesSociais[0].Tipo.Display()">
+                    <i style="color: #b6269c" class="@RedeSocialHtmlHelper.ClasseRedeSocial(topMentores[i].Mentor.RedesSociais[0].Tipo)"></i>
+                </a>
+            }
+            &nbsp;
+            @topMentores[i].Mentor.Nome
+
+        </li>
+        }
+    </ul>
+</div>
+
+<script>
+
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+
+</script>

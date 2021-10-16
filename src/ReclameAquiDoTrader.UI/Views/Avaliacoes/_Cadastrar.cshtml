@@ -1,0 +1,183 @@
+﻿@model ReclameAquiDoTrader.UI.ViewModels.AvaliacaoViewModels.CriarAvaliacaoViewModel
+@using  Microsoft.AspNetCore.Antiforgery;
+@using ReclameAquiDoTrader.Business.Enums;
+@inject IAntiforgery antiforgery
+
+<link href="~/lib/datapicker/css/datepicker3.css" rel="stylesheet">
+<link href="~/lib/awesome-bootstrap-checkbox/css/awesome-bootstrap-checkbox.css" rel="stylesheet" />
+
+<!-- Data picker -->
+<script src="~/lib/datapicker/js/bootstrap-datepicker.js"></script>
+<script src="~/js/avaliacao.js"></script>
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+    <h4 class="modal-title">Cadastrar Avaliação</h4>
+    <small class="font-bold">Cadastre uma nova avaliação.</small>
+</div>
+
+<div class="modal-body bg-white">
+
+    <div class="row">
+        <div class="col-lg-12 ">
+            @Html.AntiForgeryToken()
+            <div class="text-danger div-error"></div>
+            <div class="form-group form-group-inline">
+                <div class="col-sm">
+                    <strong><label class="control-label"> Mentor</label></strong>
+                    <br />
+                    <div class="input-group m-b pr-1">
+                        <div class="input-group-prepend">
+                            <span class="input-group-addon">
+                                <i class="fa fa-graduation-cap"></i>
+                            </span>
+                        </div>
+                        <select class="select2_mentor form-control" id="campoMentor" data-url="@Url.Action("ListarRedesSociais", "Mentores")">
+                            <option></option>
+                            @if (Model.Mentores != null)
+                            {
+                                @foreach (var mentor in Model.Mentores)
+                                {
+                                    <option value="@mentor.Id">@mentor.Nome</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <span class="alert alert-danger text-danger msg-validacao-mentor invisible" name="Nome">
+                        Campo mentor não pode ser vazio!
+                    </span>
+
+                </div>
+
+                <div class="col-sm m-b col-md-2">
+                    <strong><label class="control-label"> Positivo</label></strong>
+                    <br />
+                    <div class="form-check abc-checkbox abc-checkbox-success form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="chkPositivo">
+                        <label class="form-check-label" for="chkPositivo"> Sim </label>
+                    </div>
+                </div>
+
+                <div class="col-sm m-b col-md-4">
+                    <strong>
+                        <label class="control-label"> Data Expiração</label>
+                    </strong>
+                    <br />
+                    <div class="input-group" id="expiracao">
+                        <div class="input-group date">
+                            <span class="input-group-addon">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                            <input type="text" disabled data-toggle="tooltip" title="Prazo de 48h para resposta contando da data de cadastro" class="form-control mask-expiracao" data-mask="99/99/9999" value="@DateTime.UtcNow.AddHours(48).ToShortDateString()">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="form-group form-group-inline">
+
+                <div class="input-group m-b pr-1 preencher">
+                    <div class="input-group-prepend">
+                        <span class="input-group-addon">
+                            <i class="fa fa-desktop"></i>
+                        </span>
+                    </div>
+                    <select class="select2_redesocial form-control" id="campoRedeSocial">
+                        @foreach (var item in @Html.GetEnumSelectList<ERedeSocialTipo>())
+                        {
+                            if (item.Text.ToUpper() == ERedeSocialTipo.INSTAGRAM.ToString())
+                            {
+                                <option value="@item.Value" selected="selected"> @item.Text </option>
+                            }
+                            else
+                            {
+                                <option value="@item.Value"> @item.Text </option>
+                            }
+                        }
+                    </select>
+                </div>
+
+                <div class="input-group m-b pr-1 preencher">
+                    <div class="input-group-prepend">
+                        <span class="input-group-addon">
+                            <i class="fa fa-globe"></i>
+                        </span>
+                    </div>
+                    <input class="form-control" placeholder="Link do Post" type="text" id="campoUrl" name="RedesSociais" value="">
+                    <div class="input-group-prepend btn-salvar-redeSocial" style="cursor: pointer;" title="Adicionar Rede Social">
+                        <span class="input-group-addon">
+                            <i class="fa fa-plus" style="color: #28a745;"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive border-left border-right text-center mb-3" id="divRedesSociais">
+
+                <div class="col-sm row border-bottom border-top m-0" style="text-align: center;">
+                    <div class="col-sm numero-telefone">
+                        <h4>Post</h4>
+                    </div>
+                    <div class="col-sm acao-telefone">
+                        <h4>Remover</h4>
+                    </div>
+                </div>
+
+            </div>
+            <div class="form-group">
+                <div class="col-sm">
+                    <hr class="hr-line-dashed" />
+
+                    @await Html.PartialAsync("_Comprovante", new List<ArquivoViewModel>())
+
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm">
+                    <hr class="hr-line-dashed" />
+
+                    <div class="panel-group" id="accordion">
+                        <div class="panel panel-default">
+                            <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#textoCollapse" style="cursor: pointer;height: 40px;" title="Clique para Expandir">
+                                <h4 class="panel-title">
+                                    <i class="fa fa-file-text"></i>
+                                    <strong><label class="control-label"> Texto</label></strong>
+                                </h4>
+                            </div>
+                            <div id="textoCollapse" class="panel-collapse collapse in show">
+                                <div class="panel-body p-0">
+                                    <textarea class="form-control" rows="7" id="texto"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <hr class="hr-line-dashed" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm">
+
+                    <div class="panel-group" id="accordion">
+                        <div class="panel panel-default">
+                            <div class="panel-heading" data-parent="#accordion" href="#respostaMentorCollapse" data-toggle="collapse" style="cursor: pointer;height: 40px;" title="Clique para Expandir">
+                                <h4 class="panel-title">
+                                    <i class="fa fa-file-text-o"></i>
+                                    <strong><label class="control-label"> Resposta do Mentor</label></strong>
+                                </h4>
+                            </div>
+                            <div id="respostaMentorCollapse" class="panel-collapse collapse in">
+                                <div class="panel-body p-0">
+                                    <textarea class="form-control" rows="7" id="resposta"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer" style="justify-content:left;">
+    <button type="button" class="ladda-button ladda-button-demo btn btn-primary btn-salvar" data-url="@Url.Action("Criar","Avaliacoes")" data-style="zoom-out">Salvar Alterações</button>
+    <button type="button" class="btn btn-white" data-dismiss="modal">Fechar</button>
+</div>

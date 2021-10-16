@@ -2,8 +2,6 @@
 using ReclameAquiDoTrader.Business.Core.Communication.Notificacoes;
 using ReclameAquiDoTrader.Business.Interfaces.Data;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ReclameAquiDoTrader.Data
 {
@@ -24,9 +22,9 @@ namespace ReclameAquiDoTrader.Data
             {
                 _session.SaveChanges();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                _notificador.Handle(new Notificacao("","Houve um problema com a persistência dos dados"));
+                _notificador.Handle(new Notificacao("", "Houve um problema com a persistência dos dados"));
             }
         }
 

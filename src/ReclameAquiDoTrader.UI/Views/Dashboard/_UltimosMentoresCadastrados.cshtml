@@ -1,0 +1,82 @@
+﻿@model ReclameAquiDoTrader.UI.ViewModels.HomeViewModels.DashboardItemViewModels
+@using ReclameAquiDoTrader.UI.Extensions;
+<style>
+    .editar {
+        min-width: 28px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+</style>
+
+<div class="ibox shadow rounded slimScrollBar animated fadeIn">
+    <div class="ibox-title">
+        <h5 class="titulo-painel-dashboard">Últimos Mentores cadastrados</h5>
+        <div class="ibox-tools">
+            <a asp-controller="Mentores" asp-action="Cadastrar"
+               type="button" class="btn btn-primary abre-modal-generico" style="margin-top: -8px;"
+               data-toggle="tooltip"
+               data-original-title="Cadastrar mentor">
+                <i class="fa fa-plus"></i>
+            </a>
+        </div>
+    </div>
+    <div class="ibox-content slimScrollBar table-responsive">
+        <table class="table table-hover no-margins">
+            <thead>
+                <tr>
+                    <th>Mentor</th>
+                    <th>Criados às</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.UltimosMentoresCadastrados.Count() > 0)
+                {
+                    @foreach (var mentor in Model.UltimosMentoresCadastrados)
+                    {
+                        <tr>
+                            <td>@mentor.Nome</td>
+                            <td>@mentor.CriadoAs.FormataDataSemHora()</td>
+                            <td class="icones-acoes">
+                                <a asp-controller="Mentores" asp-action="Editar" asp-route-id="@mentor.Id"
+                                   type="button" class="btn btn-outline btn-link text-success abre-modal-generico" style="min-width: 28px; cursor: pointer;"
+                                   data-toggle="tooltip" title="Editar">
+                                    <i class="fa fa-pencil-square-o" data-toggle="tooltip"></i>
+                                </a>
+                                <a asp-controller="Mentores" asp-action="Detalhes" asp-route-id="@mentor.Id"
+                                   type="button" class="btn btn-outline btn-link text-warning abre-modal-generico" style="min-width: 28px; cursor: pointer;"
+                                   data-toggle="tooltip" title="Detalhes">
+                                    <i class="fa fa-search" data-toggle="tooltip"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="3">
+                            Não há mentores cadastrados.
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <hr class="hr-line-dashed" />
+        <a href="@Url.Action("Index", "Mentores")" class="atalho-ver-todos">
+            <span>Ver todos >></span>
+        </a>
+    </div>
+</div>
+
+<script>
+
+    $('[data-toggle="tooltip"]').tooltip();
+
+    $(document).ready(function () {
+        $(".editar").click(function () {
+            window.location = $(this).data("href");
+        });
+    });
+
+</script>

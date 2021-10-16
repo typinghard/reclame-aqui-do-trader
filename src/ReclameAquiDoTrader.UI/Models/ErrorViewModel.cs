@@ -1,5 +1,3 @@
-using System;
-
 namespace ReclameAquiDoTrader.UI.Models
 {
     public class ErrorViewModel

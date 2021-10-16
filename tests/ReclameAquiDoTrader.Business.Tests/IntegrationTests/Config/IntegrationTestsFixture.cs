@@ -2,9 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 using ReclameAquiDoTrader.UI;
 using System;
-using System.Collections.Generic;
 using System.Net.Http;
-using System.Text;
 using System.Text.RegularExpressions;
 using Xunit;
 

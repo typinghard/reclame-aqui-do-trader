@@ -1,9 +1,7 @@
 ﻿using Raven.Client.Documents;
+using Raven.Client.Documents.Session;
 using ReclameAquiDoTrader.Data.Indexes;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace ReclameAquiDoTrader.Data.Extensions
 {
@@ -12,8 +10,12 @@ namespace ReclameAquiDoTrader.Data.Extensions
         public static void Inicializar(this IDocumentStore store)
         {
             EnsureExists(store);
-
+            store.OnAfterSaveChanges += Teste;
             IndexesSetup.Execute(store);
+        }
+        private static void Teste(object sender, AfterSaveChangesEventArgs args)
+        {
+
         }
         private static IDocumentStore EnsureExists(IDocumentStore store)
         {

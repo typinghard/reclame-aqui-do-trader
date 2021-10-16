@@ -1,0 +1,184 @@
+﻿@model IEnumerable<ReclameAquiDoTrader.UI.ViewModels.AvaliacaoViewModels.AvaliacoesPendentesPublicacaoViewModel>
+@using ReclameAquiDoTrader.UI.Extensions;
+@using ReclameAquiDoTrader.Business.Enums;
+@using  Microsoft.AspNetCore.Antiforgery;
+@inject IAntiforgery antiforgery
+
+@{
+    ViewData["Title"] = "Avaliações Pendentes de Publicação";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/lib/select2/css/select2_site.min.css" rel="stylesheet">
+<link href="~/lib/select2/css/select2-bootstrap4.min.css" rel="stylesheet">
+<link href="~/lib/bootstrap/dist/css/bootstrap-tagsinput.css" rel="stylesheet">
+<link rel="stylesheet" href="~/lib/footable/css/footable.bootstrap.min.css" />
+
+<style>
+    .footable-filtering-search .input-group-btn {
+        display: none;
+    }
+
+    .footable-filtering-search {
+        width: 100% !important;
+    }
+
+        .footable-filtering-search .input-group {
+            width: 100% !important;
+        }
+
+    .texto-sucesso {
+        color: #28a745;
+    }
+</style>
+
+<div class="ibox" id="lista_avaliacoes_pendentes">
+    <div class="ibox-title">
+        <h1>@ViewData["Title"]</h1>
+    </div>
+
+    <div class="ibox-content">
+        <div class="ibox-content">
+
+            <table id="tabela-avaliacoes"
+                   class="footable table"
+                   data-paging-count-format="{CP} de {TP} páginas"
+                   data-paging="true"
+                   data-sorting="true"
+                   data-filtering="true"
+                   data-paging-limit="3"
+                   data-filter-placeholder="Pesquise aqui...">
+                <thead>
+                    <tr>
+                        <th data-breakpoints="xs">Publicar</th>
+                        <th>Mentor</th>
+                        <th data-breakpoints="xs">Data Criação</th>
+                        <th data-breakpoints="xs">Última Atualização</th>
+                        <th data-breakpoints="xs">Post</th>
+                        <th data-breakpoints="xs">Positivo</th>
+                        <th data-breakpoints="xs">Respondido</th>
+                        <th data-breakpoints="xs">Expirado</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var avaliacao in Model)
+                    {
+                        <tr>
+                            <td>
+                                <div>
+                                    <a asp-controller="Avaliacoes" asp-action="GerarPublicacao" asp-route-id="@avaliacao.Id"
+                                       class="btn btn-outline btn-success dim abre-modal-generico"
+                                       data-toggle="tooltip" title="Gerar Publicação">
+                                        <i class="fa fa-bullhorn"></i>
+                                    </a>
+                                </div>
+                            </td>
+                            <td>
+                                <div>
+                                    @avaliacao.Mentor
+                                </div>
+                            </td>
+                            <td>
+                                <div>
+                                    @avaliacao.CriadoAs.FormataData()
+                                </div>
+                            </td>
+                            <td>
+                                <div>
+                                    <span title="@avaliacao.AtualizadoAs.FormataData()"> @avaliacao.AtualizadoAs.TempoTras()</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div>
+                                    @if (avaliacao.RedesSociais.Lista != null && avaliacao.RedesSociais.Lista.Count > 0)
+                                    {
+                                        foreach (var redeSocial in avaliacao.RedesSociais.Lista)
+                                        {
+                                            var url = string.Concat("https://", @redeSocial.Url, "/", @redeSocial.Usuario);
+                                            <a href="@url" target="_blank" title="@url">
+                                                <i class="@RedeSocialHtmlHelper.ClasseRedeSocial(redeSocial.Tipo)"></i>
+                                            </a>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        @await Html.PartialAsync("~/Views/Avaliacoes/_SemLinkPostagem.cshtml", avaliacao.Id)
+                                    }
+                                </div>
+                            </td>
+                            <td>
+                                <i class="@AvaliacaoHtmlHelper.ClasseJoinha(avaliacao.Positivo)"></i>
+                            </td>
+                            <td>
+                                <i class="@AvaliacaoHtmlHelper.ClasseCheckCircle(avaliacao.Respondido)"></i>
+                            </td>
+                            <td>
+                                <i class="@AvaliacaoHtmlHelper.ClasseCheckCircle(avaliacao.Expirado)" title="Data expiração: @avaliacao.DataExpiracao"></i>
+                            </td>
+                            <td>
+                                <div class="d-inline-flex">
+                                    <a asp-controller="Avaliacoes" asp-action="Editar" asp-route-id="@avaliacao.Id"
+                                       type="button" class="btn btn-outline btn-link text-success abre-modal-generico" style="min-width: 28px; cursor: pointer;"
+                                       data-toggle="tooltip" title="Editar">
+                                        <i class="fa fa-pencil-square-o" data-toggle="tooltip"></i>
+                                    </a>
+                                    <a asp-controller="Avaliacoes" asp-action="Detalhes" asp-route-id="@avaliacao.Id"
+                                       type="button" class="btn btn-outline btn-link text-warning abre-modal-generico" style="min-width: 28px; cursor: pointer;"
+                                       data-toggle="tooltip" title="Detalhes">
+                                        <i class="fa fa-search" data-toggle="tooltip"></i>
+                                    </a>
+                                    @*<div id="lista_avaliacoes_1">
+                                            @if (avaliacao.Inativo)
+                                            {
+                                                <a asp-controller="Avaliacoes" asp-action="Ativar" asp-route-id="@avaliacao.Id"
+                                                   class="btn btn-outline btn-link text-danger link-avaliacao btn-ativar" style="min-width: 28px; cursor: pointer;"
+                                                   data-toggle="tooltip" title="Ativar Mentor">
+                                                    <i class="fa fa-eye-slash"></i>
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                <a asp-controller="Avaliacoes" asp-action="Inativar" asp-route-id="@avaliacao.Id"
+                                                   type="button" class="btn btn-outline btn-link texto-sucesso abre-modal-generico" style="min-width: 28px; cursor: pointer;"
+                                                   data-toggle="tooltip" title="Inativar Mentor">
+                                                    <i class="fa fa-eye"></i>
+                                                </a>
+                                            }
+                                        </div>*@
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="~/lib/footable/js/footable.3.6.1.min.js"></script>
+
+@*Select2*@
+<script src="~/lib/select2/js/select2.full.min.js"></script>
+
+@*Input Mask*@
+<script src="~/lib/jasny/jasny-bootstrap.min.js"></script>
+
+@*Tags Input*@
+<script src="~/lib/bootstrap/dist/js/bootstrap-tagsinput.js"></script>
+
+<script src="~/lib/datapicker/js/bootstrap-datepicker.js"></script>
+<script src="~/js/avaliacao.js"></script>
+
+@section Scripts
+ {
+    <script>
+        $('[data-toggle="tooltip"]').tooltip();
+
+        $(document).ready(function () {
+
+            $('.footable').footable();
+        });
+    </script>
+}

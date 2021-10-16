@@ -18,21 +18,39 @@
   {
     "outputFileName": "wwwroot/css/site.css",
     "inputFiles": [
+      "wwwroot/lib/dataTables/css/dataTables.bootstrap4.min.css",
+      "wwwroot/lib/dataTables/css/fixedHeader.bootstrap.min.css",
+      "wwwroot/lib/dataTables/css/responsive.bootstrap.min.css",
       "wwwroot/lib/bootstrap/dist/css/bootstrap.css",
       "wwwroot/lib/font-awesome/css/font-awesome.css",
       "wwwroot/lib/css/animate.css",
-      "wwwroot/lib/css/style.css"
+      "wwwroot/lib/css/style.css",
+      "wwwroot/css/reclame-aqui-do-trader.css",
+      "wwwroot/lib/css/toastr.css",
+      "wwwroot/lib/ladda/css/ladda-themeless.min.css",
+      "wwwroot/lib/bootstrap/dist/css/bootstrap-social.css"
+
     ]
   },
   {
     "outputFileName": "wwwroot/js/site.js",
     "inputFiles": [
+      "wwwroot/lib/Popper/popper.min.js",
       "wwwroot/lib/jquery/dist/jquery.js",
       "wwwroot/lib/bootstrap/dist/js/bootstrap.js",
       "wwwroot/lib/metisMenu/dist/jquery.metisMenu.js",
       "wwwroot/lib/slimScroll/jquery.slimscroll.js",
       "wwwroot/lib/pace/pace.js",
-      "wwwroot/lib/js/script.js"
+      "wwwroot/lib/js/script.js",
+      "wwwroot/js/reclame-aqui-do-trader.js",
+      "wwwroot/js/mentor.js",
+      "wwwroot/js/async-views.js",
+      "wwwroot/lib/js/toastr.min.js",
+      "wwwroot/lib/ladda/js/spin.min.js",
+      "wwwroot/lib/ladda/js/ladda.min.js",
+      "wwwroot/lib/ladda/js/ladda.jquery.min.js",
+      "wwwroot/lib/jasny/jasny-bootstrap.min.js",
+      "wwwroot/lib/dotdodot/jquery.dotdotdot.min.js"
     ]
   }
 ]

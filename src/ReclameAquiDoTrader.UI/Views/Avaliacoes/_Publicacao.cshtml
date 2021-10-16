@@ -1,0 +1,275 @@
+﻿@model ReclameAquiDoTrader.UI.ViewModels.PublicacaoViewModel.PublicacaoViewModels
+@using  Microsoft.AspNetCore.Antiforgery;
+@inject IAntiforgery antiforgery
+
+<link href="~/lib/awesome-bootstrap-checkbox/css/awesome-bootstrap-checkbox.css" rel="stylesheet" />
+
+<style>
+
+    .carousel .carousel-control-prev {
+        visibility: hidden;
+    }
+
+    .carousel:hover .carousel-control-prev {
+        visibility: visible;
+    }
+
+    .carousel .carousel-control-next {
+        visibility: hidden;
+    }
+
+    .carousel:hover .carousel-control-next {
+        visibility: visible;
+    }
+</style>
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+    <h4 class="modal-title">Publicação</h4>
+    <small class="font-bold">Dados da publicação.</small>
+</div>
+
+<div class="modal-body bg-white">
+    <div class="row">
+
+        <div>
+            <p>
+                <strong class="text-justify"> <i class="fa fa-exclamation-triangle text-warning"></i> O nome do usuário pode não ficar fixo no centro da tela, pois depende da quantidade e dos caracteres que possuí.</strong>
+            </p>
+            <p>
+                <strong class="text-justify"><i class="fa fa-exclamation-triangle text-warning"></i> Pode ser que seja necessário um ajuste manual de alguma forma para o ajuste final.</strong>
+            </p>
+            <div class="col-sm m-b col-md-4">
+                @Html.AntiForgeryToken()
+                <input asp-for="@Model.AvaliacaoId" type="hidden" id="id" data-url="@Url.Action("Publicar", "Avaliacoes", new { AvaliacaoId = @Model.AvaliacaoId})">
+                <strong><label class="control-label">Marcar como Publicada</label></strong>
+                <br />
+                <div class="form-check abc-checkbox abc-checkbox-success form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="chkPublicada" checked="@Model.Publicada">
+                    <label class="form-check-label" for="chkPublicada"> Publicada </label>
+                </div>
+            </div>
+            <hr class="hr-line-dashed" />
+        </div>
+
+        <div class="tabs-container">
+            <ul class="nav nav-tabs">
+                <li><a class="nav-link active" data-toggle="tab" href="#tab-1" title="Mentor"> <i class="fa fa-graduation-cap"></i></a></li>
+                @if (Model.Avaliacao.Any())
+                {
+                    <li><a class="nav-link" data-toggle="tab" href="#tab-2" title="Texto da Avaliação"><i class="fa fa-file-text-o"></i></a></li>
+                }
+                @if (Model.Resposta.Any())
+                {
+                    <li><a class="nav-link" data-toggle="tab" href="#tab-3" title="Resposta do Mentor"><i class="fa fa-file-text"></i></a></li>
+                }
+            </ul>
+            <div class="tab-content">
+
+                <div id="tab-1" class="tab-pane active">
+                    <div class="panel-body">
+
+                        <div class="row">
+                            @await Html.PartialAsync("~/Views/Publicacao/_ImgMentor.cshtml", Model.Mentor)
+                        </div>
+
+                    </div>
+                </div>
+
+                @if (Model.Avaliacao.Any())
+                {
+                    <div id="tab-2" class="tab-pane">
+                        <div class="panel-body">
+
+                            <div class="row">
+                                @if (Model.Avaliacao.Count > 1)
+                                {
+                                    <div id="carouselAvaliacoes" class="carousel slide" data-ride="carousel">
+                                        <div class="carousel-inner">
+                                            @foreach (var avaliacao in Model.Avaliacao)
+                                            {
+                                                if (avaliacao.PaginaAtual == 1)
+                                                {
+                                                    <div class="carousel-item active">
+                                                        @await Html.PartialAsync("~/Views/Publicacao/_Avaliacao.cshtml", avaliacao)
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <div class="carousel-item">
+                                                        @await Html.PartialAsync("~/Views/Publicacao/_Avaliacao.cshtml", avaliacao)
+                                                    </div>
+                                                }
+                                            }
+                                        </div>
+                                        <a class="carousel-control-prev" href="#carouselAvaliacoes" role="button" data-slide="prev">
+                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                            <span class="sr-only">Anterior</span>
+                                        </a>
+                                        <a class="carousel-control-next" href="#carouselAvaliacoes" role="button" data-slide="next">
+                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                            <span class="sr-only">Próximo</span>
+                                        </a>
+                                    </div>
+                                }
+                                else
+                                {
+                                    @await Html.PartialAsync("~/Views/Publicacao/_Avaliacao.cshtml", Model.Avaliacao.First())
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+                @if (Model.Resposta.Any())
+                {
+                    <div id="tab-3" class="tab-pane">
+                        <div class="panel-body">
+
+                            <div class="row">
+                                @if (Model.Resposta.Count > 1)
+                                {
+                                    <div id="carouselRespostas" class="carousel slide" data-ride="carousel">
+                                        <div class="carousel-inner">
+                                            @foreach (var respostaMentor in Model.Resposta)
+                                            {
+                                                if (respostaMentor.PaginaAtual == 1)
+                                                {
+                                                    <div class="carousel-item active">
+                                                        @await Html.PartialAsync("~/Views/Publicacao/_RespostaMentor.cshtml", respostaMentor)
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <div class="carousel-item">
+                                                        @await Html.PartialAsync("~/Views/Publicacao/_RespostaMentor.cshtml", respostaMentor)
+                                                    </div>
+                                                }
+                                            }
+                                        </div>
+                                        <a class="carousel-control-prev" href="#carouselRespostas" role="button" data-slide="prev">
+                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                            <span class="sr-only">Anterior</span>
+                                        </a>
+                                        <a class="carousel-control-next" href="#carouselRespostas" role="button" data-slide="next">
+                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                            <span class="sr-only">Próximo</span>
+                                        </a>
+                                    </div>
+                                }
+                                else
+                                {
+                                    @await Html.PartialAsync("~/Views/Publicacao/_RespostaMentor.cshtml", Model.Resposta.First())
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer" style="justify-content: left;">
+    @*<a type="button" class="ladda-button ladda-button-demo btn btn-info" asp-controller="Avaliacoes" asp-action="DownloadPublicacaoZip" asp-route-id="@Model.AvaliacaoId" data-style="zoom-out">Download Imagens</a>*@
+    <button type="button" class="btn btn-info" data-dismiss="modal">Fechar</button>
+</div>
+
+<script src="~/js/publicacao.js"></script>
+<!-- slick carousel-->
+
+<script>
+    $('[data-toggle="tooltip"]').tooltip();
+
+    $(document).ready(function () {
+
+        $('#modalGenerico').on('shown.bs.modal', function (e) {
+
+
+        })
+
+        $('#modalGenerico').on('hidden.bs.modal', function () {
+
+            if ($('#chkPublicada').is(":checked")) {
+
+                if ($('.painel-principal').length > 0) {
+                    window.location.href = '/Dashboard';
+                }
+
+                if ($('.lista_avaliacoes_pendentes').length > 0) {
+                    window.location.href = 'Avaliacoes/PendentesPublicacao';
+                }
+
+            }
+
+            //console.log($('#id').val());
+            //if ($('#id').val() !== undefined)
+            //RemoverImagensPublicacao();
+        })
+
+        $('#chkPublicada').on("click", function (e) {
+            PublicarAvaliacao();
+        });
+
+        function RemoverImagensPublicacao() {
+
+            $.ajax({
+                headers:
+                {
+                    "RequestVerificationToken": $("input[name='__RequestVerificationToken']").val()
+                },
+                url: $('#id').data('url'),
+                type: 'post',
+                contentType: false,
+                processData: false,
+                success: function (result) {
+                    //console.log(result);
+
+                    if (result.atualizar_pagina === true) {
+
+                        if ($('.painel-principal').length > 0) {
+                            $('#modalGenerico').modal('hide');
+                            window.location.href = result.url_painel_principal;
+                        }
+
+                        if ($('.lista_avaliacoes_pendentes').length > 0) {
+                            $('#modalGenerico').modal('hide');
+                            window.location.href = result.lista_avaliacoes_pendentes;
+                        }
+                    }
+
+                },
+                error: function (result) {
+                    TratarErro(result);
+                },
+                complete: function () { }
+            });
+
+        }
+
+        function PublicarAvaliacao() {
+
+            var obj = {
+                AvaliacaoId: $('#id').val(),
+                Publicada: $('#chkPublicada').is(":checked")
+            }
+            console.log(obj);
+            $.ajax({
+                headers:
+                {
+                    "RequestVerificationToken": $("input[name='__RequestVerificationToken']").val()
+                },
+                url: $('#id').data('url'),
+                type: 'post',
+                contentType: "application/json;",
+                data: JSON.stringify(obj),
+                success: function (result) {
+                    console.log(result);
+                    toastr.success('Publicação atualizada com sucesso!', 'Sucesso');
+                },
+                error: function (result) {
+                    TratarErro(result);
+                },
+                complete: function () { }
+            });
+        }
+    });
+</script>

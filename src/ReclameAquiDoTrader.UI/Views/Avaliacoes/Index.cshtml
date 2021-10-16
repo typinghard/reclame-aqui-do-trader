@@ -1,57 +1,238 @@
-﻿@{
-    ViewData["Title"] = "Avaliações";
+﻿@model ReclameAquiDoTrader.UI.ViewModels.AvaliacaoViewModels.DetalhesAvaliacaoItemViewModel
+@using ReclameAquiDoTrader.UI.Extensions;
+@using ReclameAquiDoTrader.Business.Enums;
+@using  Microsoft.AspNetCore.Antiforgery;
+@inject IAntiforgery antiforgery
+
+@{
+    ViewData["Title"] = "Listar Avaliações";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="row wrapper border-bottom white-bg page-heading">
-    <div class="col-lg-10">
-        <h2>Avaliações</h2>
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item">
-                <a href="@Url.Action("Index", "Home")">Dashboard</a>
-            </li>
-            <li class="breadcrumb-item active">
-                <strong>Avaliações</strong>
-            </li>
-        </ol>
+<link href="~/lib/select2/css/select2_site.min.css" rel="stylesheet">
+<link href="~/lib/select2/css/select2-bootstrap4.min.css" rel="stylesheet">
+<link href="~/lib/bootstrap/dist/css/bootstrap-tagsinput.css" rel="stylesheet">
+<link rel="stylesheet" href="~/lib/footable/css/footable.bootstrap.min.css" />
+
+<script src="~/lib/dataTables/js/jquery.dataTables.min.js"></script>
+<script src="~/lib/dataTables/js/dataTables.bootstrap4.min.js"></script>
+<script src="~/lib/dataTables/js/dataTables.fixedHeader.min.js"></script>
+<script src="~/lib/dataTables/js/dataTables.responsive.min.js"></script>
+<script src="~/lib/dataTables/js/responsive.bootstrap.min.js"></script>
+
+<style>
+    .footable-filtering-search .input-group-btn {
+        display: none;
+    }
+
+    .footable-filtering-search {
+        width: 100% !important;
+    }
+
+        .footable-filtering-search .input-group {
+            width: 100% !important;
+        }
+
+    .texto-sucesso {
+        color: #28a745;
+    }
+</style>
+
+<div class="ibox" id="lista_avaliacoes">
+    <div class="ibox-title">
+        <h1>@ViewData["Title"]</h1>
+        <div class="ibox-tools">
+            <a asp-controller="Avaliacoes" asp-action="Cadastrar"
+               type="button" class="btn btn-primary abre-modal-generico"
+               data-toggle="tooltip"
+               data-original-title="Cadastrar Mentor">
+                <i class="fa fa-plus"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="ibox-content">
+        <div class="ibox-content">
+
+            <table id="tabela-avaliacoes"
+                   class="footable table"
+                   data-paging-count-format="{CP} de {TP} páginas"
+                   data-paging="true"
+                   data-sorting="true"
+                   data-filtering="true"
+                   data-paging-limit="3"
+                   data-filter-placeholder="Pesquise aqui...">
+                <thead>
+                    <tr>
+                        <th>Mentor</th>
+                        <th data-breakpoints="xs">Data Criação</th>
+                        <th data-breakpoints="xs">Última Atualização</th>
+                        <th data-breakpoints="xs">Post</th>
+                        <th data-breakpoints="xs">Positivo</th>
+                        <th data-breakpoints="xs">Respondido</th>
+                        <th data-breakpoints="xs">Expirado</th>
+                        <th data-breakpoints="xs">Comprovantes</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var avaliacao in Model.Avaliacoes)
+                    {
+                        <tr>
+                            <td>
+                                <div>
+                                    @avaliacao.Mentor
+                                </div>
+                            </td>
+                            <td>
+                                <div>
+                                    @avaliacao.CriadoAs.FormataData()
+                                </div>
+                            </td>
+                            <td>
+                                <div>
+                                    <span title="@avaliacao.AtualizadoAs.FormataData()"> @avaliacao.AtualizadoAs.TempoTras()</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div>
+                                    @if (avaliacao.RedesSociais.Lista != null)
+                                    {
+                                        foreach (var redeSocial in avaliacao.RedesSociais.Lista)
+                                        {
+                                            var url = string.Concat("https://", @redeSocial.Url, "/", @redeSocial.Usuario);
+                                            <a href="@url" target="_blank" title="@url">
+                                                <i class="@RedeSocialHtmlHelper.ClasseRedeSocial(redeSocial.Tipo)"></i>
+                                            </a>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        @await Html.PartialAsync("_SemLinkPostagem", avaliacao.Id)
+                                    }
+                                </div>
+                            </td>
+                            <td>
+                                @if (avaliacao.Positivo)
+                                {
+                                    <i class="texto-sucesso fa fa-thumbs-o-up"></i>
+                                }
+                                else
+                                {
+                                    <i class="text-danger fa fa-thumbs-o-down"></i>
+                                }
+                            </td>
+                            <td>
+                                <i class="@AvaliacaoHtmlHelper.ClasseCheckCircle(avaliacao.Respondido)"></i>
+                            </td>
+                            <td>
+                                @if (avaliacao.Expirado)
+                                {
+                                    <i class="texto-sucesso fa fa-check-circle-o"></i>
+                                }
+                                else
+                                {
+                                    <i class="text-danger fa fa-times-circle-o"></i>
+                                }
+                            </td>
+                            <td>
+                                @if (avaliacao.Comprovantes.Count > 0)
+                                {
+                                    <span>@avaliacao.Comprovantes.Count</span>
+                                }
+                                else
+                                {
+                                    <span>-</span>
+                                }
+                            </td>
+                            <td>
+                                <div class="d-inline-flex">
+                                    <a asp-controller="Avaliacoes" asp-action="Editar" asp-route-id="@avaliacao.Id"
+                                       type="button" class="btn btn-outline btn-link text-success abre-modal-generico" style="min-width: 28px; cursor: pointer;"
+                                       data-toggle="tooltip" title="Editar">
+                                        <i class="fa fa-pencil-square-o" data-toggle="tooltip"></i>
+                                    </a>
+                                    <a asp-controller="Avaliacoes" asp-action="Detalhes" asp-route-id="@avaliacao.Id"
+                                       type="button" class="btn btn-outline btn-link text-warning abre-modal-generico" style="min-width: 28px; cursor: pointer;"
+                                       data-toggle="tooltip" title="Detalhes">
+                                        <i class="fa fa-search" data-toggle="tooltip"></i>
+                                    </a>
+                                    <div id="lista_avaliacoes_1">
+                                        @if (avaliacao.Inativo)
+                                        {
+                                            <a asp-controller="Avaliacoes" asp-action="Ativar" asp-route-id="@avaliacao.Id"
+                                               class="btn btn-outline btn-link text-danger link-avaliacao btn-ativar" style="min-width: 28px; cursor: pointer;"
+                                               data-toggle="tooltip" title="Ativar Mentor">
+                                                <i class="fa fa-eye-slash"></i>
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <a asp-controller="Avaliacoes" asp-action="Inativar" asp-route-id="@avaliacao.Id"
+                                               type="button" class="btn btn-outline btn-link texto-sucesso abre-modal-generico" style="min-width: 28px; cursor: pointer;"
+                                               data-toggle="tooltip" title="Inativar Mentor">
+                                                <i class="fa fa-eye"></i>
+                                            </a>
+                                        }
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+        </div>
     </div>
 </div>
 
+<script>
+    var dados = []
+    var data = [];
+</script>
 
-<div class="row" style="margin-top: 13px;">
-    <div class="col-lg-3">
-        <div class="ibox ">
-            <div class="ibox-title">
-                <div class="ibox-tools">
+@foreach (var avaliacao in Model.Avaliacoes)
+{
+    <script>
+        dados.push([
+            "@avaliacao.Mentor",
+            "@avaliacao.CriadoAs"
+        ]);
+    </script>
+}
 
-                </div>
-                <h5>Total de avaliações</h5>
-            </div>
-            <div class="ibox-content">
-                <span class="no-margins col-md-6" style="font-size: 20px;">
-                    114
-                </span>
-                <button type="button" class="btn btn-w-m btn-primary" style="float: right;">
-                    Nova avaliação
-                </button>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-3">
-        <div class="ibox ">
-            <div class="ibox-title">
-                <div class="ibox-tools">
+<script src="~/lib/footable/js/footable.3.6.1.min.js"></script>
 
-                </div>
-                <h5>Total de mentores</h5>
-            </div>
-            <div class="ibox-content">
-                <span class="no-margins col-md-6" style="font-size: 20px;">
-                    74
-                </span>
-                <button type="button" class="btn btn-w-m btn-info" style="float: right;">
-                    Novo mentor
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
+@*Select2*@
+<script src="~/lib/select2/js/select2.full.min.js"></script>
+
+@*Input Mask*@
+<script src="~/lib/jasny/jasny-bootstrap.min.js"></script>
+
+@*Tags Input*@
+<script src="~/lib/bootstrap/dist/js/bootstrap-tagsinput.js"></script>
+
+<script src="~/lib/datapicker/js/bootstrap-datepicker.js"></script>
+<script src="~/js/avaliacao.js"></script>
+
+@section Scripts
+ {
+    <script>
+        $('[data-toggle="tooltip"]').tooltip();
+
+        $(document).ready(function () {
+            //var table = $('#example').DataTable({
+            //    "language": {
+            //        "url": "/lib/dataTables/js/pt_br.js"
+            //    },
+            //    "scrollX": true,
+            //    responsive: false,
+            //});
+
+            //new $.fn.dataTable.FixedHeader(table);
+
+
+            $('.footable').footable();
+        });
+    </script>
+}

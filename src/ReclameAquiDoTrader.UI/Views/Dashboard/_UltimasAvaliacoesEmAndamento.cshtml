@@ -1,0 +1,72 @@
+﻿@model ReclameAquiDoTrader.UI.ViewModels.HomeViewModels.DashboardItemViewModels
+@using ReclameAquiDoTrader.Business.Enums;
+@using ReclameAquiDoTrader.UI.Extensions;
+<style>
+    .editar {
+        min-width: 28px;
+        cursor: pointer;
+    }
+</style>
+
+<div class="col-md-3">
+    <h2><br /></h2>
+    <div>
+        <small>Você tem @Model.QtdeAvaliacoesEmAndamento avaliações em andamento.</small> <i class="fa fa-info-circle text-info" data-toggle="tooltip" title="Avaliações que não expiraram e estão aguardando resposta do mentor." style="cursor:pointer;"></i>
+        <ul class="list-group clear-list m-t">
+            @if (Model.AvaliacoesEmAndamento.Count > 0)
+            {
+                @foreach (var avaliacao in Model.AvaliacoesEmAndamento)
+                {
+                    <li class="list-group-item">
+                        <span class="float-right">
+                            <a asp-controller="Avaliacoes" asp-action="Detalhes" asp-route-id="@avaliacao.AvaliacaoId"
+                               type="button" class="btn btn-outline btn-link text-warning abre-modal-generico" style="min-width: 28px; cursor: pointer;"
+                               data-toggle="tooltip" title="Detalhes">
+                                <i class="fa fa-search" data-toggle="tooltip"></i>
+                            </a>
+                        </span>
+                        @if (avaliacao.RedesSociais.Lista?.Count > 0)
+                        {
+                            @foreach (var redeSocial in avaliacao.RedesSociais.Lista)
+                            {
+                                <a href="@string.Concat("https://www.", redeSocial.Url)" target="_blank">
+                                    <i class="@RedeSocialHtmlHelper.ClasseRedeSocial(redeSocial.Tipo)"></i>
+                                </a>
+                            }
+                        }
+                        else
+                        {
+                            @await Html.PartialAsync("~/Views/Avaliacoes/_SemLinkPostagem.cshtml", avaliacao.AvaliacaoId)
+                        }
+                        <span> @avaliacao.Mentor</span>
+                    </li>
+                }
+
+            }
+            else
+            {
+                <li class="list-group-item">
+                    <span>Não há avaliações em andamento.</span>
+                </li>
+            }
+        </ul>
+        @if (Model.QtdeAvaliacoesEmAndamento > 5)
+        {<hr class="hr-line-dashed" />
+            <a href="@Url.Action("EmAndamento", "Avaliacoes")" class="atalho-ver-todos">
+                <span>Ver todos >></span>
+            </a>
+        }
+    </div>
+</div>
+
+<script>
+
+    $('[data-toggle="tooltip"]').tooltip();
+
+    $(document).ready(function () {
+        $(".editar").click(function () {
+            window.location = $(this).data("href");
+        });
+    });
+
+</script>

@@ -1,21 +1,16 @@
 ﻿using AutoMapper;
-using ReclameAquiDoTrader.Business.Aggregates;
-using ReclameAquiDoTrader.UI.ViewModels.MentoresViewModels;
-using ReclameAquiDoTrader.UI.ViewModels.PublicacaoViewModels;
 
 namespace ReclameAquiDoTrader.UI.AutoMapper
 {
     public class AutoMapperConfig : Profile
     {
-        public AutoMapperConfig()
+        public static MapperConfiguration RegisterMappings()
         {
-            CreateMap<Mentor, CriarMentorViewModel>().ReverseMap();
-            CreateMap<Mentor, AlterarMentorViewModel>().ReverseMap();
-            CreateMap<Mentor, RemoverMentorViewModel>().ReverseMap();
-
-            CreateMap<Avaliacao, CriarAvaliacaoViewModel>().ReverseMap();
-            CreateMap<Avaliacao, AlterarAvaliacaoViewModel>().ReverseMap();
-            CreateMap<Avaliacao, RemoverAvaliacaoViewModel>().ReverseMap();
+            return new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new DomainToViewModelMappingProfile());
+                cfg.AddProfile(new ViewModelToDomainMappingProfile());
+            });
         }
     }
 }

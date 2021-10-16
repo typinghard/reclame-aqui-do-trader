@@ -1,0 +1,39 @@
+﻿@model ReclameAquiDoTrader.UI.ViewModels.AvaliacaoViewModels.IdAvaliacaoViewModel
+@using  Microsoft.AspNetCore.Antiforgery;
+@inject IAntiforgery antiforgery
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+    <h4 class="modal-title">Inativar Avaliação</h4>
+</div>
+
+<div class="modal-body bg-white">
+    <div class="row pb-3">
+        <div class="col-sm">
+            <h3>Voce está prestes a inativar esta avaliação!</h3>
+            <i class="fa fa-warning text-warning"></i>
+            <span class="text-justify">Esta avaliação não aparecerá para o público página de pesquisa.</span>
+        </div>
+    </div>
+    <div class="row pb-3 border-bottom">
+        <div class="col-sm">
+            <i class="fa fa-info-circle text-success"></i>
+            <span class="font-bold">Está operação poderá ser desfeita em clicando no icone <i class="fa fa-eye-slash text-danger"></i>.</span>
+        </div>
+    </div>
+    <div class="row pb-3">
+        <div class="col-sm mt-3">
+            @Html.AntiForgeryToken()
+            <input asp-for="Id" type="hidden" id="id">
+            <button type="button" class="ladda-button ladda-button-demo btn btn-danger btn-inativar" data-url="@Url.Action("Inativar","Avaliacoes")" data-style="zoom-out">
+                <i class="fa fa-eye-slash"></i> Inativar
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer" style="justify-content:left;">
+    <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
+</div>
+
+
+<script src="~/js/avaliacao.js" charset="utf-8"></script>

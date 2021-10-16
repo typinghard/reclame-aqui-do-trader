@@ -1,0 +1,32 @@
+﻿@model ReclameAquiDoTrader.UI.ViewModels.AvaliacaoViewModels.IdAvaliacaoViewModel
+@using  Microsoft.AspNetCore.Antiforgery;
+@inject IAntiforgery antiforgery
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+    <h4 class="modal-title">Remover Status de Publicação</h4>
+</div>
+
+<div class="modal-body bg-white">
+    <div class="row pb-3 border-bottom">
+        <div class="col-sm font-bold">
+            <i class="fa fa-info-circle text-info"></i>
+            <span class="text-justify">Esta avaliação retornará para sua respectiva lista (pendentes de publicação ou em andamento). Ela avaliação poderá ser publicada novamento a qualquer momento clicando no botão <button class="btn btn-outline btn-success"><i class="fa fa-bullhorn"></i></button> no painel do <a href="@Url.Action("Index", "Dashboard")">Dashboard</a>  ou na página que lista as <a href="@Url.Action("PendentesPublicacao", "Avaliacoes")">Avaliações para Publicar</a>.</span>
+        </div>
+    </div>
+    <div class="row pb-3">
+        <div class="col-sm mt-3">
+            @Html.AntiForgeryToken()
+            <input asp-for="Id" type="hidden" id="id">
+            <button type="button" class="ladda-button ladda-button-demo btn btn-danger btn-remover-publicacao" data-url="@Url.Action("RemoverPublicacao","Avaliacoes")" data-style="zoom-out">
+                <i class="fa fa-undo"></i> Remover Status
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer" style="justify-content:left;">
+    <button type="button" class="btn btn-info" data-dismiss="modal">Fechar</button>
+</div>
+
+
+<script src="~/js/avaliacao.js" charset="utf-8"></script>

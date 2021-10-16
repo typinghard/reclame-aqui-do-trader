@@ -1,0 +1,32 @@
+﻿@using ReclameAquiDoTrader.UI.Extensions;
+@model List<ReclameAquiDoTrader.UI.ViewModels.PesquisaViewModels.QuantidadePorMentorViewModel>
+@{
+    var melhorMentor = Model.OrderByDescending(x => x.Quantidade).First().Mentor;
+}
+
+<div class="col-md-3">
+    <div class="ibox-content text-center">
+        <h1>@melhorMentor.Nome</h1>
+
+        <p class="font-bold">É o mentor mais bem avaliado</p>
+
+        <div class="text-center">
+            @foreach (var redeSocial in melhorMentor.RedesSociais)
+            {
+                <a target="_blank" href="@redeSocial.Url" class="btn btn-xs btn-white">
+                    <i class="@RedeSocialHtmlHelper.ClasseRedeSocial(redeSocial.Tipo)"></i>
+                    @redeSocial.Tipo.Display()
+                </a>
+            }
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $(document).ready(function () {
+        $('.footable').footable();
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+
+</script>

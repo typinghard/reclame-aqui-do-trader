@@ -1,0 +1,150 @@
+﻿@using ReclameAquiDoTrader.UI.Extensions;
+@model ReclameAquiDoTrader.UI.ViewModels.MentoresViewModels.DetalhesMentorViewModels
+@using ReclameAquiDoTrader.Business.Enums;
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+    <h4 class="modal-title">Detalhes do mentor</h4>
+    @*<small class="font-bold">Cadastre um novo mentor.</small>*@
+</div>
+
+<div class="modal-body bg-white">
+    <div class="row pb-3 border-bottom">
+        <div class="col-sm mt-3">
+            <h3>@Html.DisplayNameFor(model => model.Nome)</h3>
+            <span>@Html.DisplayFor(model => model.Nome)</span>
+            <br />
+        </div>
+        <div class="col-sm mt-3">
+            <h3>@Html.DisplayNameFor(model => model.Site)</h3>
+            <span>
+                @if (!string.IsNullOrEmpty(Model.Site))
+                {
+                    <a href="@string.Concat("https://", Model.Site)" target="_blank">
+                        <span>@Model.Site</span>
+                    </a>
+                }
+                else
+                {
+                    <span>
+                        Não há site cadastrado
+                    </span>
+                }
+            </span>
+            <br />
+        </div>
+    </div>
+    <div class="row mt-3 pb-3 border-bottom">
+        <div class="col-sm">
+            <h3>Data de Criação</h3>
+            <span>@Model.CriadoAs.FormataData()</span>
+            <br />
+        </div>
+        <div class="col-sm">
+            <h3>Última Atualização</h3>
+            <span title="@Model.AtualizadoAs">@Model.AtualizadoAs.TempoTras()</span>
+            <br />
+        </div>
+    </div>
+    <div class="row mt-3 pb-3 border-bottom">
+        <div class="col-sm">
+            <h3>Áreas de Atuação</h3>
+            <span>
+                @if (Model.AreasDeAtuacao != null && Model.AreasDeAtuacao.Count > 0)
+                {
+                    @foreach (var areaAtuacao in Model.AreasDeAtuacao)
+                    {
+                        <span class="label label-success ml-1">@string.Concat(areaAtuacao)</span>
+                    }
+                }
+                else
+                {
+                    <span>
+                        Não há áreas de atuação cadastradas
+                    </span>
+                }
+            </span>
+        </div>
+    </div>
+    <div class="row mt-3 border-bottom">
+        <div class="col-sm">
+            <h3>Redes Sociais</h3>
+            <span>
+                @if (Model.RedesSociais != null && Model.RedesSociais.Count > 0)
+                {
+                    @foreach (var redeSocial in Model.RedesSociais)
+                    {
+                        var url = string.Concat("https://", @redeSocial.Url, "/", @redeSocial.Usuario);
+
+                        <a href="@url" target="_blank" title="@url">
+                            <i class="@RedeSocialHtmlHelper.ClasseRedeSocial(redeSocial.Tipo)"></i>
+                            <span>@redeSocial.Usuario</span>
+                        </a>
+                        <br />
+                    }
+                }
+                else
+                {
+                    <span>
+                        Não há redes sociais cadastradas
+                    </span>
+                }
+            </span>
+            <br />
+        </div>
+        <div class="col-sm">
+            <h3>@Html.DisplayNameFor(model => model.Telefones)</h3>
+            <span>
+                @if (Model.Telefones != null && Model.Telefones.Count > 0)
+                {
+                    @foreach (var telefone in Model.Telefones)
+                    {
+                        <span>@telefone.Numero.FormataTelefone()</span>
+                        <br />
+                    }
+                }
+                else
+                {
+                    <span>
+                        Não há telefones cadastrados
+                    </span>
+                }
+            </span>
+            <br />
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-sm">
+            <h3>@Html.DisplayNameFor(model => model.Emails)</h3>
+            <span>
+                @if (Model.Emails != null && Model.Emails.Count > 0)
+                {
+                    @foreach (var email in Model.Emails)
+                    {
+                        <span>@email.Endereco</span>
+                        <br />
+                    }
+                }
+                else
+                {
+                    <span>
+                        Não há e-mails cadastrados
+                    </span>
+                }
+            </span>
+            <br />
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer" style="justify-content:left;">
+    @*<button type="button" class="ladda-button ladda-button-demo btn btn-primary btn-salvar" data-url="@Url.Action("Criar","Mentores")" data-style="zoom-out">Salvar Alterações</button>*@
+    <button type="button" class="btn btn-info" data-dismiss="modal">Fechar</button>
+</div>
+
+<script src="~/js/mentor.js" charset="utf-8"></script>
+
+@section Scripts {
+
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

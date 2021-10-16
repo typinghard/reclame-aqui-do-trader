@@ -1,0 +1,73 @@
+﻿@using ReclameAquiDoTrader.UI.Extensions;
+@model ReclameAquiDoTrader.UI.ViewModels.HomeViewModels.DashboardItemViewModels
+
+<style>
+    .editar {
+        min-width: 28px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+</style>
+
+<div class="ibox shadow rounded slimScrollBar animated fadeIn">
+    <div class="ibox-title">
+        <h5 class="titulo-painel-dashboard">Últimos Assinantes cadastrados</h5>
+        <div class="ibox-tools">
+        </div>
+    </div>
+    <div class="ibox-content table-responsive">
+        <table class="table table-hover no-margins">
+            <thead>
+                <tr>
+                    <th>E-mail</th>
+                    <th>Cadastrado às</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.UltimosAssinantesCadastrados.Count > 0)
+                {
+                    @foreach (var assinante in Model.UltimosAssinantesCadastrados)
+                    {
+                        <tr>
+                            <td>@assinante.Telefone.FormataTelefone()</td>
+                            <td>@assinante.CriadoAs.FormataDataSemHora()</td>
+                            <td class="icones-acoes">
+                                <a asp-controller="Assinantes" asp-action="Detalhes" asp-route-id="@assinante.Id"
+                                   type="button" class="btn btn-outline btn-link text-warning abre-modal-generico" style="min-width: 28px; cursor: pointer;"
+                                   data-toggle="tooltip" title="Detalhes">
+                                    <i class="fa fa-search" data-toggle="tooltip"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="3">
+                            Não há assinantes cadastrados.
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <hr class="hr-line-dashed" />
+        <span></span>
+        <a href="@Url.Action("Index", "Assinantes")" class="atalho-ver-todos">
+            <span>Ver todos >></span>
+        </a>
+    </div>
+</div>
+
+<script>
+
+    $('[data-toggle="tooltip"]').tooltip();
+
+    $(document).ready(function () {
+        $(".editar").click(function () {
+            window.location = $(this).data("href");
+        });
+    });
+
+</script>

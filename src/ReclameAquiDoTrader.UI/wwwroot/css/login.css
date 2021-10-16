@@ -16254,7 +16254,7 @@ h5 {
 .nav-header {
   padding: 33px 25px;
   background-color: #2f4050;
-  background-image: url("../lib/css/patterns/header-profile.png");
+  /*background-image: url("../lib/css/~/img/header_one.jpg");*/
 }
 .caret {
   display: inline-block;

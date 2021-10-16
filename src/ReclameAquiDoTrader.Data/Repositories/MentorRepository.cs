@@ -7,8 +7,9 @@ namespace ReclameAquiDoTrader.Data.Repositories
 {
     public class MentorRepository : Repository<Mentor>, IMentorRepository
     {
-        public MentorRepository(INotificador notificador,
-                                IDocumentSession session) : base(session, notificador)
+        public MentorRepository(IDocumentSession session,
+                                IAsyncDocumentSession asyncSession,
+                                INotificador notificador) : base(session, asyncSession, notificador)
         {
         }
     }

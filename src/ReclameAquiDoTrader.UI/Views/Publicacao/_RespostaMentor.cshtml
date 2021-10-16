@@ -1,0 +1,12 @@
+﻿@model ReclameAquiDoTrader.UI.ViewModels.PublicacaoViewModel.RespostaMentorViewModel
+
+
+<div style=" position:relative; left: 0; top: 0; margin:0 auto; padding:0">
+    <img class=" w-100 position: relative;" src="@Model.ImagemFundo" style=" opacity: 99%;">
+    <span style=" position:absolute;left:8%;top:25%;text-align:justify;color:#ffffff;font-weight:bold;background-color:#060606000;width:84%;font-size:1.35em;">
+        @Model.Resposta
+    </span>
+    <span style=" position:absolute;left:48%;bottom:2%;color:#ffffff;font-weight:bold;font-size:1.35em;">
+        @Model.PaginaAtual/@Model.PaginaFinal
+    </span>
+</div>

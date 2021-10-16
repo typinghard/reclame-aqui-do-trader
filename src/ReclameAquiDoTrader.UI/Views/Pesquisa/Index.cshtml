@@ -1,0 +1,128 @@
+﻿@using ReclameAquiDoTrader.UI.Extensions;
+@using ReclameAquiDoTrader.Business.Enums;
+@model ReclameAquiDoTrader.UI.ViewModels.PesquisaViewModels.AvaliacaoParaPesquisaViewModel
+@{
+    ViewData["Title"] = "ReclameAquiDoTrader";
+    Layout = "";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reclame Aqui do Trader</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="shortcut icon" href="~/img/fav-icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="~/css/site.min.css" />
+    <link rel="stylesheet" href="~/lib/footable/css/footable.bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/reclame-aqui-do-trader.css" />
+    <link href="~/lib/creative-link-effects/component.css" rel="stylesheet">
+    <link href="~/landing/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/landing/css/animate.css" rel="stylesheet">
+    <link href="~/landing/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="~/landing/css/style.css" rel="stylesheet">
+    <link href="~/lib/morris/morris-0.4.3.min.css" rel="stylesheet">
+    <link href="~/lib/css/toastr.css" rel="stylesheet">
+    <link href="~/lib/ladda/css/ladda-themeless.min.css" rel="stylesheet">
+
+    <style>
+        /* width */
+        ::-webkit-scrollbar {
+            width: 7px;
+        }
+
+        /* Track */
+        ::-webkit-scrollbar-track {
+            background: rgba(136, 136, 136, 0.00);
+        }
+
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+        }
+
+            /* Handle on hover */
+            ::-webkit-scrollbar-thumb:hover {
+                background: #1ab394;
+            }
+    </style>
+
+</head>
+<body id="page-top" class="landing-page pace-done">
+
+    <partial name="_Cabecalho" />
+
+    <script src="~/lib/Popper/popper.min.js"></script>
+    <script src="~/js/site.min.js"></script>
+    <script src="~/lib/jquery/jquery.mask.min.js"></script>
+    <script src="~/lib/footable/js/footable.min.js"></script>
+    <script src="~/js/async-views.js"></script>
+    <script src="~/js/reclame-aqui-do-trader.js"></script>
+    <script src="~/lib/morris/raphael-2.1.0.min.js"></script>
+    <script src="~/lib/morris/morris.js"></script>
+    <script src="~/lib/chartJs/Chart.min.js"></script>
+    <script src="~/lib/idle-timer/idle-timer.min.js"></script>
+    <script src="~/landing/js/pace.min.js"></script>
+    <script src="~/landing/js/classie.js"></script>
+    <script src="~/landing/js/cbpAnimatedHeader.js"></script>
+    <script src="~/landing/js/wow.min.js"></script>
+    <script src="~/landing/js/inspinia.js"></script>
+    <script src="~/lib/ladda/js/ladda.min.js"></script>
+    <script src="~/lib/ladda/js/ladda.jquery.min.js"></script>
+    <script src="~/lib/js/toastr.min.js"></script>
+
+
+    <input type="hidden" value="@Url.Action("Newsletter")" id="url-newsletter" />
+
+    <div id="wrapper">
+        <div id="page-wrapper" style="width: 100%;background: #d8d8d8;">
+            <div class="wrapper-content">
+                <section id="features">
+                    <div class="row border-bottom white-bg dashboard-header" style="margin-left: -24px;margin-right: -25px;">
+
+                        @await Html.PartialAsync("_TopMentores", Model)
+
+                        @await Html.PartialAsync("_Quantidades", Model)
+
+                        @await Html.PartialAsync("_AreasDeAtuacaoMaisAvaliadas", Model.Avaliacoes)
+
+                    </div>
+                </section>
+                @await Html.PartialAsync("_ListagemAvaliacoes", Model.Avaliacoes)
+
+            </div>
+        </div>
+
+    </div>
+
+    <partial name="_Workflow" />
+    <partial name="_Rodape" />
+
+    @if (!Context.Request.Cookies.ContainsKey("Assinante"))
+    {
+
+        <partial name="_ModalGenerico" />
+        <script>
+            $(document).idleTimer(5000);
+            $(document).on("idle.idleTimer", function (event, elem, obj) {
+                $(document).unbind('idle.idleTimer');
+                CarregarConteudoDoModal($("#url-newsletter").val());
+            });
+        </script>
+    }
+
+    <script>
+        if ($(window).width() > 550) {
+            $("#areas-avaliacao").show();
+        }
+    </script>
+
+    <partial name="_GoogleAnalytics" />
+
+</body>
+</html>

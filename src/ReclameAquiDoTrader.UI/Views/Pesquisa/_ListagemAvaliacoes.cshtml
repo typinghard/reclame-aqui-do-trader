@@ -1,0 +1,121 @@
+﻿@using ReclameAquiDoTrader.UI.Extensions;
+@using ReclameAquiDoTrader.Business.Enums;
+@using ReclameAquiDoTrader.UI.Helpers;
+@model List<ReclameAquiDoTrader.UI.ViewModels.PesquisaViewModels.AvaliacaoParaPesquisaItemViewModel>
+
+<style>
+    .footable-filtering-search .input-group-btn {
+        display: none;
+    }
+
+    .footable-filtering-search {
+        width: 100% !important;
+    }
+
+        .footable-filtering-search .input-group {
+            width: 100% !important;
+        }
+
+    .explicacao-mentores {
+        padding: 3px 10px;
+        text-align: center;
+    }
+</style>
+<section id="pesquisa">
+
+    <div class="row" style="padding-top: 35px;">
+
+        <div class="col-lg-12">
+            <div class="ibox shadow  fadeInRight animated wow">
+                <div class="ibox-title">
+                    <h5>Todas as avaliações</h5>
+                </div>
+                <div class="ibox-content">
+
+                    <table id="tabela-avaliacoes"
+                           class="footable table"
+                           data-paging-count-format="{CP} de {TP} páginas"
+                           data-paging="true"
+                           data-sorting="true"
+                           data-filtering="true"
+                           data-paging-size="7"
+                           data-paging-limit="3"
+                           data-filter-placeholder="Pesquise aqui...">
+                        <thead>
+                            <tr>
+                                <th>Mentor</th>
+                                <th data-breakpoints="xs">Publicado</th>
+                                <th data-breakpoints="xs" style="text-align:center">Respondido pelo mentor</th>
+                                <th>Avaliação</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach (var avaliacao in Model.OrderByDescending(x => x.CriadoAs))
+                            {
+                                <tr>
+                                    <td data-sort-value="@avaliacao.Mentor.Nome">
+                                        @if (avaliacao.RedesSociais != null)
+                                        {
+                                            @foreach (var redeSocial in avaliacao.RedesSociais)
+                                            {
+                                                <a href="@redeSocial.Url" target="_blank" data-toggle="tooltip" title="Ir para @redeSocial.Tipo.Display()">
+                                                    <i class="@RedeSocialHtmlHelper.ClasseRedeSocial(redeSocial.Tipo)"></i>
+                                                </a>
+                                            }
+                                        }
+                                        @avaliacao.Mentor.Nome
+                                    </td>
+                                    <td data-sort-value="@avaliacao.CriadoAs.Ticks">
+                                        <span data-toggle="tooltip" title="@avaliacao.CriadoAs.FormataData()">@avaliacao.CriadoAs.TempoTras()</span>
+                                    </td>
+                                    <td style="text-align:center">
+                                        <i style="font-size:17px;" class="@AvaliacaoHtmlHelper.ClasseCheckCircle(avaliacao.Respondido)"></i>
+                                    </td>
+                                    <td class="text-truncate"
+                                        @{ 
+                                            var filtro = avaliacao.Texto;
+                                            foreach(var areaAtuacao in avaliacao.Mentor.AreasDeAtuacao)
+                                            {
+                                                filtro += " " + areaAtuacao;
+                                            }
+                                        }
+                                        data-filter-value="@filtro">
+                                        @avaliacao.Texto.Truncar(60)
+                                        @if (!string.IsNullOrEmpty(avaliacao.Texto) && avaliacao.RedesSociais?.Any() == true)
+                                        {
+                                            <a href='@avaliacao.RedesSociais.First().Url' target='_blank'>...leia mais</a>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+
+
+                    </table>
+
+                </div>
+                <div class="explicacao-mentores">
+                    <span>
+                        <i class="fa fa-exclamation"></i>
+                        &nbsp;
+                        Acha que um mentor possui muitas avaliações negativas? <a class="abre-modal-generico" href="@Url.Action("EntendaAvalicoesNegativas")"> Entenda </a>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+
+    $('[data-toggle="tooltip"]').tooltip();
+
+    $(document).ready(function () {
+        $('.footable').footable();
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+
+
+</script>

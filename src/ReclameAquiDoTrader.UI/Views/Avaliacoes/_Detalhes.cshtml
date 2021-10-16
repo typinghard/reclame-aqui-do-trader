@@ -1,0 +1,192 @@
+﻿@using ReclameAquiDoTrader.UI.Extensions;
+@model ReclameAquiDoTrader.UI.ViewModels.AvaliacaoViewModels.DetalhesAvaliacaoViewModel
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+    <h4 class="modal-title">Detalhes da Avaliação</h4>
+</div>
+
+<div class="modal-body bg-white">
+    <div class="row pb-3 border-bottom">
+        <div class="col-sm">
+            <h3>@Html.DisplayNameFor(model => model.Mentor)</h3>
+            <strong>@Html.DisplayFor(model => model.Mentor)</strong>
+            <br />
+        </div>
+        <div class="col-sm">
+            <h3>Data de Criação</h3>
+            <span>@Model.CriadoAs.FormataData()</span>
+            <br />
+        </div>
+        <div class="col-sm">
+            <h3>Última Atualização</h3>
+            <span title="@Model.AtualizadoAs.FormataData()">@Model.AtualizadoAs.TempoTras()</span>
+            <br />
+        </div>
+    </div>
+    <div class="row mt-3 pb-3 border-bottom">
+        <div class="col-sm mt-2">
+            <h3>Ativo</h3>
+            <span>
+                @if (Model.Inativo)
+                {
+                    <i class="text-danger fa fa-times-circle-o" title="Inativo"></i>
+                }
+                else
+                {
+                    <i class="texto-sucesso fa fa-check-circle-o" title="Ativo"></i>
+                }
+            </span>
+            <br>
+        </div>
+        <div class="col-sm mt-2">
+            <h3>Publicado</h3>
+            <span>
+                @if (Model.Publicado)
+                {
+                    <i class="texto-sucesso fa fa-check-circle-o" title="Data da Publicação: @Model.DataPublicacao"></i>
+                }
+                else
+                {
+                    <i class="text-danger fa fa-times-circle-o" title="Não publicado até o momento"></i>
+                }
+            </span>
+            <br>
+        </div>
+        <div class="col-sm mt-2">
+            <h3>Expirado</h3>
+            <span class="">
+                @if (Model.Expirado)
+                {
+                    <i class="texto-sucesso fa fa-check-circle-o" title="Data expiração: @Model.DataExpiracao"></i>
+                }
+                else
+                {
+                    <i class="text-danger fa fa-times-circle-o" title="Expira em: @Model.DataExpiracao"></i>
+                }
+            </span>
+            <br>
+        </div>
+        <div class="col-sm mt-2">
+            <h3>Respondido</h3>
+            <span>
+                @if (Model.Respondido)
+                {
+                    <i class="texto-sucesso fa fa-check-circle-o" title="Data da Resposta: @Model.DataResposta"></i>
+                }
+                else
+                {
+                    <i class="text-danger fa fa-times-circle-o" title="Prazo final da resposta: @Model.CriadoAs.AddHours(48).ToShortDateString()"></i>
+                }
+            </span>
+            <br>
+        </div>
+        <div class="col-sm mt-2">
+            <h3>Positivo</h3>
+            <div class="ml-3">
+                <span>
+                    @if (Model.Positivo)
+                    {
+                        <i class="texto-sucesso fa fa-thumbs-o-up" title="Sim"></i>
+                    }
+                    else
+                    {
+                        <i class="text-danger fa fa-thumbs-o-down" title="Não"></i>
+                    }
+                </span>
+                <br>
+            </div>
+        </div>
+        <div class="col-sm mt-2">
+            <h3>Postagens</h3>
+            <span class="text-center">
+                @if (Model.RedesSociais.Lista != null && Model.RedesSociais.Lista.Count > 0)
+                {
+                    @foreach (var redeSocial in Model.RedesSociais.Lista)
+                    {
+                        <a href="@redeSocial.Url" target="_blank" data-toggle="tooltip" title="Ir para @redeSocial.Tipo.Display()">
+                            <i class="@RedeSocialHtmlHelper.ClasseRedeSocial(redeSocial.Tipo)"></i>
+                        </a>
+                    }
+                }
+                else
+                {
+                    @await Html.PartialAsync("~/Views/Avaliacoes/_SemLinkPostagem.cshtml", Model.Id)
+                }
+            </span>
+            <br>
+        </div>
+    </div>
+
+    <div class="row mt-3 pb-3 border-bottom">
+
+        <div class="col-sm">
+
+            @if (Model.Comprovantes.Count > 0)
+            {
+                @await Html.PartialAsync("_ListagemComprovantes", Model.Comprovantes)
+            }
+            else
+            {
+                <h4>
+                    <i class="fa fa-file-photo-o"></i>
+                    <strong><label class="control-label"> Comprovantes</label></strong>
+                </h4>
+                <div>
+                    <p>Não há comprovantes cadastrados.</p>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="row mt-3 pb-3 border-bottom">
+
+        <div class="col-sm">
+            <div class="panel-group" id="accordion">
+                <div class="panel panel-default">
+                    <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#textoCollapse" style="cursor: pointer;height: 40px;" title="Clique para Expandir">
+                        <h4 class="panel-title">
+                            <i class="fa fa-file-text"></i>
+                            <strong><label class="control-label"> Texto</label></strong>
+                        </h4>
+                    </div>
+                    <div id="textoCollapse" class="panel-collapse collapse in show">
+                        <div class="panel-body p-0">
+                            <textarea class="form-control" disabled asp-for="Texto" rows="7" id="texto"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="row mt-3 pb-3 border-bottom">
+
+        <div class="col-sm">
+
+            <div class="panel-group" id="accordion">
+                <div class="panel panel-default">
+                    <div class="panel-heading" data-parent="#accordion" href="#respostaMentorCollapse" data-toggle="collapse" style="cursor: pointer;height: 40px;" title="Clique para Expandir">
+                        <h4 class="panel-title">
+                            <i class="fa fa-file-text"></i>
+                            <strong><label class="control-label"> Resposta do Mentor</label></strong>
+                        </h4>
+                    </div>
+                    <div id="respostaMentorCollapse" class="panel-collapse collapse in">
+                        <div class="panel-body p-0">
+                            <textarea class="form-control" disabled asp-for="Resposta" rows="7" id="resposta"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="modal-footer" style="justify-content:left;">
+    <button type="button" class="btn btn-info" data-dismiss="modal">Fechar</button>
+</div>
+
+<script src="~/js/avaliacao.js" charset="utf-8"></script>

@@ -1,0 +1,85 @@
+﻿@model List<ReclameAquiDoTrader.UI.ViewModels.AvaliacaoViewModels.ArquivoViewModel>
+
+
+<div class="panel-group" id="accordion">
+    <div class="panel panel-default">
+        <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#comprovanteCollapse" style="cursor: pointer;height: 40px;" title="Clique para Expandir">
+            <h4 class="panel-title">
+                <i class="fa fa-file-photo-o"></i>
+                <strong><label class="control-label"> Comprovantes - @Model.Count</label></strong>
+            </h4>
+        </div>
+        <div id="comprovanteCollapse" class="panel-collapse collapse in">
+            <div class="col-lg-12 mt-3" id="div_comprovantes">
+                <div class="row">
+                    <div class="col-lg-12" id="preview_arquivos">
+                        @foreach (var arquivo in Model)
+                        {
+
+                            <div class="file-box animated fadeIn">
+                                <div class="file">
+
+                                    <span class="corner"></span>
+
+                                    @if (arquivo.ContentType == "image/jpeg" || arquivo.ContentType == "image/png")
+                                    {
+                                        <div class="image">
+                                            <img alt="@arquivo.Nome" class="img-fluid" src="@arquivo.Url">
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="icon">
+                                            <i class="@ArquivoHtmlHelper.ClasseFaIconContentType(arquivo.ContentType)"></i>
+                                        </div>
+                                    }
+
+                                    <div class="file-name">
+                                        <a title="Download" href="@Url.Action("DownloadComprovante", "Avaliacoes", new { avaliacaoId = arquivo.AvaliacaoId, comprovanteId = arquivo.ComprovanteId })">
+                                            <i class="fa fa-download"></i>
+                                            <span class="truncate fh-15">
+                                                @arquivo.Nome
+                                            </span>
+                                        </a>
+                                        <br>
+                                        <small>Adicionado ás: @arquivo.Cadastro</small>
+                                    </div>
+
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    $(document).ready(function () {
+
+        Truncar();
+
+        $('#modalGenerico').on('shown.bs.modal', function (e) {
+            // do cool stuff here all day… no need to change bootstrap
+
+            Truncar();
+        });
+
+        // do cool stuff here all day… no need to change bootstrap
+
+        function Truncar() {
+            $(".truncate").dotdotdot({
+                watch: 'window',
+                ellipsis: '...'
+            });
+
+            console.log("TRUNCOU");
+        }
+
+    });
+
+</script>

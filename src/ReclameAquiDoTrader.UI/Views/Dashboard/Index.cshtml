@@ -1,0 +1,37 @@
+﻿@model ReclameAquiDoTrader.UI.ViewModels.HomeViewModels.DashboardItemViewModels
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<link href="~/lib/select2/css/select2_site.min.css" rel="stylesheet">
+<link href="~/lib/select2/css/select2-bootstrap4.min.css" rel="stylesheet">
+<link href="~/lib/bootstrap/dist/css/bootstrap-tagsinput.css" rel="stylesheet">
+
+<div class="row border-bottom white-bg dashboard-header painel-principal">
+
+    @await Html.PartialAsync("_UltimasAvaliacoesPendentesPublicacao", Model)
+    @await Html.PartialAsync("_UltimasAvaliacoesEmAndamento", Model)
+    @await Html.PartialAsync("_GraficoAvaliacoesCadastradas", Model)
+
+</div>
+
+<div class="wrapper wrapper-content row">
+    <div class="col-lg-12">
+        <div class="row">
+            <div class="col-lg-4">
+                @await Html.PartialAsync("_UltimasAvaliacoesCadastradas", Model)
+            </div>
+            <div class="col-lg-4">
+                @await Html.PartialAsync("_UltimosMentoresCadastrados", Model)
+            </div>
+            <div class="col-lg-4">
+                @await Html.PartialAsync("_UltimosAssinantesCadastrados", Model)
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+
+}

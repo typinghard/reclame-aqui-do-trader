@@ -1,16 +1,15 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Raven.Client.Documents;
+using Raven.DependencyInjection;
+using Raven.Identity;
+using ReclameAquiDoTrader.Data.Extensions;
+using ReclameAquiDoTrader.UI.Identity.Models;
 using System;
 using System.Net;
-using ReclameAquiDoTrader.Data.Extensions;
-using Microsoft.Extensions.Configuration;
-using Raven.DependencyInjection;
 using System.Security.Cryptography.X509Certificates;
-using ReclameAquiDoTrader.UI.Identity.Models;
-using Raven.Identity;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Http;
+//using ReclameAquiDoTrader.UI.Query.Indexes;
 
 namespace ReclameAquiDoTrader.UI.Config
 {
@@ -20,32 +19,34 @@ namespace ReclameAquiDoTrader.UI.Config
         {
             var docStore = serviceProvider.GetService<IDocumentStore>();
             docStore.Inicializar();
+            //QueryIndexesConfiguration.Execute(docStore);
             return app;
         }
         public static IServiceCollection AddRavenDbConfig(this IServiceCollection services, IConfiguration configuration)
         {
-            DownloadCertificate(configuration);
-
             services
                 .AddRavenDbDocStore(options =>
-                    options.Certificate = new X509Certificate2(configuration["RavenSettings:CertFilePath"],
+                {
+                    using var client = new WebClient();
+                    var certBytes = client.DownloadData(configuration["RavebDBConnectionConfigs:Certificate:DownloadPath"]);
+
+                    options.Certificate = new X509Certificate2(certBytes,
                                                                configuration["RavenSettings:CertPassword"],
-                                                           X509KeyStorageFlags.MachineKeySet))
+                                                               X509KeyStorageFlags.MachineKeySet);
+                })
                 .AddRavenDbSession()
                 .AddRavenDbAsyncSession()
-                .AddIdentity<Usuario, Raven.Identity.IdentityRole>()    
+                .AddIdentity<Usuario, Raven.Identity.IdentityRole>(x =>
+                {
+
+                    x.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+                    x.Lockout.MaxFailedAccessAttempts = 5;
+                    x.Lockout.AllowedForNewUsers = true;
+
+                })
                 .AddRavenDbIdentityStores<Usuario>();
 
             return services;
-        }
-
-        private static void DownloadCertificate(IConfiguration configuration)
-        {
-            using (var client = new WebClient())
-            {
-                client.DownloadFile(configuration["RavebDBConnectionConfigs:Certificate:DownloadPath"],
-                                    configuration["RavenSettings:CertFilePath"]);
-            }
         }
     }
 }

@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using ReclameAquiDoTrader.Business.Interfaces.Identity;
-using ReclameAquiDoTrader.UI.Identity.Models;
 using System;
-using System.Collections.Generic;
 using System.Security.Claims;
 
 namespace ReclameAquiDoTrader.UI.Extensions
@@ -18,31 +16,21 @@ namespace ReclameAquiDoTrader.UI.Extensions
 
         public string Nome => _acessor.HttpContext.User.Identity.Name;
 
-        public string Email => OberUsuarioEmail();
+        public string Email => ObterUsuarioEmail();
 
         public bool EstaAutenticado()
         {
             return _acessor.HttpContext.User.Identity.IsAuthenticated;
         }
 
-        public string OberUsuarioEmail()
+        public string ObterUsuarioEmail()
         {
             return EstaAutenticado() ? _acessor.HttpContext.User.ObterUsuarioEmail() : string.Empty;
         }
 
-        public string OberUsuarioId()
+        public string ObterUsuarioId()
         {
             return EstaAutenticado() ? _acessor.HttpContext.User.ObterUsuarioId() : string.Empty;
-        }
-
-        public IEnumerable<Claim> ObterClaims()
-        {
-            return _acessor.HttpContext.User.Claims;
-        }
-
-        public bool PossuiRole(string role)
-        {
-            return _acessor.HttpContext.User.IsInRole(role);
         }
     }
 

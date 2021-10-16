@@ -1,0 +1,27 @@
+﻿@using ReclameAquiDoTrader.UI.Extensions;
+@model ReclameAquiDoTrader.UI.ViewModels.AssinantesViewModels.DetalhesAssinantesViewModel
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+    <h4 class="modal-title">Detalhes do Assinante</h4>
+    @*<small class="font-bold">Cadastre um novo mentor.</small>*@
+</div>
+
+<div class="modal-body bg-white">
+    <div class="row pb-3">
+        <div class="col-sm mt-3">
+            <h3>@Html.DisplayNameFor(model => model.Telefone)</h3>
+            <span>@Model.Telefone.FormataTelefone()</span>
+            <br />
+        </div>
+        <div class="col-sm mt-3">
+            <h3>Data do Cadastro</h3>
+            <span>@Model.CriadoAs.FormataData()</span>
+            <br />
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer" style="justify-content:left;">
+    <button type="button" class="btn btn-info" data-dismiss="modal">Fechar</button>
+</div>

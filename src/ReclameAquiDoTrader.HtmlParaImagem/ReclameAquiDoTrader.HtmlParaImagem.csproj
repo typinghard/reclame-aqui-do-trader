@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="TuesPechkin" Version="2.1.1" />
+    <PackageReference Include="TuesPechkin.Wkhtmltox.Win64" Version="0.12.2.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ReclameAquiDoTrader.Business\ReclameAquiDoTrader.Business\ReclameAquiDoTrader.Business.csproj" />
+  </ItemGroup>
+
+</Project>

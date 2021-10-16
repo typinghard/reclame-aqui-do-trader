@@ -1,0 +1,104 @@
+﻿@model ReclameAquiDoTrader.UI.ViewModels.HomeViewModels.DashboardItemViewModels
+@using ReclameAquiDoTrader.Business.Enums;
+@using ReclameAquiDoTrader.UI.Extensions;
+<style>
+    .editar {
+        min-width: 28px;
+        cursor: pointer;
+    }
+</style>
+
+<div class="col-md-4">
+    <h2>Bem Vindo</h2>
+    <div>
+        <small>Você tem @Model.QtdeAvaliacoesPendentesPublicacao avaliações pendentes de publicação.</small> <i class="fa fa-info-circle text-info" data-toggle="tooltip"
+                                                                                                                title="Avaliações que não foram publicadas que já expiraram e/ou que não foram respondidas"
+                                                                                                                style="cursor:pointer;"></i>
+        <ul class="list-group clear-list m-t">
+            @if (Model.AvaliacoesPendentesPublicacao.Count > 0)
+            {
+                @foreach (var avaliacao in Model.AvaliacoesPendentesPublicacao)
+                {
+                    var msgToltip = string.Empty;
+
+                    <li class="list-group-item">
+                        <span class="float-right">
+                            <span>
+                                @if (avaliacao.Texto
+                            && avaliacao.Respondido)
+                                {
+                                    <span class="texto-sucesso"
+                                          data-toggle="tooltip" title="Avaliação com todos os dados para a publicação preenchidos!">
+                                        <i class="fa fa-check-circle"></i>
+                                    </span>
+                                }
+                                else
+                                @if (!avaliacao.Texto && !avaliacao.Respondido)
+                                {
+                                    msgToltip = "Avaliação sem Texto e sem Resposta do Mentor.";
+                                }
+                                else
+                        if (!avaliacao.Texto)
+                                {
+                                    msgToltip = "Avaliação sem Texto.";
+                                }
+                                else
+                        if (!avaliacao.Respondido)
+                                {
+                                    msgToltip = "Avaliação sem Resposta do Mentor.";
+                                }
+
+                                @if (!string.IsNullOrEmpty(msgToltip))
+                                {
+                                    <a class="text-warning abre-modal-generico"
+                                       asp-controller="Avaliacoes" asp-action="Editar" asp-route-id="@avaliacao.AvaliacaoId"
+                                       data-toggle="tooltip" title="@msgToltip Clique para editar a avaliação.">
+                                        <i class="fa fa-exclamation-triangle text-warning"></i>
+                                    </a>
+                                }
+                            </span>
+                            <a asp-controller="Avaliacoes" asp-action="Detalhes" asp-route-id="@avaliacao.AvaliacaoId"
+                               type="button" class="btn btn-outline btn-link text-warning abre-modal-generico" style="min-width: 28px; cursor: pointer;"
+                               data-toggle="tooltip" title="Detalhes">
+                                <i class="fa fa-search" data-toggle="tooltip"></i>
+                            </a>
+                        </span>
+
+                        <a asp-controller="Avaliacoes" asp-action="GerarPublicacao" asp-route-id="@avaliacao.AvaliacaoId"
+                           class="btn btn-outline btn-success dim abre-modal-generico"
+                           data-toggle="tooltip" title="Gerar Publicação">
+                            <i class="fa fa-bullhorn"></i>
+                        </a>
+
+                        <span> @avaliacao.Mentor</span>
+                    </li>
+                }
+
+            }
+            else
+            {
+                <li class="list-group-item">
+                    <span>Não há avaliações pendentes para publicação.</span>
+                </li>
+            }
+        </ul>
+        @if (Model.QtdeAvaliacoesPendentesPublicacao > 5)
+        {<hr class="hr-line-dashed" />
+            <a href="@Url.Action("PendentesPublicacao", "Avaliacoes")" class="atalho-ver-todos">
+                <span>Ver todos >></span>
+            </a>
+        }
+    </div>
+</div>
+
+<script>
+
+    $('[data-toggle="tooltip"]').tooltip();
+
+    $(document).ready(function () {
+        $(".editar").click(function () {
+            window.location = $(this).data("href");
+        });
+    });
+
+</script>

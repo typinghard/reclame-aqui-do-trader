@@ -1,0 +1,108 @@
+﻿@model ReclameAquiDoTrader.UI.ViewModels.HomeViewModels.DashboardItemViewModels
+@using ReclameAquiDoTrader.Business.Enums;
+@using ReclameAquiDoTrader.UI.Extensions;
+
+<style>
+    .editar {
+        min-width: 28px;
+        cursor: pointer;
+    }
+</style>
+
+<div class="ibox shadow slimScrollBar animated fadeIn">
+    <div class="ibox-title">
+        <h5 class="titulo-painel-dashboard">Últimas Avaliações Cadastradas</h5>
+        <div class="ibox-tools">
+            <a asp-controller="Avaliacoes" asp-action="Cadastrar"
+               type="button" class="btn btn-primary abre-modal-generico" style="margin-top: -8px;"
+               data-toggle="tooltip"
+               data-original-title="Cadastrar Avaliação">
+                <i class="fa fa-plus"></i>
+            </a>
+        </div>
+    </div>
+    <div class="ibox-content slimScrollBar  table-responsive">
+        <table class="table table-hover no-margins" id="tabelaAvaliacao">
+            <thead>
+                <tr>
+                    <th>Avaliação</th>
+                    <th>Mentor</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.UltimasAvaliacoesCadastradas.Count() > 0)
+                {
+                    @foreach (var avaliacao in Model.UltimasAvaliacoesCadastradas)
+                    {
+                        <tr>
+                            <td>
+                                @if (avaliacao.RedesSociais.Lista?.Count > 0)
+                                {
+                                    @foreach (var redeSocial in avaliacao.RedesSociais.Lista)
+                                    {
+                                        <a href="@string.Concat("https://www.", redeSocial.Url)" target="_blank">
+                                            @switch (redeSocial.Tipo)
+                                            {
+                                                case ERedeSocialTipo.FACEBOOK:
+                                                    <i class="fa fa-facebook-square"></i>
+                                                    break;
+                                                case ERedeSocialTipo.INSTAGRAM:
+                                                    <i class="fa fa-instagram"></i>
+                                                    break;
+                                                default:
+                                                    <i class="fa fa-question-circle"></i>
+                                                    break;
+                                            }
+                                        </a>
+                                    }
+                                }
+                                else
+                                {
+                                    @await Html.PartialAsync("~/Views/Avaliacoes/_SemLinkPostagem.cshtml", avaliacao.AvaliacaoId)
+                                }
+                            </td>
+                            <td title="Criado às: @avaliacao.CriadoAs.FormataData()">@avaliacao.Mentor</td>
+                            <td class="icones-acoes">
+                                <a asp-controller="Avaliacoes" asp-action="Editar" asp-route-id="@avaliacao.AvaliacaoId"
+                                   type="button" class="btn btn-outline btn-link text-success abre-modal-generico" style="min-width: 28px; cursor: pointer;"
+                                   data-toggle="tooltip" title="Editar">
+                                    <i class="fa fa-pencil-square-o" data-toggle="tooltip"></i>
+                                </a>
+                                <a asp-controller="Avaliacoes" asp-action="Detalhes" asp-route-id="@avaliacao.AvaliacaoId"
+                                   type="button" class="btn btn-outline btn-link text-warning abre-modal-generico" style="min-width: 28px; cursor: pointer;"
+                                   data-toggle="tooltip" title="Detalhes">
+                                    <i class="fa fa-search" data-toggle="tooltip"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="3">
+                            Não há avaliações cadastradas.
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <hr class="hr-line-dashed" />
+        <a href="@Url.Action("Index", "Avaliacoes")" class="atalho-ver-todos">
+            <span>Ver todos >></span>
+        </a>
+    </div>
+</div>
+
+<script>
+
+    $('[data-toggle="tooltip"]').tooltip();
+
+    $(document).ready(function () {
+        $(".editar").click(function () {
+            window.location = $(this).data("href");
+        });
+    });
+
+</script>

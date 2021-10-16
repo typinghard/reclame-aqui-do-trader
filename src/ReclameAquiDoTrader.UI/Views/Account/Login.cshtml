@@ -1,4 +1,6 @@
 ﻿@model ReclameAquiDoTrader.UI.ViewModels.AcessoViewModel.SignInViewModel
+@using Microsoft.Extensions.Options
+@inject IOptions<ReclameAquiDoTrader.UI.Config.ReCaptchaConfig> ReCaptcha
 @{
     ViewData["Title"] = "Login";
     Layout = "";
@@ -18,6 +20,8 @@
     <link href="~/lib/ladda/css/ladda-themeless.min.css" rel="stylesheet">
 
     <link href="~/css/site.min.css" rel="stylesheet">
+    <link href="~/lib/css/toastr.css" rel="stylesheet">
+
 
 </head>
 
@@ -27,25 +31,24 @@
         <div class="loginColumns animated fadeInDown">
             <div class="col-lg-12 shadow p-3 mb-5 bg-white rounded">
                 <div class="ibox border-bottom">
-                    <div class="ibox-content" style="display: flex;">
-                        <div class="white-bg col-md-6 m-t / m-t-(xs,sm,md,lg,xl) border-right">
+                    <div class="ibox-content" style="display: flow-root;">
+                        <div class="white-bg col-md-6 m-t / m-t-(xs,sm,md,lg,xl) pull-left">
                             <h2 class="font-bold text-center">Reclame Aqui do Trader!</h2>
                             <hr class="hr-line-dashed">
                             <p class="text-justify">
-                                Este login destina-se aos adiministradores do site, faça o login para ter acesso aos paineis administrativos.
+                                Este login destina-se aos adiministradores do site. <a href="@Url.ActionLink("Index", "Pesquisa")">Clique aqui</a> para ir pra tela de pesquisa.
                             </p>
-
-                            <p class="text-justify font-weight-normal">
-                                Caso tenha perdido a senha, para mais informações entre em contato no <email email-domain="reclameaquidotraderz.com">contato</email>.
-                            </p>
-
                         </div>
-                        <div class="col-md-6 m-t / m-t-(xs,sm,md,lg,xl)">
+                        <div class="col-md-6 m-t / m-t-(xs,sm,md,lg,xl) pull-right">
                             <div>
                                 <h2 class="font-bold text-center">Login</h2>
                                 <form class="m-t" id="form-login" role="form" asp-action="Login" method="post">
+                                    <input type="hidden" asp-for="Token" id="input_token">
+                                    <input type="hidden" asp-for="TokenValido" id="input_token_valido">
 
-                                    <vc:Summary></vc:Summary>
+                                    <div class="alert alert-danger d-none" id="erros">
+                                        <span class="alert text-danger msg-validacao" name="Erro"></span>
+                                    </div>
 
                                     <div class="form-group">
                                         <div class="input-group m-b">
@@ -77,12 +80,11 @@
                         </div>
                     </div>
                 </div>
-                <hr />
-                <div class="row">
-                    <div class="col-md-6">
+                <div class="row col-md-12">
+                    <div class="col-md-7 text-justify">
                         Reclame Aqui do Trader - Todos os Direitos Reservados
                     </div>
-                    <div class="col-md-6 text-right">
+                    <div class="col-md-5 text-right">
                         <small>© 2018-@DateTime.UtcNow.Year</small>
                     </div>
                 </div>
@@ -99,11 +101,20 @@
     <script src="~/lib/ladda/js/ladda.min.js"></script>
     <script src="~/lib/ladda/js/ladda.jquery.min.js"></script>
 
+    <script src="~/lib/js/toastr.min.js"></script>
 </body>
 
 </html>
 
+<script src="https://www.google.com/recaptcha/api.js?render=@ReCaptcha.Value.Site_Key"></script>
 <script>
+
+    grecaptcha.ready(function () {
+        grecaptcha.execute('@ReCaptcha.Value.Site_Key', { action: 'login' }).then(function (token) {
+           $('#input_token').val(token);
+        });
+    });
+
     $('#form-login').submit(function () {
 
         var l = $('.ladda-button-demo').ladda();
@@ -119,6 +130,7 @@
                 window.location.href = result.url;
             },
             error: function (result) {
+                TratarToken(result);
                 TratarErro(result);
             },
             complete: function () {
@@ -128,13 +140,12 @@
         return false;
     });
 
-
     function TratarErro(resultError) {
         $('.msg-validacao').html('');
         $("input.error").removeClass('error');
 
         if (resultError.responseJSON == undefined) {
-            //TO DO
+            toastr.error('Ops, ocorreu um erro inesperado! Recarrega a página e tente novamente.', 'Erro');
         }
 
         let erros = resultError.responseJSON.erros;
@@ -142,6 +153,17 @@
             $('[name="' + erro.chave + '"].msg-validacao').append(erro.mensagem + '</br>');
             $('input[name="' + erro.chave + '"]').addClass('error');
         });
+
+        $('#erros').removeClass('d-none');
+    }
+
+    function TratarToken(resultError) {
+        if (resultError.responseJSON == undefined) {
+            $('#input_token_valido').val(false);
+            return;
+        }
+
+        $('#input_token_valido').val(resultError.responseJSON.result.tokenValido);
     }
 
 </script>

@@ -1,0 +1,85 @@
+﻿@model ReclameAquiDoTrader.UI.ViewModels.PesquisaViewModels.AssinarNewsletterViewModel
+@using  Microsoft.AspNetCore.Antiforgery;
+@inject IAntiforgery antiforgery
+
+<div class="modal-body bg-white">
+    <h1>Assine nossa newsletter</h1>
+    <div class="form-group">
+
+        @Html.AntiForgeryToken()
+
+        <span class="text-danger" style="display: none;" id="alerta"></span>
+        <div class="input-group m-b">
+            <div class="input-group-prepend">
+                <span class="input-group-addon">
+                    <i class="fa fa-whatsapp"></i>
+                </span>
+            </div>
+            <input id="campoTelefone" class="form-control" placeholder="Digite seu whatsapp" name="Whatsapp" />
+
+        </div>
+        <button type="button" class="btn btn-white" data-dismiss="modal">
+            <i class="fa fa-close"></i>
+        </button>
+        <button type="button" class="ladda-button btn btn-success" id="btn-salvar" data-url="@Url.Action("AssinarNewsletter")" data-style="zoom-out">Assinar</button>
+    </div>
+</div>
+
+<script>
+    $("#btn-salvar").click(function () {
+
+        $(this).ladda().ladda('start');
+
+        $.ajax({
+            headers:
+            {
+                "RequestVerificationToken": $("input[name='__RequestVerificationToken']").val()
+            },
+            url: $(this).data('url'),
+            type: 'post',
+            contentType: "application/json;",
+            data: JSON.stringify({ Whatsapp: $("[name='Whatsapp']").val() }),
+            success: function () {
+                toastr.success('Seu whatsapp foi adicionado em nossa newsletter. Obrigado!');
+                $('#modalGenerico').modal('hide');
+            },
+            error: function (result) {
+
+                if (result.responseJSON === undefined) {
+                    toastr.error('Ops, ocorreu um erro inesperado! Recarrega a página e tente novamente.', 'Erro');
+                    return;
+                }
+                let erros = result.responseJSON.erros;
+                $("#alerta").html('');
+                $(erros).each(function (i, erro) {
+                    $("#alerta").append(erro.mensagem + '</br>');
+                });
+                $("#alerta").fadeIn();
+            },
+            complete: function () {
+                $('#btn-salvar').ladda('stop');
+            }
+        });
+    });
+
+    $(document).ready(function () {
+
+        MascaraTelefone();
+
+        function MascaraTelefone() {
+            var SPMaskBehavior = function (val) {
+                return '(00) 00000-0000';
+            },
+                spOptions = {
+                    onKeyPress: function (val, e, field, options) {
+                        field.mask(SPMaskBehavior.apply({}, arguments), options);
+                    }
+                };
+
+            $('#campoTelefone').mask(SPMaskBehavior, spOptions);
+        }
+
+    });
+
+
+</script>

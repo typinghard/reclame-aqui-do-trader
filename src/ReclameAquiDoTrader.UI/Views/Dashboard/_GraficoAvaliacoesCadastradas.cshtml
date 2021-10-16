@@ -1,0 +1,131 @@
+﻿@model ReclameAquiDoTrader.UI.ViewModels.HomeViewModels.DashboardItemViewModels
+@using ReclameAquiDoTrader.UI.Extensions;
+
+
+<link href="~/lib/morris/morris-0.4.3.min.css" rel="stylesheet">
+
+<style>
+    .morris-hover {
+        position: absolute;
+        z-index: 1000;
+        background-color: white;
+        border: 1px solid #808080;
+        padding: 5px;
+        border-radius: 5px;
+    }
+</style>
+
+<div class="col-md-5">
+    <div class="flot-chart dashboard-chart">
+        @if (Model.DadosGrafico.Count() > 0)
+        {<br />
+            <div class="flot-chart-content" id="morris-area-chart"></div>
+            @*<div class="flot-chart-content" id="morris-bar-chart"></div>*@
+        }
+        else
+        {
+            <div class="pt-2">
+                <small>Não há dados para exibição do grafico no momento.</small> <i class="fa fa-info-circle text-info" data-toggle="tooltip" title="Não há dados de Mentor, Avaliação ou Assinantes cadastrados." style="cursor:pointer;"></i>
+                <ul class="list-group clear-list m-t">
+                    <li class="list-group-item">
+                        <span></span>
+                    </li>
+                </ul>
+            </div>
+        }
+    </div>
+    <div class="row text-left">
+        <div class="col">
+            <div class="m-l-md">
+                <span class="h5 font-bold m-t block" style="color:#1ab394;"><i class="fa fa-comments"></i> @Model.QtdeTotalAvaliacoes</span>
+                <small class="text-muted m-b block">Total de <strong style="color:#1ab394;">Avaliacoes</strong> cadastradas</small>
+            </div>
+        </div>
+        <div class="col">
+            <div class="m-l-md">
+                <span class="h5 font-bold m-t block" style="color:#1C84C6;"><i class="fa fa-graduation-cap"></i> @Model.QtdeTotalMentores </span>
+                <small class="text-muted m-b block">Total de <strong style="color:#1C84C6;">Mentores</strong> cadastrados</small>
+            </div>
+        </div>
+        <div class="col">
+            <div class="m-l-md">
+                <span class="h5 font-bold m-t block" style="color:#FF8C69;"><i class="fa fa-users"></i> @Model.QtdeTotalAssinantes </span>
+                <small class="text-muted m-b block">Total de <strong style="color:#FF8C69;">Assinantes</strong> cadastrados</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var dados = [];
+    var dadosArea = [];
+</script>
+
+@foreach (var item in Model.DadosGrafico)
+{
+    <script>
+        dados.push(
+            { y: '@item.Data', a: @item.QtdeAvaliacao, b: @item.QtdeMentor, c: @item.QtdeAssinante }
+        );
+
+        dadosArea.push(
+            { y: @item.DataTicks, a: @item.QtdeAvaliacao, b: @item.QtdeMentor, c: @item.QtdeAssinante }
+        );
+    </script>
+}
+
+<script src="~/lib/morris/raphael-2.1.0.min.js"></script>
+<script src="~/lib/morris/morris.js"></script>
+
+<script>
+
+    $('[data-toggle="tooltip"]').tooltip();
+
+    $(document).ready(function () {
+
+        //config = {
+        //    data: dados,
+        //    xkey: 'y',
+        //    ykeys: ['a', 'b', 'c'],
+        //    labels: ['Avaliacao', 'Mentor', 'Assinante'],
+        //    fillOpacity: 0.1,
+        //    pointSize: 0,
+        //    hideHover: 'auto',
+        //    behaveLikeLine: true,
+        //    resize: true,
+        //    barColors: ['#1ab394', '#1C84C6', '#FF8C69']
+        //};
+
+        //config.element = 'morris-bar-chart';
+        //config.stacked = true;
+        //Morris.Bar(config);
+
+
+        config = {
+            data: dadosArea,
+            xkey: 'y',
+            ykeys: ['a', 'b', 'c'],
+            labels: ['Avaliacao', 'Mentor', 'Assinante'],
+            fillOpacity: 0.1,
+            pointSize: 0,
+            hideHover: 'auto',
+            behaveLikeLine: true,
+            resize: true,
+            dateFormat: function (x) {  return Data(x); },
+            xLabels: 'day',
+            xLabelFormat: function (x) { return x.toLocaleDateString(); },
+            lineColors: ['#1ab394', '#1C84C6', '#FF8C69']
+        };
+
+        config.element = 'morris-area-chart';
+        Morris.Area(config);
+
+
+        function Data(x) {
+            var date = new Date(x);
+            date.setDate(date.getDate() + 1)
+            return date.toLocaleDateString();
+        }
+    });
+
+</script>

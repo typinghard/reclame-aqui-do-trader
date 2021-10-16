@@ -1,0 +1,77 @@
+﻿@model ReclameAquiDoTrader.UI.ViewModels.PesquisaViewModels.AvaliacaoParaPesquisaViewModel
+@{
+    var avaliacoes = Model.Avaliacoes.Count;
+}
+
+<div class="col-md-4">
+    <div class="statistic-box">
+        <h4>
+            Já recebemos @avaliacoes avaliações
+        </h4>
+        <div class="row text-center">
+            <div class="col-lg-6">
+                <canvas id="doughnutChart2" width="160" height="160" style="margin: 18px auto 0px; display: block;"></canvas>
+                <p style="margin-top: 11px">
+                    Avaliações<br/>
+                    <span style="font-weight: 700; color: #8ea6b5;">não respondidas</span>
+                    x 
+                    <span style="font-weight: 700; color: #2aa4f3;">respondidas</span>
+                </p>
+            </div>
+            <div class="col-lg-6">
+                <canvas id="doughnutChart" width="160" height="160" style="margin: 18px auto 0px; display: block;"></canvas>
+                <p style="margin-top: 11px">
+                    Avaliações<br /> 
+                    <span style="font-weight: 700; color: #e26363;">negativas</span>
+                    x 
+                    <span style="font-weight: 700; color: #62e272;">positivas</span>
+                </p>
+            </div>
+        </div>
+        <div class="m-t" style="text-align: center;">
+            <small>Você pode pesquisar por cada avaliação e ver mais detalhes como data e links para perfis de mentores e posts nossa <a href="#pesquisa" class="page-scroll">pesquisa de avaliações</a></small>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+
+        var doughnutData = {
+            labels: ["Positivas", "Negativas"],
+            datasets: [{
+                data: [@Model.Avaliacoes.Count(x => x.Positivo), @Model.Avaliacoes.Count(x => !x.Positivo)],
+                backgroundColor: ["#63e273", "#e26363"]
+            }]
+        };
+
+        var doughnutOptions = {
+            responsive: false,
+            legend: {
+                display: false
+            }
+        };
+
+        var ctx4 = $("#doughnutChart");
+        new Chart(ctx4, { type: 'doughnut', data: doughnutData, options: doughnutOptions });
+
+        var doughnutData = {
+            labels: ["Respondidas", "Não respondidas"],
+            datasets: [{
+                data: [@Model.Avaliacoes.Count(x => x.Respondido), @Model.Avaliacoes.Count(x => !x.Respondido)],
+                backgroundColor: ["#2aa5f3", "#8fa6b5"]
+            }]
+        };
+
+        var doughnutOptions = {
+            responsive: false,
+            legend: {
+                display: false
+            }
+        };
+
+        var ctx4 = $("#doughnutChart2");
+        new Chart(ctx4, { type: 'doughnut', data: doughnutData, options: doughnutOptions });
+    });
+</script>

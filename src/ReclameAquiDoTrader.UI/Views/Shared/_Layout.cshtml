@@ -3,42 +3,39 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Reclame Aqui do Trader</title>
+    <title>@ViewData["Title"] - RADT Admin</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Cache-control" content="no-cache">
 
-    <link rel="shortcut icon" href="~/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="~/img/fav-icon.png" type="image/x-icon">
 
     <!-- Add local styles, mostly for plugins css file -->
     @if (IsSectionDefined("Styles"))
     {@RenderSection("Styles", required: false)}
 
-
-    
     <link rel="stylesheet" href="~/css/site.min.css" />
+
 </head>
 <body>
+    <script src="~/js/site.min.js"></script>
+
+    <script src="~/lib/select2/js/select2.full.min.js"></script>
+    <script src="~/lib/jquery/jquery.mask.js"></script>
+
+    @RenderSection("scripts", required: false)
+
     <div id="wrapper" class="@Html.PageClass()">
-
-        
-
         <partial name="_Navigation" />
         <div id="page-wrapper" class="gray-bg @ViewBag.SpecialClass">
             <partial name="_TopNavbar" />
-            @RenderBody()
+            <div class="wrapper-content">
+                @RenderBody()
+            </div>
             <partial name="_Footer" />
         </div>
     </div>
 
-
-
-    <script src="~/js/site.min.js"></script>
-    <script src="~/lib/Popper/popper.min.js"></script>
-
-    @RenderSection("scripts", required: false)
-
+    <partial name="_ModalGenerico" />
 
 </body>
-
-
-
 </html>

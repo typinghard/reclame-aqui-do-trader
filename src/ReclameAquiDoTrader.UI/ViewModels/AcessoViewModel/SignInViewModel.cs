@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ReclameAquiDoTrader.UI.ViewModels.AcessoViewModel
 {
@@ -17,5 +14,9 @@ namespace ReclameAquiDoTrader.UI.ViewModels.AcessoViewModel
         [DataType(DataType.Password)]
         [Display(Name = "Senha")]
         public string Password { get; set; }
+
+        public string Token { get; set; }
+
+        public bool TokenValido { get; set; }
     }
 }
