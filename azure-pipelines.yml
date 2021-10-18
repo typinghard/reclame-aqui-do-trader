@@ -35,8 +35,11 @@ steps:
     command: 'publish'
     publishWebProjects: true
 
-- task: PublishBuildArtifacts@1
+- task: AzureRmWebAppDeployment@4
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'drop'
-    publishLocation: 'Container'
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'Minha Assinatura'
+    appType: 'webApp'
+    WebAppName: 'app-typinghard-radt'
+    packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
+
