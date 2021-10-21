@@ -72,7 +72,7 @@ stages:
           scriptPath: '$(variables.templateLocation)\DeployInfrastructure.ps1'
           arguments: '-appPrefix "app-typinghard-radt" -environment "$(variables.environment)" -templatesLocation "$(variables.templateLocation)"'
   - job: Deploy
-    dependsOn: PreparePRInfrastructure
+    dependsOn: CreateAzureResources
     steps:
       - task: AzureRmWebAppDeployment@4
         inputs:
