@@ -58,7 +58,7 @@ stages:
     resourceGroupName: 'rg-radt-$(variables.prId)'
     resourceGroupLocation: 'brazil-south'
     resourceGroupLocationShort: 'br'
-    templateLocation: $(build.SourcesDirectory)\src\ReclameAquiDoTrader.Environment.ARMTemplate
+    templateLocation: '$(build.SourcesDirectory)\src\ReclameAquiDoTrader.Environment.ARMTemplate'
   jobs:
   - job: CreateAzureResources
     displayName: 'Create Azure Resources'
@@ -72,6 +72,7 @@ stages:
           scriptPath: '$(variables.templateLocation)\DeployInfrastructure.ps1'
           arguments: '-appPrefix "app-typinghard-radt" -environment "$(variables.environment)" -templatesLocation "$(variables.templateLocation)"'
   - job: Deploy
+    dependsOn: PreparePRInfrastructure
     steps:
       - task: AzureRmWebAppDeployment@4
         inputs:
@@ -79,4 +80,4 @@ stages:
           azureSubscription: 'Minha Assinatura'
           appType: 'webApp'
           WebAppName: 'app-typinghard-radt-$(variables.environment)'
-          packageForLinux: '$(build.artifactstagingdirectory)/**/*.zip'
+          packageForLinux: '$(build.artifactstagingdirectory)/*.zip'
