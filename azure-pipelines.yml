@@ -1,5 +1,9 @@
 trigger:
   - master
+pr:
+  branches:
+    include:
+    - '*'
 
 pool:
   vmImage: 'windows-latest'
@@ -8,38 +12,71 @@ variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
+  prId: $(System.PullRequest.PullRequestId)
+  productionPipeline: $[eq(variables['Build.SourceBranch'], 'refs/heads/master')]
 
-steps:
-- task: NuGetToolInstaller@1
-  displayName: 'Install NuGet'
+stages:
+- stage: PrepareApp
+  displayName: 'Build, Test & Publish'
+  jobs:
+  - job:
+    displayName: Build
+    steps:
+    - task: NuGetToolInstaller@1
+      displayName: 'Install NuGet'
 
-- task: NuGetCommand@2
-  displayName: 'Restore NuGet packages from Solution'
-  inputs:
-    restoreSolution: '$(solution)'
+    - task: NuGetCommand@2
+      displayName: 'Restore NuGet packages from Solution'
+      inputs:
+        restoreSolution: '$(solution)'
 
-- task: VSBuild@1
-  inputs:
-    solution: '$(solution)'
-    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+    - task: VSBuild@1
+      displayName: 'Build'
+      inputs:
+        solution: '$(solution)'
+        msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
+        platform: '$(buildPlatform)'
+        configuration: '$(buildConfiguration)'
 
-- task: VSTest@2
-  inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+    - task: VSTest@2
+      displayName: 'Run Unit Tests'
+      inputs:
+        platform: '$(buildPlatform)'
+        configuration: '$(buildConfiguration)'
 
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'publish'
-    publishWebProjects: true
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Artifact'
+      inputs:
+        PathtoPublish: '$(build.artifactstagingdirectory)'
 
-- task: AzureRmWebAppDeployment@4
-  inputs:
-    ConnectionType: 'AzureRM'
-    azureSubscription: 'Minha Assinatura'
-    appType: 'webApp'
-    WebAppName: 'app-typinghard-radt'
-    packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
-
+- stage: PreparePRInfrastructure
+  displayName: 'Prepare Infrastructure for PR'
+  condition: and(eq(variables.productionPipeline, 'false'), ne(variables.prId, 'null'))
+  variables:
+    environment: $(variables.prId)
+    environmentLowercase: $(variables.prId)
+    resourceGroupName: 'rg-radt-$(variables.prId)'
+    resourceGroupLocation: 'brazil-south'
+    resourceGroupLocationShort: 'br'
+    templateLocation: $(build.SourcesDirectory)\src\ReclameAquiDoTrader.Environment.ARMTemplate
+  jobs:
+  - job: CreateAzureResources
+    displayName: 'Create Azure Resources'
+    steps:    
+      - task: AzureCLI@2
+        displayName: 'Deploy infrastructure with ARM templates'
+        inputs:
+          azureSubscription: 'Minha Assinatura'
+          scriptType: 'ps'
+          scriptLocation: 'scriptPath'
+          scriptPath: '$(variables.templateLocation)\DeployInfrastructure.ps1'
+          arguments: '-appPrefix "app-typinghard-radt" -environment "$(variables.environment)" -templatesLocation "$(variables.templateLocation)"'
+  - job: Deploy
+    steps:
+      - task: AzureRmWebAppDeployment@4
+        inputs:
+          ConnectionType: 'AzureRM'
+          azureSubscription: 'Minha Assinatura'
+          appType: 'webApp'
+          WebAppName: 'app-typinghard-radt-$(variables.environment)'
+          packageForLinux: '$(build.artifactstagingdirectory)/**/*.zip'
