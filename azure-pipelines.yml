@@ -51,7 +51,7 @@ stages:
 
 - stage: PreparePRInfrastructure
   displayName: 'Prepare Infrastructure for PR'
-  condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'), ne(variables['System.PullRequest.PullRequestId'], 'Null'))
+  ##condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'), ne(variables['System.PullRequest.PullRequestId'], 'Null'))
   variables:
     environment: $(variables['System.PullRequest.PullRequestId'])
     environmentLowercase: $(variables['System.PullRequest.PullRequestId'])
@@ -69,21 +69,21 @@ stages:
           echo "$(Build.Reason)"
           echo "variables['System.PullRequest.PullRequestId']:" 
           echo "$(System.PullRequest.PullRequestId)"
-    - task: AzureCLI@2
-      displayName: 'Deploy infrastructure with ARM templates'
-      inputs:
-        azureSubscription: 'Minha Assinatura'
-        scriptType: 'ps'
-        scriptLocation: 'scriptPath'
-        scriptPath: '$(build.SourcesDirectory)\src\ReclameAquiDoTrader.Environment.ARMTemplate\DeployInfrastructure.ps1'
-        arguments: '-appPrefix "app-typinghard-radt" -environment "$(variables.environment)" -templatesLocation "$(build.SourcesDirectory)\src\ReclameAquiDoTrader.Environment.ARMTemplate"'
-  - job: Deploy
-    dependsOn: CreateAzureResources
-    steps:
-      - task: AzureRmWebAppDeployment@4
-        inputs:
-          ConnectionType: 'AzureRM'
-          azureSubscription: 'Minha Assinatura'
-          appType: 'webApp'
-          WebAppName: 'app-typinghard-radt-$(variables.environment)'
-          packageForLinux: '$(build.artifactstagingdirectory)/*.zip'
+  #   - task: AzureCLI@2
+  #     displayName: 'Deploy infrastructure with ARM templates'
+  #     inputs:
+  #       azureSubscription: 'Minha Assinatura'
+  #       scriptType: 'ps'
+  #       scriptLocation: 'scriptPath'
+  #       scriptPath: '$(build.SourcesDirectory)\src\ReclameAquiDoTrader.Environment.ARMTemplate\DeployInfrastructure.ps1'
+  #       arguments: '-appPrefix "app-typinghard-radt" -environment "$(variables.environment)" -templatesLocation "$(build.SourcesDirectory)\src\ReclameAquiDoTrader.Environment.ARMTemplate"'
+  # - job: Deploy
+  #   dependsOn: CreateAzureResources
+  #   steps:
+  #     - task: AzureRmWebAppDeployment@4
+  #       inputs:
+  #         ConnectionType: 'AzureRM'
+  #         azureSubscription: 'Minha Assinatura'
+  #         appType: 'webApp'
+  #         WebAppName: 'app-typinghard-radt-$(variables.environment)'
+  #         packageForLinux: '$(build.artifactstagingdirectory)/*.zip'
