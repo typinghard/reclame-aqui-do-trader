@@ -20,6 +20,6 @@ $currentStack = "dotnetcore"
 $phpVersion = "OFF"
 $timing = -join($timing, "2. Variables created: ", $stopwatch.Elapsed.TotalSeconds, "`n");
 
-$whatifResultsJson = az deployment group what-if --no-pretty-print --only-show-errors --resource-group $serverFarmResourceGroup --name $serviceAPIName --template-file "$templatesLocation/WebApp.json" --parameters subscriptionId=$subscriptionId hostingPlanName=$webhostingName location=$location name=$serviceAPIName serverFarmResourceGroup=$serverFarmResourceGroup alwaysOn=$alwaysOn currentStack=$currentStack phpVersion=$phpVersion
-$whatifResults = $whatifResultsJson | ConvertFrom-Json 
-$ChangeResults12 = $whatifResults.changes
+az group create -l brazilsouth -n $serverFarmResourceGroup
+
+az deployment group create --resource-group $serverFarmResourceGroup --name $serviceAPIName --template-file "$templatesLocation/WebApp.json" --parameters subscriptionId=$subscriptionId hostingPlanName=$webhostingName location=$location name=$serviceAPIName serverFarmResourceGroup=$serverFarmResourceGroup alwaysOn=$alwaysOn currentStack=$currentStack phpVersion=$phpVersion
