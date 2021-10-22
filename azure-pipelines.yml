@@ -16,38 +16,38 @@ variables:
   productionPipeline: $[eq(variables['Build.SourceBranch'], 'refs/heads/master')]
 
 stages:
-- stage: PrepareApp
-  displayName: 'Build, Test & Publish'
-  jobs:
-  - job:
-    displayName: Build
-    steps:
-    - task: NuGetToolInstaller@1
-      displayName: 'Install NuGet'
+# - stage: PrepareApp
+#   displayName: 'Build, Test & Publish'
+#   jobs:
+#   - job:
+#     displayName: Build
+#     steps:
+#     - task: NuGetToolInstaller@1
+#       displayName: 'Install NuGet'
 
-    - task: NuGetCommand@2
-      displayName: 'Restore NuGet packages from Solution'
-      inputs:
-        restoreSolution: '$(solution)'
+#     - task: NuGetCommand@2
+#       displayName: 'Restore NuGet packages from Solution'
+#       inputs:
+#         restoreSolution: '$(solution)'
 
-    - task: VSBuild@1
-      displayName: 'Build'
-      inputs:
-        solution: '$(solution)'
-        msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
-        platform: '$(buildPlatform)'
-        configuration: '$(buildConfiguration)'
+#     - task: VSBuild@1
+#       displayName: 'Build'
+#       inputs:
+#         solution: '$(solution)'
+#         msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
+#         platform: '$(buildPlatform)'
+#         configuration: '$(buildConfiguration)'
 
-    - task: VSTest@2
-      displayName: 'Run Unit Tests'
-      inputs:
-        platform: '$(buildPlatform)'
-        configuration: '$(buildConfiguration)'
+#     - task: VSTest@2
+#       displayName: 'Run Unit Tests'
+#       inputs:
+#         platform: '$(buildPlatform)'
+#         configuration: '$(buildConfiguration)'
 
-    - task: PublishBuildArtifacts@1
-      displayName: 'Publish Artifact'
-      inputs:
-        PathtoPublish: '$(build.artifactstagingdirectory)'
+#     - task: PublishBuildArtifacts@1
+#       displayName: 'Publish Artifact'
+#       inputs:
+#         PathtoPublish: '$(build.artifactstagingdirectory)'
 
 - stage: PreparePRInfrastructure
   displayName: 'Prepare Infrastructure for PR'
@@ -62,14 +62,21 @@ stages:
   - job: CreateAzureResources
     displayName: 'Create Azure Resources'
     steps:    
-      - task: AzureCLI@2
-        displayName: 'Deploy infrastructure with ARM templates'
-        inputs:
-          azureSubscription: 'Minha Assinatura'
-          scriptType: 'ps'
-          scriptLocation: 'scriptPath'
-          scriptPath: '$(build.SourcesDirectory)\src\ReclameAquiDoTrader.Environment.ARMTemplate\DeployInfrastructure.ps1'
-          arguments: '-appPrefix "app-typinghard-radt" -environment "$(variables.environment)" -templatesLocation "$(build.SourcesDirectory)\src\ReclameAquiDoTrader.Environment.ARMTemplate"'
+    - task: CmdLine@2
+      inputs:
+        script: |  
+          echo "variables['Build.Reason']:" 
+          echo "$(variables['Build.Reason'])"
+          echo "variables['System.PullRequest.PullRequestId']:" 
+          echo "$(variables['System.PullRequest.PullRequestId'])"
+    - task: AzureCLI@2
+      displayName: 'Deploy infrastructure with ARM templates'
+      inputs:
+        azureSubscription: 'Minha Assinatura'
+        scriptType: 'ps'
+        scriptLocation: 'scriptPath'
+        scriptPath: '$(build.SourcesDirectory)\src\ReclameAquiDoTrader.Environment.ARMTemplate\DeployInfrastructure.ps1'
+        arguments: '-appPrefix "app-typinghard-radt" -environment "$(variables.environment)" -templatesLocation "$(build.SourcesDirectory)\src\ReclameAquiDoTrader.Environment.ARMTemplate"'
   - job: Deploy
     dependsOn: CreateAzureResources
     steps:
