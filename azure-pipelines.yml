@@ -51,11 +51,11 @@ stages:
 
 - stage: PreparePRInfrastructure
   displayName: 'Prepare Infrastructure for PR'
-  condition: and(eq(variables.productionPipeline, 'false'), ne(variables.prId, 'null'))
+  condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'), ne(variables['System.PullRequest.PullRequestId'], 'Null'))
   variables:
-    environment: $(variables.prId)
-    environmentLowercase: $(variables.prId)
-    resourceGroupName: 'rg-radt-$(variables.prId)'
+    environment: $(variables['System.PullRequest.PullRequestId'])
+    environmentLowercase: $(variables['System.PullRequest.PullRequestId'])
+    resourceGroupName: "rg-radt-$(variables['System.PullRequest.PullRequestId'])"
     resourceGroupLocation: 'brazil-south'
     resourceGroupLocationShort: 'br'
     templateLocation: '$(build.SourcesDirectory)\src\ReclameAquiDoTrader.Environment.ARMTemplate'
