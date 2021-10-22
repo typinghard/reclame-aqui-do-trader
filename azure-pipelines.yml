@@ -58,7 +58,6 @@ stages:
     resourceGroupName: "rg-radt-$(variables['System.PullRequest.PullRequestId'])"
     resourceGroupLocation: 'brazil-south'
     resourceGroupLocationShort: 'br'
-    templateLocation: '$(build.SourcesDirectory)\src\ReclameAquiDoTrader.Environment.ARMTemplate'
   jobs:
   - job: CreateAzureResources
     displayName: 'Create Azure Resources'
@@ -69,8 +68,8 @@ stages:
           azureSubscription: 'Minha Assinatura'
           scriptType: 'ps'
           scriptLocation: 'scriptPath'
-          scriptPath: '$(variables.templateLocation)\DeployInfrastructure.ps1'
-          arguments: '-appPrefix "app-typinghard-radt" -environment "$(variables.environment)" -templatesLocation "$(variables.templateLocation)"'
+          scriptPath: '$(build.SourcesDirectory)\src\ReclameAquiDoTrader.Environment.ARMTemplate\DeployInfrastructure.ps1'
+          arguments: '-appPrefix "app-typinghard-radt" -environment "$(variables.environment)" -templatesLocation "$(build.SourcesDirectory)\src\ReclameAquiDoTrader.Environment.ARMTemplate"'
   - job: Deploy
     dependsOn: CreateAzureResources
     steps:
