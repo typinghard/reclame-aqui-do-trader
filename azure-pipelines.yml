@@ -13,7 +13,7 @@ variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
   prId: $(System.PullRequest.PullRequestId)
-  productionPipeline: $[eq(variables['Build.SourceBranch'], 'refs/heads/master')]
+  prPipeline: $[eq(variables['Build.Reason'], 'PullRequest')]
 
 stages:
 - stage: PrepareApp
@@ -51,7 +51,7 @@ stages:
 
 - stage: PreparePRInfrastructure
   displayName: 'Prepare Infrastructure for PR'
-  condition: and(succeeded(), eq($(Build.Reason), 'PullRequest'), ne($(System.PullRequest.PullRequestId), 'Null'))
+  condition: and(succeeded(), eq(variables.prPipeline, 'true'))
   variables:
     environment: $(System.PullRequest.PullRequestId)
     environmentLowercase: $(System.PullRequest.PullRequestId)
@@ -67,6 +67,8 @@ stages:
         script: |  
           echo "Build.Reason:" 
           echo "$(Build.Reason)"
+          echo "System.PullRequest.PullRequestId:" 
+          echo "$(System.PullRequest.PullRequestId)"
           echo "System.PullRequest.PullRequestId:" 
           echo "$(System.PullRequest.PullRequestId)"
     - task: AzureCLI@2
