@@ -78,7 +78,7 @@ stages:
         scriptType: 'ps'
         scriptLocation: 'scriptPath'
         scriptPath: '$(build.SourcesDirectory)\src\ReclameAquiDoTrader.Environment.ARMTemplate\DeployInfrastructure.ps1'
-        arguments: '-appPrefix "app-typinghard-radt" -environment "$(variables.environment)" -templatesLocation "$(build.SourcesDirectory)\src\ReclameAquiDoTrader.Environment.ARMTemplate"'
+        arguments: '-appPrefix "app-typinghard-radt" -environment "$(environment)" -templatesLocation "$(build.SourcesDirectory)\src\ReclameAquiDoTrader.Environment.ARMTemplate"'
   - job: Deploy
     dependsOn: CreateAzureResources
     steps:
@@ -87,5 +87,5 @@ stages:
           ConnectionType: 'AzureRM'
           azureSubscription: 'Minha Assinatura'
           appType: 'webApp'
-          WebAppName: 'app-typinghard-radt-$(variables.environment)'
+          WebAppName: 'app-typinghard-radt-$(environment)'
           packageForLinux: '$(build.artifactstagingdirectory)/*.zip'
