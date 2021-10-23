@@ -100,9 +100,10 @@ stages:
           
 - stage: DeployProd
   displayName: 'Deploy Prod'
-  condition: and(succeeded(), eq(variables.prPipeline, 'false'))
+  condition: and(succeeded(), eq(variables['Build.SourceBranchName'], 'master'))
+  dependsOn: PrepareApp
   jobs:
-  - job: Deploy
+  - job: DeployProdJob
     steps:
       - task: DownloadBuildArtifacts@0
         displayName: 'Download the build artifacts'
