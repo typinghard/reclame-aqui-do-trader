@@ -21,7 +21,7 @@ variables:
   buildConfiguration: 'Release'
   prId: $(System.PullRequest.pullRequestNumber)
   prPipeline: $[eq(variables['Build.Reason'], 'PullRequest')]
-
+   
 stages:
 - stage: PrepareApp
   displayName: 'Build, Test & Publish'
@@ -68,16 +68,9 @@ stages:
   jobs:
   - job: CreateAzureResources
     displayName: 'Create Azure Resources'
+    variables:
+    - group: RADT-Secrets
     steps:    
-    - task: CmdLine@2
-      inputs:
-        script: |  
-          echo "Build.Reason:" 
-          echo "$(Build.Reason)"
-          echo "System.PullRequest.pullRequestNumber:" 
-          echo "$(System.PullRequest.pullRequestNumber)"
-          echo "System.PullRequest.pullRequestNumber:" 
-          echo "$(System.PullRequest.pullRequestNumber)"
     - task: AzureCLI@2
       displayName: 'Deploy infrastructure with ARM templates'
       inputs:
@@ -85,7 +78,16 @@ stages:
         scriptType: 'ps'
         scriptLocation: 'scriptPath'
         scriptPath: '$(build.SourcesDirectory)\src\ReclameAquiDoTrader.Environment.ARMTemplate\DeployInfrastructure.ps1'
-        arguments: '-appPrefix "app-typinghard-radt" -environment "$(environment)" -templatesLocation "$(build.SourcesDirectory)\src\ReclameAquiDoTrader.Environment.ARMTemplate"'
+        arguments: | 
+          -appPrefix "app-typinghard-radt" 
+          -environment "$(environment)" 
+          -templatesLocation "$(build.SourcesDirectory)\src\ReclameAquiDoTrader.Environment.ARMTemplate"
+          -azureStorageConnectionString "$(AzureStorage:ConnectionString)"
+          -ravenDbConnectionConfigsCertificateDownloadPath "$(RavebDBConnectionConfigs:Certificate:DownloadPath)"
+          -ravenSettingsCertFilePath "$(RavenSettings:CertFilePath)"
+          -ravenSettingsCertPassword "$(RavenSettings:CertPassword)"
+          -ravenSettingsDatabaseName "$(RavenSettings:DatabaseName)"
+          -ravenSettingsUrl "$(RavenSettings:Urls:0)"
   - job: Deploy
     dependsOn: CreateAzureResources
     steps:
