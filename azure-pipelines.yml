@@ -76,16 +76,7 @@ stages:
         scriptType: 'ps'
         scriptLocation: 'scriptPath'
         scriptPath: '$(build.SourcesDirectory)\src\ReclameAquiDoTrader.Environment.ARMTemplate\DeployInfrastructure.ps1'
-        arguments: | 
-          -appPrefix "app-typinghard-radt" 
-          -environment "$(System.PullRequest.pullRequestNumber)" 
-          -templatesLocation "$(build.SourcesDirectory)\src\ReclameAquiDoTrader.Environment.ARMTemplate"
-          -azureStorageConnectionString "$(AzureStorage:ConnectionString)"
-          -ravenDbConnectionConfigsCertificateDownloadPath "$(RavebDBConnectionConfigs:Certificate:DownloadPath)"
-          -ravenSettingsCertFilePath "$(RavenSettings:CertFilePath)"
-          -ravenSettingsCertPassword "$(RavenSettings:CertPassword)"
-          -ravenSettingsDatabaseName "$(RavenSettings:DatabaseName)"
-          -ravenSettingsUrl "$(RavenSettings:Urls:0)"
+        arguments: -appPrefix "app-typinghard-radt" -environment "$(System.PullRequest.pullRequestNumber)" -templatesLocation "$(build.SourcesDirectory)\src\ReclameAquiDoTrader.Environment.ARMTemplate" -azureStorageConnectionString "$(AzureStorage:ConnectionString)" -ravenDbConnectionConfigsCertificateDownloadPath "$(RavebDBConnectionConfigs:Certificate:DownloadPath)" -ravenSettingsCertFilePath "$(RavenSettings:CertFilePath)" -ravenSettingsCertPassword "$(RavenSettings:CertPassword)" -ravenSettingsDatabaseName "$(RavenSettings:DatabaseName)" -ravenSettingsUrl "$(RavenSettings:Urls:0)"
   - job: Deploy
     dependsOn: CreateAzureResources
     steps:
