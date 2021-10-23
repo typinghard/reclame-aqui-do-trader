@@ -21,81 +21,95 @@ variables:
   buildConfiguration: 'Release'
   prId: $(System.PullRequest.pullRequestNumber)
   prPipeline: $[eq(variables['Build.Reason'], 'PullRequest')]
-   
-stages:
-- stage: PrepareApp
-  displayName: 'Build, Test & Publish'
-  jobs:
-  - job:
-    displayName: Build
-    steps:
-    - task: NuGetToolInstaller@1
-      displayName: 'Install NuGet'
 
-    - task: NuGetCommand@2
-      displayName: 'Restore NuGet packages from Solution'
-      inputs:
-        restoreSolution: '$(solution)'
+jobs:
+- job: CreateAzureResources
+  displayName: 'Create Azure Resources'
+  variables:
+  - group: RADT-Secrets
+  steps:    
+  - script: |
+      echo "System.PullRequest.pullRequestNumber: $(System.PullRequest.pullRequestNumber)"
+      echo "ravenSettingsDatabaseName: $(RavenSettings:DatabaseName)"
+      echo "prId: $(prId)"
 
-    - task: VSBuild@1
-      displayName: 'Build'
-      inputs:
-        solution: '$(solution)'
-        msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
-        platform: '$(buildPlatform)'
-        configuration: '$(buildConfiguration)'
+# stages:
+# - stage: PrepareApp
+#   displayName: 'Build, Test & Publish'
+#   jobs:
+#   - job:
+#     displayName: Build
+#     steps:
+#     - task: NuGetToolInstaller@1
+#       displayName: 'Install NuGet'
 
-    - task: VSTest@2
-      displayName: 'Run Unit Tests'
-      inputs:
-        platform: '$(buildPlatform)'
-        configuration: '$(buildConfiguration)'
+#     - task: NuGetCommand@2
+#       displayName: 'Restore NuGet packages from Solution'
+#       inputs:
+#         restoreSolution: '$(solution)'
 
-    - task: PublishBuildArtifacts@1
-      displayName: 'Publish Artifact'
-      inputs:
-        PathtoPublish: '$(build.artifactstagingdirectory)'
+#     - task: VSBuild@1
+#       displayName: 'Build'
+#       inputs:
+#         solution: '$(solution)'
+#         msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
+#         platform: '$(buildPlatform)'
+#         configuration: '$(buildConfiguration)'
 
-- stage: PreparePRInfrastructure
-  displayName: 'Prepare Infrastructure for PR'
-  condition: and(succeeded(), eq(variables.prPipeline, 'true'))
-  jobs:
-  - job: CreateAzureResources
-    displayName: 'Create Azure Resources'
-    variables:
-    - group: RADT-Secrets
-    steps:    
-    - task: AzureCLI@2
-      displayName: 'Deploy infrastructure with ARM templates'
-      inputs:
-        azureSubscription: 'Minha Assinatura'
-        scriptType: 'ps'
-        scriptLocation: 'scriptPath'
-        scriptPath: '$(build.SourcesDirectory)\src\ReclameAquiDoTrader.Environment.ARMTemplate\DeployInfrastructure.ps1'
-        arguments: | 
-          -appPrefix "app-typinghard-radt" 
-          -environment "$(System.PullRequest.pullRequestNumber)" 
-          -templatesLocation "$(build.SourcesDirectory)\src\ReclameAquiDoTrader.Environment.ARMTemplate"
-          -azureStorageConnectionString "$(AzureStorage:ConnectionString)"
-          -ravenDbConnectionConfigsCertificateDownloadPath "$(RavebDBConnectionConfigs:Certificate:DownloadPath)"
-          -ravenSettingsCertFilePath "$(RavenSettings:CertFilePath)"
-          -ravenSettingsCertPassword "$(RavenSettings:CertPassword)"
-          -ravenSettingsDatabaseName "$(RavenSettings:DatabaseName)"
-          -ravenSettingsUrl "$(RavenSettings:Urls:0)"
-  - job: Deploy
-    dependsOn: CreateAzureResources
-    steps:
-      - task: DownloadBuildArtifacts@0
-        displayName: 'Download the build artifacts'
-        inputs:
-          buildType: 'current'
-          downloadType: 'single'
-          artifactName: 'drop'
-          downloadPath: '$(build.artifactstagingdirectory)'
-      - task: AzureRmWebAppDeployment@4
-        inputs:
-          ConnectionType: 'AzureRM'
-          azureSubscription: 'Minha Assinatura'
-          appType: 'webApp'
-          WebAppName: 'app-typinghard-radt-$(environment)'
-          packageForLinux: '$(build.artifactstagingdirectory)/drop/*.zip'
+#     - task: VSTest@2
+#       displayName: 'Run Unit Tests'
+#       inputs:
+#         platform: '$(buildPlatform)'
+#         configuration: '$(buildConfiguration)'
+
+#     - task: PublishBuildArtifacts@1
+#       displayName: 'Publish Artifact'
+#       inputs:
+#         PathtoPublish: '$(build.artifactstagingdirectory)'
+
+# - stage: PreparePRInfrastructure
+#   displayName: 'Prepare Infrastructure for PR'
+#   condition: and(succeeded(), eq(variables.prPipeline, 'true'))
+#   jobs:
+#   - job: CreateAzureResources
+#     displayName: 'Create Azure Resources'
+#     variables:
+#     - group: RADT-Secrets
+#     steps:    
+#     - script: |
+#         echo "System.PullRequest.pullRequestNumber: $(System.PullRequest.pullRequestNumber)"
+#         echo "nravenSettingsDatabaseName: $(RavenSettings:DatabaseName)"
+#     - task: AzureCLI@2
+#       displayName: 'Deploy infrastructure with ARM templates'
+#       inputs:
+#         azureSubscription: 'Minha Assinatura'
+#         scriptType: 'ps'
+#         scriptLocation: 'scriptPath'
+#         scriptPath: '$(build.SourcesDirectory)\src\ReclameAquiDoTrader.Environment.ARMTemplate\DeployInfrastructure.ps1'
+#         arguments: | 
+#           -appPrefix "app-typinghard-radt" 
+#           -environment "$(System.PullRequest.pullRequestNumber)" 
+#           -templatesLocation "$(build.SourcesDirectory)\src\ReclameAquiDoTrader.Environment.ARMTemplate"
+#           -azureStorageConnectionString "$(AzureStorage:ConnectionString)"
+#           -ravenDbConnectionConfigsCertificateDownloadPath "$(RavebDBConnectionConfigs:Certificate:DownloadPath)"
+#           -ravenSettingsCertFilePath "$(RavenSettings:CertFilePath)"
+#           -ravenSettingsCertPassword "$(RavenSettings:CertPassword)"
+#           -ravenSettingsDatabaseName "$(RavenSettings:DatabaseName)"
+#           -ravenSettingsUrl "$(RavenSettings:Urls:0)"
+#   - job: Deploy
+#     dependsOn: CreateAzureResources
+#     steps:
+#       - task: DownloadBuildArtifacts@0
+#         displayName: 'Download the build artifacts'
+#         inputs:
+#           buildType: 'current'
+#           downloadType: 'single'
+#           artifactName: 'drop'
+#           downloadPath: '$(build.artifactstagingdirectory)'
+#       - task: AzureRmWebAppDeployment@4
+#         inputs:
+#           ConnectionType: 'AzureRM'
+#           azureSubscription: 'Minha Assinatura'
+#           appType: 'webApp'
+#           WebAppName: 'app-typinghard-radt-$(environment)'
+#           packageForLinux: '$(build.artifactstagingdirectory)/drop/*.zip'
