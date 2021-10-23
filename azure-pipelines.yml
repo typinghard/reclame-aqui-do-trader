@@ -19,7 +19,7 @@ variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-  prId: $(System.PullRequest.PullRequestId)
+  prId: $(System.PullRequest.pullRequestNumber)
   prPipeline: $[eq(variables['Build.Reason'], 'PullRequest')]
 
 stages:
@@ -60,9 +60,9 @@ stages:
   displayName: 'Prepare Infrastructure for PR'
   condition: and(succeeded(), eq(variables.prPipeline, 'true'))
   variables:
-    environment: $(System.PullRequest.PullRequestId)
-    environmentLowercase: $(System.PullRequest.PullRequestId)
-    resourceGroupName: "rg-radt-$(System.PullRequest.PullRequestId)"
+    environment: $(System.PullRequest.pullRequestNumber)
+    environmentLowercase: $(System.PullRequest.pullRequestNumber)
+    resourceGroupName: "rg-radt-$(System.PullRequest.pullRequestNumber)"
     resourceGroupLocation: 'brazil-south'
     resourceGroupLocationShort: 'br'
   jobs:
@@ -74,10 +74,10 @@ stages:
         script: |  
           echo "Build.Reason:" 
           echo "$(Build.Reason)"
-          echo "System.PullRequest.PullRequestId:" 
-          echo "$(System.PullRequest.PullRequestId)"
-          echo "System.PullRequest.PullRequestId:" 
-          echo "$(System.PullRequest.PullRequestId)"
+          echo "System.PullRequest.pullRequestNumber:" 
+          echo "$(System.PullRequest.pullRequestNumber)"
+          echo "System.PullRequest.pullRequestNumber:" 
+          echo "$(System.PullRequest.pullRequestNumber)"
     - task: AzureCLI@2
       displayName: 'Deploy infrastructure with ARM templates'
       inputs:
