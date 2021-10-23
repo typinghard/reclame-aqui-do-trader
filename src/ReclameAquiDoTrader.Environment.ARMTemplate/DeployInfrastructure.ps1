@@ -2,7 +2,13 @@ param
 (
 	[string] $appPrefix,
 	[string] $environment,
-	[string] $templatesLocation
+	[string] $templatesLocation,
+	[string] $azureStorageConnectionString,
+	[string] $ravenDbConnectionConfigsCertificateDownloadPath,
+	[string] $ravenSettingsCertFilePath,
+	[string] $ravenSettingsCertPassword,
+	[string] $ravenSettingsDatabaseName,
+	[string] $ravenSettingsUrl
 )
 
 $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
@@ -23,3 +29,12 @@ $timing = -join($timing, "2. Variables created: ", $stopwatch.Elapsed.TotalSecon
 az group create -l brazilsouth -n $serverFarmResourceGroup
 
 az deployment group create --resource-group $serverFarmResourceGroup --name $serviceAPIName --template-file "$templatesLocation/WebApp.json" --parameters subscriptionId=$subscriptionId hostingPlanName=$webhostingName location=$location name=$serviceAPIName serverFarmResourceGroup=$serverFarmResourceGroup alwaysOn=$alwaysOn currentStack=$currentStack phpVersion=$phpVersion
+
+az deployment group wait --name $serviceAPIName --resource-group $serverFarmResourceGroup
+
+az webapp config appsettings set -g $serverFarmResourceGroup -n $serviceAPIName --settings AzureStorage:ConnectionString=$azureStorageConnectionString `
+																						   RavebDBConnectionConfigs:Certificate:DownloadPath=$ravenDbConnectionConfigsCertificateDownloadPath `
+																						   RavenSettings:CertFilePath=$ravenSettingsCertFilePath `
+																						   RavenSettings:CertPassword=$ravenSettingsCertPassword `
+																						   RavenSettings:DatabaseName=$ravenSettingsDatabaseName `
+																						   RavenSettings:Urls:0=$ravenSettingsUrl
