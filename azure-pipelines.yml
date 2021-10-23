@@ -21,85 +21,93 @@ variables:
   buildConfiguration: 'Release'
   prId: $(System.PullRequest.pullRequestNumber)
   prPipeline: $[eq(variables['Build.Reason'], 'PullRequest')]
-
-stages:
-- stage: PrepareApp
-  displayName: 'Build, Test & Publish'
-  jobs:
-  - job:
-    displayName: Build
+  
+jobs:
+  - job: Test
+    variables:
+    - group: RADT-Secrets
     steps:
-    - task: NuGetToolInstaller@1
-      displayName: 'Install NuGet'
+    - script: echo $(AzureStorage:ConnectionString)
+    - script: echo $(RavenSettings:Urls:0)
+  
+# stages:
+# - stage: PrepareApp
+#   displayName: 'Build, Test & Publish'
+#   jobs:
+#   - job:
+#     displayName: Build
+#     steps:
+#     - task: NuGetToolInstaller@1
+#       displayName: 'Install NuGet'
 
-    - task: NuGetCommand@2
-      displayName: 'Restore NuGet packages from Solution'
-      inputs:
-        restoreSolution: '$(solution)'
+#     - task: NuGetCommand@2
+#       displayName: 'Restore NuGet packages from Solution'
+#       inputs:
+#         restoreSolution: '$(solution)'
 
-    - task: VSBuild@1
-      displayName: 'Build'
-      inputs:
-        solution: '$(solution)'
-        msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
-        platform: '$(buildPlatform)'
-        configuration: '$(buildConfiguration)'
+#     - task: VSBuild@1
+#       displayName: 'Build'
+#       inputs:
+#         solution: '$(solution)'
+#         msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
+#         platform: '$(buildPlatform)'
+#         configuration: '$(buildConfiguration)'
 
-    - task: VSTest@2
-      displayName: 'Run Unit Tests'
-      inputs:
-        platform: '$(buildPlatform)'
-        configuration: '$(buildConfiguration)'
+#     - task: VSTest@2
+#       displayName: 'Run Unit Tests'
+#       inputs:
+#         platform: '$(buildPlatform)'
+#         configuration: '$(buildConfiguration)'
 
-    - task: PublishBuildArtifacts@1
-      displayName: 'Publish Artifact'
-      inputs:
-        PathtoPublish: '$(build.artifactstagingdirectory)'
+#     - task: PublishBuildArtifacts@1
+#       displayName: 'Publish Artifact'
+#       inputs:
+#         PathtoPublish: '$(build.artifactstagingdirectory)'
 
-- stage: PreparePRInfrastructure
-  displayName: 'Prepare Infrastructure for PR'
-  condition: and(succeeded(), eq(variables.prPipeline, 'true'))
-  variables:
-    environment: $(System.PullRequest.pullRequestNumber)
-    environmentLowercase: $(System.PullRequest.pullRequestNumber)
-    resourceGroupName: "rg-radt-$(System.PullRequest.pullRequestNumber)"
-    resourceGroupLocation: 'brazil-south'
-    resourceGroupLocationShort: 'br'
-  jobs:
-  - job: CreateAzureResources
-    displayName: 'Create Azure Resources'
-    steps:    
-    - task: CmdLine@2
-      inputs:
-        script: |  
-          echo "Build.Reason:" 
-          echo "$(Build.Reason)"
-          echo "System.PullRequest.pullRequestNumber:" 
-          echo "$(System.PullRequest.pullRequestNumber)"
-          echo "System.PullRequest.pullRequestNumber:" 
-          echo "$(System.PullRequest.pullRequestNumber)"
-    - task: AzureCLI@2
-      displayName: 'Deploy infrastructure with ARM templates'
-      inputs:
-        azureSubscription: 'Minha Assinatura'
-        scriptType: 'ps'
-        scriptLocation: 'scriptPath'
-        scriptPath: '$(build.SourcesDirectory)\src\ReclameAquiDoTrader.Environment.ARMTemplate\DeployInfrastructure.ps1'
-        arguments: '-appPrefix "app-typinghard-radt" -environment "$(environment)" -templatesLocation "$(build.SourcesDirectory)\src\ReclameAquiDoTrader.Environment.ARMTemplate"'
-  - job: Deploy
-    dependsOn: CreateAzureResources
-    steps:
-      - task: DownloadBuildArtifacts@0
-        displayName: 'Download the build artifacts'
-        inputs:
-          buildType: 'current'
-          downloadType: 'single'
-          artifactName: 'drop'
-          downloadPath: '$(build.artifactstagingdirectory)'
-      - task: AzureRmWebAppDeployment@4
-        inputs:
-          ConnectionType: 'AzureRM'
-          azureSubscription: 'Minha Assinatura'
-          appType: 'webApp'
-          WebAppName: 'app-typinghard-radt-$(environment)'
-          packageForLinux: '$(build.artifactstagingdirectory)/drop/*.zip'
+# - stage: PreparePRInfrastructure
+#   displayName: 'Prepare Infrastructure for PR'
+#   condition: and(succeeded(), eq(variables.prPipeline, 'true'))
+#   variables:
+#     environment: $(System.PullRequest.pullRequestNumber)
+#     environmentLowercase: $(System.PullRequest.pullRequestNumber)
+#     resourceGroupName: "rg-radt-$(System.PullRequest.pullRequestNumber)"
+#     resourceGroupLocation: 'brazil-south'
+#     resourceGroupLocationShort: 'br'
+#   jobs:
+#   - job: CreateAzureResources
+#     displayName: 'Create Azure Resources'
+#     steps:    
+#     - task: CmdLine@2
+#       inputs:
+#         script: |  
+#           echo "Build.Reason:" 
+#           echo "$(Build.Reason)"
+#           echo "System.PullRequest.pullRequestNumber:" 
+#           echo "$(System.PullRequest.pullRequestNumber)"
+#           echo "System.PullRequest.pullRequestNumber:" 
+#           echo "$(System.PullRequest.pullRequestNumber)"
+#     - task: AzureCLI@2
+#       displayName: 'Deploy infrastructure with ARM templates'
+#       inputs:
+#         azureSubscription: 'Minha Assinatura'
+#         scriptType: 'ps'
+#         scriptLocation: 'scriptPath'
+#         scriptPath: '$(build.SourcesDirectory)\src\ReclameAquiDoTrader.Environment.ARMTemplate\DeployInfrastructure.ps1'
+#         arguments: '-appPrefix "app-typinghard-radt" -environment "$(environment)" -templatesLocation "$(build.SourcesDirectory)\src\ReclameAquiDoTrader.Environment.ARMTemplate"'
+#   - job: Deploy
+#     dependsOn: CreateAzureResources
+#     steps:
+#       - task: DownloadBuildArtifacts@0
+#         displayName: 'Download the build artifacts'
+#         inputs:
+#           buildType: 'current'
+#           downloadType: 'single'
+#           artifactName: 'drop'
+#           downloadPath: '$(build.artifactstagingdirectory)'
+#       - task: AzureRmWebAppDeployment@4
+#         inputs:
+#           ConnectionType: 'AzureRM'
+#           azureSubscription: 'Minha Assinatura'
+#           appType: 'webApp'
+#           WebAppName: 'app-typinghard-radt-$(environment)'
+#           packageForLinux: '$(build.artifactstagingdirectory)/drop/*.zip'
