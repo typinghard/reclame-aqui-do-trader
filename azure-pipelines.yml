@@ -102,4 +102,4 @@ stages:
           azureSubscription: 'Minha Assinatura'
           appType: 'webApp'
           WebAppName: 'app-typinghard-radt-$(environment)'
-          packageForLinux: '$(build.artifactstagingdirectory)/*.zip'
+          packageForLinux: '$(build.artifactstagingdirectory)/drop/*.zip'
