@@ -59,12 +59,6 @@ stages:
 - stage: PreparePRInfrastructure
   displayName: 'Prepare Infrastructure for PR'
   condition: and(succeeded(), eq(variables.prPipeline, 'true'))
-  variables:
-    environment: $(System.PullRequest.pullRequestNumber)
-    environmentLowercase: $(System.PullRequest.pullRequestNumber)
-    resourceGroupName: "rg-radt-$(System.PullRequest.pullRequestNumber)"
-    resourceGroupLocation: 'brazil-south'
-    resourceGroupLocationShort: 'br'
   jobs:
   - job: CreateAzureResources
     displayName: 'Create Azure Resources'
@@ -80,7 +74,7 @@ stages:
         scriptPath: '$(build.SourcesDirectory)\src\ReclameAquiDoTrader.Environment.ARMTemplate\DeployInfrastructure.ps1'
         arguments: | 
           -appPrefix "app-typinghard-radt" 
-          -environment "$(environment)" 
+          -environment "$(System.PullRequest.pullRequestNumber)" 
           -templatesLocation "$(build.SourcesDirectory)\src\ReclameAquiDoTrader.Environment.ARMTemplate"
           -azureStorageConnectionString "$(AzureStorage:ConnectionString)"
           -ravenDbConnectionConfigsCertificateDownloadPath "$(RavebDBConnectionConfigs:Certificate:DownloadPath)"
