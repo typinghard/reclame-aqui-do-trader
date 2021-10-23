@@ -60,8 +60,8 @@ stages:
       inputs:
         PathtoPublish: '$(build.artifactstagingdirectory)'
 
-- stage: PreparePRInfrastructure
-  displayName: 'Prepare Infrastructure for PR'
+- stage: DeployPR
+  displayName: 'Deploy PR'
   condition: and(succeeded(), eq(variables.prPipeline, 'true'))
   jobs:
   - job: CreateAzureResources
