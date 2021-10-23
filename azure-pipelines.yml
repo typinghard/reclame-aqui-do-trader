@@ -92,5 +92,5 @@ stages:
           ConnectionType: 'AzureRM'
           azureSubscription: 'Minha Assinatura'
           appType: 'webApp'
-          WebAppName: 'app-typinghard-radt-$(environment)'
+          WebAppName: 'app-typinghard-radt-$(System.PullRequest.pullRequestNumber)'
           packageForLinux: '$(build.artifactstagingdirectory)/drop/*.zip'
