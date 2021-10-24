@@ -35,7 +35,8 @@ if ($(az group exists --name $serverFarmResourceGroup) -eq 'false')
 
 	az deployment group wait --name $serviceAPIName --resource-group $serverFarmResourceGroup
 
-	az webapp config appsettings set -g $serverFarmResourceGroup -n $serviceAPIName --settings AzureStorage:ConnectionString=$azureStorageConnectionString `
+	az webapp config appsettings set -g $serverFarmResourceGroup -n $serviceAPIName --only-show-errors `
+											--settings AzureStorage:ConnectionString=$azureStorageConnectionString `
 												   RavebDBConnectionConfigs:Certificate:DownloadPath=$ravenDbConnectionConfigsCertificateDownloadPath `
 												   RavenSettings:CertFilePath=$ravenSettingsCertFilePath `
 												   RavenSettings:CertPassword=$ravenSettingsCertPassword `
