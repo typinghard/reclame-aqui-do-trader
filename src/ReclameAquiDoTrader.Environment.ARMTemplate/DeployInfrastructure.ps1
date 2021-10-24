@@ -26,15 +26,20 @@ $currentStack = "dotnetcore"
 $phpVersion = "OFF"
 $timing = -join($timing, "2. Variables created: ", $stopwatch.Elapsed.TotalSeconds, "`n");
 
-az group create -l brazilsouth -n $serverFarmResourceGroup
 
-az deployment group create --resource-group $serverFarmResourceGroup --name $serviceAPIName --template-file "$templatesLocation/WebApp.json" --parameters subscriptionId=$subscriptionId hostingPlanName=$webhostingName location=$location name=$serviceAPIName serverFarmResourceGroup=$serverFarmResourceGroup alwaysOn=$alwaysOn currentStack=$currentStack phpVersion=$phpVersion
+if [ $(az group exists --name $serverFarmResourceGroup) = false ]; then
 
-az deployment group wait --name $serviceAPIName --resource-group $serverFarmResourceGroup
+	az group create -l brazilsouth -n $serverFarmResourceGroup
 
-az webapp config appsettings set -g $serverFarmResourceGroup -n $serviceAPIName --settings AzureStorage:ConnectionString=$azureStorageConnectionString `
-																						   RavebDBConnectionConfigs:Certificate:DownloadPath=$ravenDbConnectionConfigsCertificateDownloadPath `
-																						   RavenSettings:CertFilePath=$ravenSettingsCertFilePath `
-																						   RavenSettings:CertPassword=$ravenSettingsCertPassword `
-																						   RavenSettings:DatabaseName=$ravenSettingsDatabaseName `
-																						   RavenSettings:Urls:0=$ravenSettingsUrl
+	az deployment group create --resource-group $serverFarmResourceGroup --name $serviceAPIName --template-file "$templatesLocation/WebApp.json" --parameters subscriptionId=$subscriptionId hostingPlanName=$webhostingName location=$location name=$serviceAPIName serverFarmResourceGroup=$serverFarmResourceGroup alwaysOn=$alwaysOn currentStack=$currentStack phpVersion=$phpVersion
+
+	az deployment group wait --name $serviceAPIName --resource-group $serverFarmResourceGroup
+
+	az webapp config appsettings set -g $serverFarmResourceGroup -n $serviceAPIName --settings AzureStorage:ConnectionString=$azureStorageConnectionString `
+												   RavebDBConnectionConfigs:Certificate:DownloadPath=$ravenDbConnectionConfigsCertificateDownloadPath `
+												   RavenSettings:CertFilePath=$ravenSettingsCertFilePath `
+												   RavenSettings:CertPassword=$ravenSettingsCertPassword `
+												   RavenSettings:DatabaseName=$ravenSettingsDatabaseName `
+												   RavenSettings:Urls:0=$ravenSettingsUrl
+	Write-Host "1. Deployment finished: "$stopwatch.Elapsed.TotalSeconds
+fi
