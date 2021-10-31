@@ -119,3 +119,8 @@ stages:
           appType: 'webApp'
           WebAppName: 'app-typinghard-radt'
           packageForLinux: '$(build.artifactstagingdirectory)/drop/*.zip'
+      - task: WorkItemUpdater@2
+        inputs:
+          workitemsSource: 'Build'
+          linkBuild: true
+          updateAssignedTo: 'Never'
