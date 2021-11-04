@@ -72,7 +72,7 @@ namespace ReclameAquiDoTrader.UI
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Pesquisa}/{action=Index}");
-            });
+            }); 
         }
     }
 }
