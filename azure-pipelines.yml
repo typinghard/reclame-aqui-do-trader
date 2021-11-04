@@ -90,38 +90,10 @@ stages:
           downloadType: 'single'
           artifactName: 'drop'
           downloadPath: '$(build.artifactstagingdirectory)'
-      # - task: AzureRmWebAppDeployment@4
-      #   inputs:
-      #     ConnectionType: 'AzureRM'
-      #     azureSubscription: 'Minha Assinatura'
-      #     appType: 'webApp'
-      #     WebAppName: 'app-typinghard-radt-$(System.PullRequest.pullRequestNumber)'
-      #     packageForLinux: '$(build.artifactstagingdirectory)/drop/*.zip'
-          
-- stage: DeployProd
-  displayName: 'Deploy Prod'
-  condition: and(succeeded(), eq(variables['Build.SourceBranchName'], 'master'))
-  dependsOn: PrepareApp
-  jobs:
-  - job: DeployProdJob
-    steps:
-      - task: DownloadBuildArtifacts@0
-        displayName: 'Download the build artifacts'
+      - task: AzureRmWebAppDeployment@4
         inputs:
-          buildType: 'current'
-          downloadType: 'single'
-          artifactName: 'drop'
-          downloadPath: '$(build.artifactstagingdirectory)'
-      # - task: AzureRmWebAppDeployment@4
-      #   inputs:
-      #     ConnectionType: 'AzureRM'
-      #     azureSubscription: 'Minha Assinatura'
-      #     appType: 'webApp'
-      #     WebAppName: 'app-typinghard-radt'
-      #     packageForLinux: '$(build.artifactstagingdirectory)/drop/*.zip'
-# steps:
-# - task: WorkItemUpdater@2
-#   inputs:
-#     workitemsSource: 'Build'
-#     linkBuild: true
-#     updateAssignedTo: 'Never'
+          ConnectionType: 'AzureRM'
+          azureSubscription: 'Minha Assinatura'
+          appType: 'webApp'
+          WebAppName: 'app-typinghard-radt-$(System.PullRequest.pullRequestNumber)'
+          packageForLinux: '$(build.artifactstagingdirectory)/drop/*.zip'
